@@ -3,8 +3,26 @@ Nonfunctional requirements:
 -The game timer shall be based on GridWorld steps.
 -Messages shall be displayed in the GridWorld message field.
 -The game engine shall support AI players written in PHP or python.
--The game engine shall use HTTP POST to send JSON data to the AIs.
-	-The AIs' responses shall also be JSON.
+-The game engine shall use HTTP POST to send JSON data to the AIs as follows:
+{
+   "home":
+       {
+        "color":"red",
+        "pieces":[{"row":0,"column":0,"damage":0},{"row":1,"column":1,"damage":1}],
+        "target":[{"row":0,"column":0},{"row":1,"column":1}]
+         },
+    "enemy":
+         {
+          "color":"blue",
+          "pieces":[{"row":0,"column":0,"damage":0},{"row":1,"column":1,"damage":1}],
+          "target":[{"row":0,"column":0},{"row":1,"column":1}]
+          }
+}
+-The AIs' responses shall also be JSON formatted:
+{
+  "from":[{"row":0,"column":0,"damage":0},{"row":1,"column":1,"damage":1},{"row":2,"column":2,"damage":2}],
+  "to":[{"row":0,"column":0,"damage":0},{"row":1,"column":1,"damage":1},{"row":2,"column":2,"damage":2}]
+}
 
 Functional requirements:
 -The game engine shall send each AI data on both teams' pieces' locations, destinations, and damaged pieces, as well as the board's size.
