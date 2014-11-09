@@ -62,6 +62,9 @@ abstract class OfficialObserver implements Observer{
 			}
 		}
 	}
+	protected void reply(String sender, String [] message){
+		m_official.reply(sender, message);
+	}
 	protected Official getOfficial(){
 		return m_official;
 	}
@@ -83,10 +86,9 @@ class HalmaMessenger extends OfficialObserver{
 	protected void handleUpdate(){
 		if(!"m".equalsIgnoreCase(getMessageRecipient()))
 			return;
-		Official official = getOfficial();
 		System.out.println(getMessageRecipient() + getMessage());
 		String [] replyArray = { getData(m_url1), getData(m_url2) };
-		official.reply( "m",  replyArray);
+		this.reply( "m",  replyArray);
 	}
 	
 	public String getData(String address){
