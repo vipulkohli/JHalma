@@ -18,7 +18,8 @@
 
 import info.gridworld.actor.ActorWorld;
 import info.gridworld.grid.Location;
-import org.json.*;
+
+import com.grack.nanojson.*;
 import java.awt.Color;
 import java.util.*;
 import java.net.*;
@@ -86,11 +87,12 @@ class HalmaMessenger extends OfficialObserver{
 	protected void handleUpdate(){
 		if(!"m".equalsIgnoreCase(getMessageRecipient()))
 			return;
+		m_url1 = "http://helloworldss.net/halma/jsontest.php";
+		String jsonMovesAI1 = getData(m_url1);
 		System.out.println(getMessageRecipient() + getMessage());
-		String [] replyArray = { getData(m_url1), getData(m_url2) };
+		String [] replyArray = { jsonMovesAI1 , getData(m_url2) };
 		this.reply( "m",  replyArray);
 	}
-	
 	public String getData(String address){
     	try{
     		URL url = new URL(address);
@@ -112,10 +114,50 @@ class Official extends Observable{
 		send("m", "hi");
 	}
 	public void reply(String sender, String [] messages){
-		System.out.println("Official received message from " + sender + messages[0] + messages[1]);
+		if( "m".equalsIgnoreCase(sender) ){
+			//messages[0] player 1 moves
+			getMoveArrayFromJSON( messages[0] );
+		}
 	}
 	private void send(String recipient, String message){
 		setChanged();
 		notifyObservers(recipient + "SPLITSPLIT" + message);
+	}
+	private void getMoveArrayFromJSON(String json){
+		try{
+					 System.out.println("=======decode=======");
+		 JsonObject obj = JsonParser.object().from(json);
+		 JsonArray toArray = obj.getArray("to");
+		 for(Object object : toArray){
+			JsonObject o = (JsonObject)object;
+		 	Position p = new Position( o.getInt("row"), o.getInt("column"), o.getInt("damage") );
+		 	System.out.println(p);
+		 }
+		}
+		catch(Exception e){
+		}
+	}
+}
+
+class Position{
+	private int damage, row, column;
+	
+	public Position(int r, int c, int d){
+		this.damage = d;
+		this.row = r;
+		this.column = c;
+	}
+	public int getDamage(){
+		return damage;
+	}
+	public int getRow(){
+		return row;
+	}
+	public int getColumn(){
+		return column;
+	}
+	@Override
+	public String toString(){
+		return "(" + row + "," + column + "," + damage + ")";
 	}
 }

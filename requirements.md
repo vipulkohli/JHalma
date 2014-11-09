@@ -20,10 +20,11 @@ Nonfunctional requirements:
           }
 }
 -The AIs' responses shall also be JSON formatted:
-{
-  "from":[{"row":0,"column":0,"damage":0},{"row":1,"column":1,"damage":1},{"row":2,"column":2,"damage":2}],
-  "to":[{"row":0,"column":0,"damage":0},{"row":1,"column":1,"damage":1},{"row":2,"column":2,"damage":2}]
-}
+[
+{"from":{"row":0,"column":0,"damage":0},"to":{"row":0,"column":0,"damage":0}},
+{"from":{"row":1,"column":1,"damage":1},"to":{"row":1,"column":1,"damage":1}},
+{"from":{"row":2,"column":2,"damage":2},"to":{"row":2,"column":2,"damage":2}}
+]
 
 Functional requirements:
 -The game engine shall send each player's Web AI data on both teams' pieces' locations, destinations, and damaged pieces, as well as the board's size.
