@@ -32,7 +32,8 @@ Functional requirements:
     "from":{"row":0,"column":0},
     "to":[{"row":1,"column":1},{"row":2,"column":2}]
   }
--4 pieces of each team shall move if possible.
+-"to" field shall consist of sequence of jump moves
+-1 piece of each team shall move.
 	-It is the AI's responsibility to check if a move is possible.
 	-The game engine shall not check for move possiblilities.
 -Using a timer, the game engine shall repeat a cycle of sending the teams their data, receiving information on each team's next move, verifying each move's validity, and performing the moves.

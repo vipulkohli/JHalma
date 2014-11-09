@@ -32,26 +32,40 @@ public class HalmaGameRunner
 {
     public static void main(String[] args)
     {
-     	String player1 = "http://lyle.smu.edu/~sochaa/4345/Homework11/HW11v2.php";
-     	String player2 = "http://lyle.smu.edu/~sochaa/4345/Homework11/HW11v2.php";
+     	String player1 = "http://helloworldss.net/halma/jsontest.php";
+     	String player2 = "http://helloworldss.net/halma/jsontest.php";
      	new HalmaGame(player1, player2);   
     }
 }
 class HalmaGame {
+	
 	public HalmaGame(String url1, String url2){
-		HalmaMessenger m = new HalmaMessenger(url1, url2);
 		Official o = new Official();
-		o.addObserver(m);
+		OfficialObserver [] array = 
+		{
+			new HalmaMessenger(url1, url2),
+			new CollisionAnalyst()
+		};
+		for( Observer keeper : array )
+			o.addObserver(keeper);
 		o.startGame();
+	}
+	
+}
+class Board extends OfficialObserver{
+	@Override
+	protected void handleUpdate(){
+		
 	}
 }
 abstract class OfficialObserver implements Observer{
+	
 	private Official m_official;
 	private String m_message, m_recipient;
 	
 	@Override
 	public void update(Observable o, Object arg){
-		System.out.println("update ok");
+		System.out.println(arg);
 		if(arg instanceof String && o instanceof Official){
 			String string = arg.toString();
 			String[] parts = string.split("SPLITSPLIT");
@@ -77,6 +91,16 @@ abstract class OfficialObserver implements Observer{
 	}
 	protected abstract void handleUpdate();
 }
+
+class CollisionAnalyst extends OfficialObserver{
+	@Override
+	protected void handleUpdate(){
+		Official o = getOfficial();
+		String movesStr = getMessage();	
+		System.out.println(MoveParser.toMoveList(movesStr));		
+	}
+}
+
 class HalmaMessenger extends OfficialObserver{
 	private String m_url1, m_url2;
 	public HalmaMessenger(String inPlayer1addy, String inPlayer2addy){
@@ -87,7 +111,6 @@ class HalmaMessenger extends OfficialObserver{
 	protected void handleUpdate(){
 		if(!"m".equalsIgnoreCase(getMessageRecipient()))
 			return;
-		m_url1 = "http://helloworldss.net/halma/jsontest.php";
 		String jsonMovesAI1 = getData(m_url1);
 		System.out.println(getMessageRecipient() + getMessage());
 		String [] replyArray = { jsonMovesAI1 , getData(m_url2) };
@@ -107,86 +130,21 @@ class HalmaMessenger extends OfficialObserver{
 }
 class Official extends Observable{
 	//The official knows the rules including what a halma move is
-	private class Move{
-		private int fr, fc, fd, tr, tc, td;
-		private String str;
-		
-		public Move(int [] data, String instr){
-			fr = data[0];
-			fc = data[1];
-			fd = data[2];
-			tr = data[3];
-			tc = data[4];
-			td = data[5];
-			str = instr;
-		}
-		public int getFromDamage(){
-			return fd;
-		}
-		public int getFromRow(){
-			return fr;
-		}
-		public int getFromColumn(){
-			return fc;
-		}
-		public int getToDamage(){
-			return td;
-		}
-		public int getToRow(){
-			return tr;
-		}
-		public int getToColumn(){
-			return tc;
-		}
-		@Override
-		public String toString(){
-			return new String(str);
-		}
-		public boolean isNorthMove(){
-			return comp( getFromColumn(), getToColumn() ) == 0 
-				&& comp( getFromRow(), getToRow() ) < 0;
-		}
-		public boolean isStepMove(){
-			boolean [] bools = 
-			{
-				comp( getFromColumn(), getToColumn() ) == 0 
-					&& comp( getFromRow(), getToRow() ) ==  -1,
-				comp( getFromColumn(), getToColumn() ) == 0 
-					&& comp( getFromRow(), getToRow() ) ==  1,
-				comp( getFromColumn(), getToColumn() ) == -1 
-					&& comp( getFromRow(), getToRow() ) ==  0,
-				comp( getFromColumn(), getToColumn() ) == 1 
-					&& comp( getFromRow(), getToRow() ) ==  0,
-				comp( getFromColumn(), getToColumn() ) == 1 
-					&& comp( getFromRow(), getToRow() ) ==  1,
-				comp( getFromColumn(), getToColumn() ) == -1 
-					&& comp( getFromRow(), getToRow() ) ==  -1,
-				comp( getFromColumn(), getToColumn() ) == 1 
-					&& comp( getFromRow(), getToRow() ) ==  -1,
-				comp( getFromColumn(), getToColumn() ) == -1 
-					&& comp( getFromRow(), getToRow() ) ==  1
-			};
-			for(boolean b : bools)
-				if (b)
-					return true;
-			return false;
-		}
-		private int comp(int a, int b){
-			return a - b;
-		}
-	}
-	//end class Move
+	
 	public void startGame(){
 		System.out.println("started");
 		getNextMove();
 	}
+	
 	private void getNextMove(){
 		send("m", "hi");
 	}
 	
 	public void reply(String sender, String [] messages){
+		String outstr = "";
 		if( "m".equalsIgnoreCase(sender) )
-			messengerCase(messages);
+			outstr = messengerCase(messages);
+		send("c", outstr);
 	}
 	
 	private void send(String recipient, String message){
@@ -194,9 +152,36 @@ class Official extends Observable{
 		notifyObservers(recipient + "SPLITSPLIT" + message);
 	}
 	
-	private void messengerCase(String [] messages){
-		ArrayList<Move>moves = getMovesFromJSON(messages[0]);
-		System.out.println(moves.size());
+	public boolean isValid(ArrayList<Move>inMoves){
+		return true;
+	}
+	
+	private String messengerCase(String [] messages){
+		if(messages.length < 2)
+			throw new IllegalArgumentException("Not enough players");
+		ArrayList<Move>movesPlayer1 = getMovesFromJSON(messages[0]);
+		ArrayList<Move>movesPlayer2 = getMovesFromJSON(messages[1]);
+		ArrayList<String>formattedMoves = new ArrayList<String>();
+		if( !isValid(movesPlayer1) || !isValid(movesPlayer2) )
+			messengerCase(messages);
+		//players array shall only have ArrayList<Move> type objects
+		ArrayList [] players = {movesPlayer1, movesPlayer2};
+		for(int ind = 0; ind < players.length; ind++){
+			for( Object obj : players[ind] ){
+				Move m = (Move) obj;
+				String p1 = "Player" + ind;
+				String fromRow = "FromRow:" + m.getFromRow();
+				String fromCol = "FromColumn:" + m.getFromColumn();
+				String fromDamage = "FromDamage:" + m.getFromColumn();
+				String toRow = "ToRow:" + m.getToRow();
+				String toColumn = "ToColumn:" + m.getToColumn();
+				String toDamage = "ToDamage:" + m.getToDamage();
+				String [] p1Moves = {p1, fromRow, fromCol, fromDamage, toRow, toColumn, toDamage};
+				for (String detail : p1Moves)
+					formattedMoves.add(detail);
+			}
+		}
+		return formattedMoves.toString();
 	}
 	
 	private ArrayList<Move> getMovesFromJSON(String json){
@@ -228,4 +213,84 @@ class Official extends Observable{
 		}
 	}
 }
+class Move{
+	private int fr, fc, fd, tr, tc, td;
+	private String str;
+	
+	public Move(int [] data, String instr){
+		fr = data[0];
+		fc = data[1];
+		fd = data[2];
+		tr = data[3];
+		tc = data[4];
+		td = data[5];
+		str = instr;
+	}
+	public int getFromDamage(){
+		return fd;
+	}
+	public int getFromRow(){
+		return fr;
+	}
+	public int getFromColumn(){
+		return fc;
+	}
+	public int getToDamage(){
+		return td;
+	}
+	public int getToRow(){
+		return tr;
+	}
+	public int getToColumn(){
+		return tc;
+	}
+	public boolean sameToAs(Move other){
+		return this.getToRow() == other.getToRow()
+			 && this.getToColumn() == other.getToColumn();
+	}
+	@Override
+	public String toString(){
+		return new String(str);
+	}
+	public boolean isNorthMove(){
+		return comp( getFromColumn(), getToColumn() ) == 0 
+			&& comp( getFromRow(), getToRow() ) < 0;
+	}
+	public boolean isStepMove(){
+		boolean [] bools = 
+		{
+			comp( getFromColumn(), getToColumn() ) == 0 
+				&& comp( getFromRow(), getToRow() ) ==  -1,
+			comp( getFromColumn(), getToColumn() ) == 0 
+				&& comp( getFromRow(), getToRow() ) ==  1,
+			comp( getFromColumn(), getToColumn() ) == -1 
+				&& comp( getFromRow(), getToRow() ) ==  0,
+			comp( getFromColumn(), getToColumn() ) == 1 
+				&& comp( getFromRow(), getToRow() ) ==  0,
+			comp( getFromColumn(), getToColumn() ) == 1 
+				&& comp( getFromRow(), getToRow() ) ==  1,
+			comp( getFromColumn(), getToColumn() ) == -1 
+				&& comp( getFromRow(), getToRow() ) ==  -1,
+			comp( getFromColumn(), getToColumn() ) == 1 
+				&& comp( getFromRow(), getToRow() ) ==  -1,
+			comp( getFromColumn(), getToColumn() ) == -1 
+				&& comp( getFromRow(), getToRow() ) ==  1
+		};
+		for(boolean b : bools)
+			if (b)
+				return true;
+		return false;
+	}
+	private int comp(int a, int b){
+		return a - b;
+	}
+}
 
+class MoveParser{
+	
+	public static ArrayList<Move> toMoveList(String inMoves){
+		System.out.println(inMoves);
+		return null;
+	}
+
+}
