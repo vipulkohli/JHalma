@@ -106,6 +106,76 @@ class HalmaMessenger extends OfficialObserver{
 	}
 }
 class Official extends Observable{
+	//The official knows the rules including what a halma move is
+	private class Move{
+		private int fr, fc, fd, tr, tc, td;
+		private String str;
+		
+		public Move(int [] data, String instr){
+			fr = data[0];
+			fc = data[1];
+			fd = data[2];
+			tr = data[3];
+			tc = data[4];
+			td = data[5];
+			str = instr;
+		}
+		public int getFromDamage(){
+			return fd;
+		}
+		public int getFromRow(){
+			return fr;
+		}
+		public int getFromColumn(){
+			return fc;
+		}
+		public int getToDamage(){
+			return td;
+		}
+		public int getToRow(){
+			return tr;
+		}
+		public int getToColumn(){
+			return tc;
+		}
+		@Override
+		public String toString(){
+			return new String(str);
+		}
+		public boolean isNorthMove(){
+			return comp( getFromColumn(), getToColumn() ) == 0 
+				&& comp( getFromRow(), getToRow() ) < 0;
+		}
+		public boolean isStepMove(){
+			boolean [] bools = 
+			{
+				comp( getFromColumn(), getToColumn() ) == 0 
+					&& comp( getFromRow(), getToRow() ) ==  -1,
+				comp( getFromColumn(), getToColumn() ) == 0 
+					&& comp( getFromRow(), getToRow() ) ==  1,
+				comp( getFromColumn(), getToColumn() ) == -1 
+					&& comp( getFromRow(), getToRow() ) ==  0,
+				comp( getFromColumn(), getToColumn() ) == 1 
+					&& comp( getFromRow(), getToRow() ) ==  0,
+				comp( getFromColumn(), getToColumn() ) == 1 
+					&& comp( getFromRow(), getToRow() ) ==  1,
+				comp( getFromColumn(), getToColumn() ) == -1 
+					&& comp( getFromRow(), getToRow() ) ==  -1,
+				comp( getFromColumn(), getToColumn() ) == 1 
+					&& comp( getFromRow(), getToRow() ) ==  -1,
+				comp( getFromColumn(), getToColumn() ) == -1 
+					&& comp( getFromRow(), getToRow() ) ==  1
+			};
+			for(boolean b : bools)
+				if (b)
+					return true;
+			return false;
+		}
+		private int comp(int a, int b){
+			return a - b;
+		}
+	}
+	//end class Move
 	public void startGame(){
 		System.out.println("started");
 		getNextMove();
@@ -113,51 +183,49 @@ class Official extends Observable{
 	private void getNextMove(){
 		send("m", "hi");
 	}
+	
 	public void reply(String sender, String [] messages){
-		if( "m".equalsIgnoreCase(sender) ){
-			//messages[0] player 1 moves
-			getMoveArrayFromJSON( messages[0] );
-		}
+		if( "m".equalsIgnoreCase(sender) )
+			messengerCase(messages);
 	}
+	
 	private void send(String recipient, String message){
 		setChanged();
 		notifyObservers(recipient + "SPLITSPLIT" + message);
 	}
-	private void getMoveArrayFromJSON(String json){
+	
+	private void messengerCase(String [] messages){
+		ArrayList<Move>moves = getMovesFromJSON(messages[0]);
+		System.out.println(moves.size());
+	}
+	
+	private ArrayList<Move> getMovesFromJSON(String json){
+		ArrayList<Move> moves = new ArrayList<Move>();
 		try{
-					 System.out.println("=======decode=======");
-		 JsonObject obj = JsonParser.object().from(json);
-		 JsonArray toArray = obj.getArray("to");
-		 for(Object object : toArray){
-			JsonObject o = (JsonObject)object;
-		 	Position p = new Position( o.getInt("row"), o.getInt("column"), o.getInt("damage") );
-		 	System.out.println(p);
+		 JsonArray moveJSONArray = JsonParser.array().from(json);
+		 //JsonArray toArray = obj.getArray("to");
+		 for(Object object : moveJSONArray ){
+		 	JsonObject o = (JsonObject) object ;
+		 	JsonObject from = o.getObject("from");
+		 	JsonObject to = o.getObject("to");
+		 	int [] moveInfo = 
+		 	{ 
+		 		from.getInt("row"), 
+		 		from.getInt("column"), 
+		 		from.getInt("damage"),
+		 		to.getInt("row"), 
+		 		to.getInt("column"), 
+		 		to.getInt("damage")
+		 	};
+		 	Move move = new Move(moveInfo, o.toString());
+		 	moves.add( move );
 		 }
+		 return moves;
 		}
 		catch(Exception e){
+			e.printStackTrace();
+			return null;
 		}
 	}
 }
 
-class Position{
-	private int damage, row, column;
-	
-	public Position(int r, int c, int d){
-		this.damage = d;
-		this.row = r;
-		this.column = c;
-	}
-	public int getDamage(){
-		return damage;
-	}
-	public int getRow(){
-		return row;
-	}
-	public int getColumn(){
-		return column;
-	}
-	@Override
-	public String toString(){
-		return "(" + row + "," + column + "," + damage + ")";
-	}
-}
