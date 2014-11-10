@@ -159,59 +159,14 @@ class Official extends Observable{
 	private String messengerCase(String [] messages){
 		if(messages.length < 2)
 			throw new IllegalArgumentException("Not enough players");
-		ArrayList<Move>movesPlayer1 = getMovesFromJSON(messages[0]);
-		ArrayList<Move>movesPlayer2 = getMovesFromJSON(messages[1]);
-		ArrayList<String>formattedMoves = new ArrayList<String>();
-		if( !isValid(movesPlayer1) || !isValid(movesPlayer2) )
-			messengerCase(messages);
-		//players array shall only have ArrayList<Move> type objects
-		ArrayList [] players = {movesPlayer1, movesPlayer2};
-		for(int ind = 0; ind < players.length; ind++){
-			for( Object obj : players[ind] ){
-				Move m = (Move) obj;
-				String p1 = "Player" + ind;
-				String fromRow = "FromRow:" + m.getFromRow();
-				String fromCol = "FromColumn:" + m.getFromColumn();
-				String fromDamage = "FromDamage:" + m.getFromColumn();
-				String toRow = "ToRow:" + m.getToRow();
-				String toColumn = "ToColumn:" + m.getToColumn();
-				String toDamage = "ToDamage:" + m.getToDamage();
-				String [] p1Moves = {p1, fromRow, fromCol, fromDamage, toRow, toColumn, toDamage};
-				for (String detail : p1Moves)
-					formattedMoves.add(detail);
-			}
-		}
-		return formattedMoves.toString();
+		ArrayList<String>playerMoves = new ArrayList<String>();
+		playerMoves.add( MoveParser.getMovesFromJSON(messages[0]) );
+		playerMoves.add( MoveParser.getMovesFromJSON(messages[1]) );
+		System.out.println(playerMoves);
+		return playerMoves.toString();
 	}
 	
-	private ArrayList<Move> getMovesFromJSON(String json){
-		ArrayList<Move> moves = new ArrayList<Move>();
-		try{
-		 JsonArray moveJSONArray = JsonParser.array().from(json);
-		 //JsonArray toArray = obj.getArray("to");
-		 for(Object object : moveJSONArray ){
-		 	JsonObject o = (JsonObject) object ;
-		 	JsonObject from = o.getObject("from");
-		 	JsonObject to = o.getObject("to");
-		 	int [] moveInfo = 
-		 	{ 
-		 		from.getInt("row"), 
-		 		from.getInt("column"), 
-		 		from.getInt("damage"),
-		 		to.getInt("row"), 
-		 		to.getInt("column"), 
-		 		to.getInt("damage")
-		 	};
-		 	Move move = new Move(moveInfo, o.toString());
-		 	moves.add( move );
-		 }
-		 return moves;
-		}
-		catch(Exception e){
-			e.printStackTrace();
-			return null;
-		}
-	}
+	
 }
 class Move{
 	private int fr, fc, fd, tr, tc, td;
@@ -288,6 +243,24 @@ class Move{
 
 class MoveParser{
 	
+	public static String getMovesFromJSON(String json){
+		ArrayList<Integer>sequence = new ArrayList<Integer>();
+		JsonObject obj = null;
+		try{ obj = JsonParser.object().from(json); }
+		catch(Exception e){ e.printStackTrace();}
+		JsonObject fromObj = obj.getObject("from");
+		JsonArray toArray = obj.getArray("to");
+		int fromRow = fromObj.getInt("row");
+		int fromColumn = fromObj.getInt("column");
+		sequence.add(fromRow);
+		sequence.add(fromColumn);
+		for(Object o : toArray){
+			obj = (JsonObject) o;
+			sequence.add(obj.getInt("row"));
+			sequence.add(obj.getInt("column"));
+		}
+		return sequence.toString();
+	}
 	public static ArrayList<Move> toMoveList(String inMoves){
 		System.out.println(inMoves);
 		return null;
