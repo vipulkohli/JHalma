@@ -1,4 +1,6 @@
 /* 
+ * JHalma
+ * SMU CSE 4345 Fall 2014 Team Project
  * AP(r) Computer Science GridWorld Case Study:
  * Copyright(c) 2005-2006 Cay S. Horstmann (http://horstmann.com)
  *
@@ -11,6 +13,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  * 
+ * @author Vipul Kohli
+ * @author Andrew Socha
  * @author Cay Horstmann
  * @author Chris Nevison
  * @author Barbara Cloud Wells
@@ -90,12 +94,101 @@ class GameBoard extends OfficialObserver{
 	ArrayList<Piece> m_pieces;
 	ActorWorld m_world;
 	
+	private class Move{
+	
+		private ArrayList<Integer>mList;
+	
+		public Move(String inMove){
+			mList = new ArrayList<Integer>();
+			String [] coordinates = 
+				inMove.replace("[", "").replace("]", "")
+				.replace(" ", "").split(",");
+			for(String point : coordinates)
+				mList.add( toInt( point ) );
+		}
+		private int toInt(String s){
+			return Integer.parseInt(s);
+		}
+		private ArrayList<Integer> getSequence(){
+			return mList;
+		}
+		public int getFromRow(){
+			return mList.get(0);
+		}
+		public int getFromColumn(){
+			return mList.get(1);
+		}
+		public int getToRow(){
+			return mList.get( getSequence().size() - 2 );
+		}
+		public int getToColumn(){
+			return mList.get( getSequence().size() - 1 );
+		}
+		public boolean sameToAs(Move other){
+			return this.getToRow() == other.getToRow()
+				 && this.getToColumn() == other.getToColumn();
+		}
+		@Override
+		public String toString(){
+			return mList.toString();
+		}
+		public boolean isNorthMove(){
+			return comp( getFromColumn(), getToColumn() ) == 0 
+				&& comp( getFromRow(), getToRow() ) < 0;
+		}
+		public boolean isStepMove(){
+			boolean [] bools = 
+			{
+				comp( getFromColumn(), getToColumn() ) == 0 
+					&& comp( getFromRow(), getToRow() ) ==  -1,
+				comp( getFromColumn(), getToColumn() ) == 0 
+					&& comp( getFromRow(), getToRow() ) ==  1,
+				comp( getFromColumn(), getToColumn() ) == -1 
+					&& comp( getFromRow(), getToRow() ) ==  0,
+				comp( getFromColumn(), getToColumn() ) == 1 
+					&& comp( getFromRow(), getToRow() ) ==  0,
+				comp( getFromColumn(), getToColumn() ) == 1 
+					&& comp( getFromRow(), getToRow() ) ==  1,
+				comp( getFromColumn(), getToColumn() ) == -1 
+					&& comp( getFromRow(), getToRow() ) ==  -1,
+				comp( getFromColumn(), getToColumn() ) == 1 
+					&& comp( getFromRow(), getToRow() ) ==  -1,
+				comp( getFromColumn(), getToColumn() ) == -1 
+					&& comp( getFromRow(), getToRow() ) ==  1
+			};
+			for(boolean b : bools)
+				if (b)
+					return true;
+			return false;
+		}
+		private int comp(int a, int b){
+			return a - b;
+		}
+	}//end class Move
+	
+	
+	private ArrayList<Move> splitPlayerMoves(String inMoves){
+		ArrayList<Move>moves = new ArrayList<Move>();
+		JsonArray array = null;
+		try{ array = JsonParser.array().from(inMoves);  }
+		catch(Exception e){ e.printStackTrace(); }
+		for(Object o : array){
+			Move m = new Move(o.toString());
+			moves.add(m);
+		}
+		return moves;
+	}
+
+	public boolean isCollision(ArrayList<Move> moves){
+		Iterator<Move>moveItr = moves.iterator();
+		return moveItr.next().sameToAs( moveItr.next() );
+	}
+	
 	@Override 
 	public void handleUpdate(){
 		if( "grid".equalsIgnoreCase( getMessageRecipient() ) ){
-			String [] scenario = getMessage().split("SPLITSINGLE");
-			boolean isCollision = Boolean.parseBoolean( scenario[0] );
-			ArrayList<Move> playerMoves = MoveParser.splitPlayerMoves( scenario[1] );
+			ArrayList<Move> playerMoves = this.splitPlayerMoves( super.getMessage() );
+			System.out.println("Collsion: " + isCollision(playerMoves));
 			Move move = playerMoves.get(0);
 			Location toLoc = new Location( move.getToRow(), move.getToColumn() );
 			m_pieces.get(0).moveTo( toLoc );
@@ -112,6 +205,7 @@ class GameBoard extends OfficialObserver{
 			}
 		}
 	}
+	
 	public GameBoard(){
 		m_world = new ActorWorld();
 		m_pieces = new ArrayList<Piece>();
@@ -129,30 +223,12 @@ class GameBoard extends OfficialObserver{
 				m_pieces.get(k).setColor(Color.RED);
 		m_world.show();
 	}
-}
-class CollisionAnalyst extends OfficialObserver{
-	@Override
-	protected void handleUpdate(){
-		if( !"c".equalsIgnoreCase( getMessageRecipient() ) )
-			return;
-		Official o = getOfficial();
-		String movesStr = getMessage();	
-		ArrayList<Move>moves = MoveParser.splitPlayerMoves( movesStr );
-		Iterator<Move>moveItr = moves.iterator();
-		replyAboutCollision(movesStr, moveItr.next().sameToAs( moveItr.next() ) );		
-	}
-	private void replyAboutCollision(String playerMoves, boolean isCollision){
-			String [] responses = 
-			{
-				"" + isCollision,
-				playerMoves
-			};
-			super.reply("c", responses);
-	}
-}
+}//end GameBoard
 
 class HalmaMessenger extends OfficialObserver{
 	private String m_url1, m_url2;
+	
+	
 	public HalmaMessenger(String inPlayer1addy, String inPlayer2addy){
 		m_url1 = inPlayer1addy;
 		m_url2 = inPlayer2addy;
@@ -170,6 +246,7 @@ class HalmaMessenger extends OfficialObserver{
 		};
 		this.reply( "m",  replyArray);
 	}
+	
 	public String getData(String address){
     	try{
     		URL url = new URL(address);
@@ -182,6 +259,7 @@ class HalmaMessenger extends OfficialObserver{
     	}
 	}
 }
+
 class Official extends Observable{
 	//The official knows the rules including what a halma move is
 	
@@ -198,11 +276,6 @@ class Official extends Observable{
 		String outstr = "";
 		if( "m".equalsIgnoreCase(sender) ){
 			outstr = messengerCase(messages);
-			send("c", outstr);
-		}
-		else if("c".equalsIgnoreCase(sender)){
-			outstr = Boolean.parseBoolean(messages[0]) + "SPLITSINGLE" + messages[1];
-			System.out.println(outstr);
 			send("grid", outstr);
 		}
 		else if( "grid".equalsIgnoreCase(sender) ){
@@ -215,92 +288,15 @@ class Official extends Observable{
 		notifyObservers(recipient + "SPLITSPLIT" + message);
 	}
 	
-	public boolean isValid(ArrayList<Move>inMoves){
-		return true;
-	}
 	
 	private String messengerCase(String [] messages){
 		if(messages.length < 2)
 			throw new IllegalArgumentException("Not enough players");
 		ArrayList<String>playerMoves = new ArrayList<String>();
-		playerMoves.add( MoveParser.getMovesFromJSON(messages[0]) );
-		playerMoves.add( MoveParser.getMovesFromJSON(messages[1]) );
+		playerMoves.add( this.getMovesFromJSON(messages[0]) );
+		playerMoves.add( this.getMovesFromJSON(messages[1]) );
 		return playerMoves.toString();
 	}
-}
-class Move{
-	
-	private ArrayList<Integer>mList;
-	
-	public Move(String inMove){
-		mList = new ArrayList<Integer>();
-		String [] coordinates = 
-			inMove.replace("[", "").replace("]", "")
-			.replace(" ", "").split(",");
-		for(String point : coordinates)
-			mList.add( toInt( point ) );
-	}
-	private int toInt(String s){
-		return Integer.parseInt(s);
-	}
-	private ArrayList<Integer> getSequence(){
-		return mList;
-	}
-	public int getFromRow(){
-		return mList.get(0);
-	}
-	public int getFromColumn(){
-		return mList.get(1);
-	}
-	public int getToRow(){
-		return mList.get( getSequence().size() - 2 );
-	}
-	public int getToColumn(){
-		return mList.get( getSequence().size() - 1 );
-	}
-	public boolean sameToAs(Move other){
-		return this.getToRow() == other.getToRow()
-			 && this.getToColumn() == other.getToColumn();
-	}
-	@Override
-	public String toString(){
-		return mList.toString();
-	}
-	public boolean isNorthMove(){
-		return comp( getFromColumn(), getToColumn() ) == 0 
-			&& comp( getFromRow(), getToRow() ) < 0;
-	}
-	public boolean isStepMove(){
-		boolean [] bools = 
-		{
-			comp( getFromColumn(), getToColumn() ) == 0 
-				&& comp( getFromRow(), getToRow() ) ==  -1,
-			comp( getFromColumn(), getToColumn() ) == 0 
-				&& comp( getFromRow(), getToRow() ) ==  1,
-			comp( getFromColumn(), getToColumn() ) == -1 
-				&& comp( getFromRow(), getToRow() ) ==  0,
-			comp( getFromColumn(), getToColumn() ) == 1 
-				&& comp( getFromRow(), getToRow() ) ==  0,
-			comp( getFromColumn(), getToColumn() ) == 1 
-				&& comp( getFromRow(), getToRow() ) ==  1,
-			comp( getFromColumn(), getToColumn() ) == -1 
-				&& comp( getFromRow(), getToRow() ) ==  -1,
-			comp( getFromColumn(), getToColumn() ) == 1 
-				&& comp( getFromRow(), getToRow() ) ==  -1,
-			comp( getFromColumn(), getToColumn() ) == -1 
-				&& comp( getFromRow(), getToRow() ) ==  1
-		};
-		for(boolean b : bools)
-			if (b)
-				return true;
-		return false;
-	}
-	private int comp(int a, int b){
-		return a - b;
-	}
-}
-
-class MoveParser{
 	
 	public static String getMovesFromJSON(String json){
 		ArrayList<Integer>sequence = new ArrayList<Integer>();
@@ -320,15 +316,5 @@ class MoveParser{
 		}
 		return sequence.toString();
 	}
-	public static ArrayList<Move> splitPlayerMoves(String inMoves){
-		ArrayList<Move>moves = new ArrayList<Move>();
-		JsonArray array = null;
-		try{ array = JsonParser.array().from(inMoves);  }
-		catch(Exception e){ e.printStackTrace(); }
-		for(Object o : array){
-			Move m = new Move(o.toString());
-			moves.add(m);
-		}
-		return moves;
-	}
+	
 }
