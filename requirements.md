@@ -47,6 +47,8 @@ Functional requirements:
 -The damage count will decrement upon each successful move with a lower limit of 0.
   -Upon reaching damage of 0, the piece is able to jump again.
 -Collisions shall be determined by matching destination squares only, not by intermediate jumps.
+-Colliding pieces shall occupy the same square.
+	-Collision squares shall blink both team colors.
 -Upon a player's victory, the UI shall declare "halmate" and stop requesting moves.
 -Messages displayed by the UI shall include the most recent moves made, a list of any "damaged" pieces, the number of turns elapsed, any errors that have occurred, and if "halmate" has occurred.
 -Each team shall have different colored pieces.
