@@ -99,7 +99,9 @@ class CollisionAnalyst extends OfficialObserver{
 			return;
 		Official o = getOfficial();
 		String movesStr = getMessage();	
-		MoveParser.splitPlayerMoves( movesStr );		
+		ArrayList<Move>moves = MoveParser.splitPlayerMoves( movesStr );
+		Iterator<Move>itr = moves.iterator();
+		System.out.println("Analyst says: " + itr.next().sameToAs( itr.next() ) );		
 	}
 }
 
@@ -174,35 +176,34 @@ class Official extends Observable{
 	
 }
 class Move{
-	private int fr, fc, fd, tr, tc, td;
-	private String str;
 	
-	public Move(int [] data, String instr){
-		fr = data[0];
-		fc = data[1];
-		fd = data[2];
-		tr = data[3];
-		tc = data[4];
-		td = data[5];
-		str = instr;
+	private ArrayList<Integer>mList;
+	
+	public Move(String inMove){
+		mList = new ArrayList<Integer>();
+		String [] coordinates = 
+			inMove.replace("[", "").replace("]", "")
+			.replace(" ", "").split(",");
+		for(String point : coordinates)
+			mList.add( toInt( point ) );
 	}
-	public int getFromDamage(){
-		return fd;
+	private int toInt(String s){
+		return Integer.parseInt(s);
+	}
+	private ArrayList<Integer> getSequence(){
+		return mList;
 	}
 	public int getFromRow(){
-		return fr;
+		return mList.get(0);
 	}
 	public int getFromColumn(){
-		return fc;
-	}
-	public int getToDamage(){
-		return td;
+		return mList.get(1);
 	}
 	public int getToRow(){
-		return tr;
+		return mList.get( getSequence().size() - 2 );
 	}
 	public int getToColumn(){
-		return tc;
+		return mList.get( getSequence().size() - 1 );
 	}
 	public boolean sameToAs(Move other){
 		return this.getToRow() == other.getToRow()
@@ -210,7 +211,7 @@ class Move{
 	}
 	@Override
 	public String toString(){
-		return new String(str);
+		return mList.toString();
 	}
 	public boolean isNorthMove(){
 		return comp( getFromColumn(), getToColumn() ) == 0 
@@ -267,11 +268,15 @@ class MoveParser{
 		return sequence.toString();
 	}
 	public static ArrayList<Move> splitPlayerMoves(String inMoves){
+		System.out.println(inMoves);
+		ArrayList<Move>moves = new ArrayList<Move>();
 		JsonArray array = null;
 		try{ array = JsonParser.array().from(inMoves);  }
 		catch(Exception e){ e.printStackTrace(); }
-		System.out.println(  );
-		return null;
+		for(Object o : array){
+			Move m = new Move(o.toString());
+			moves.add(m);
+		}
+		return moves;
 	}
-
 }
