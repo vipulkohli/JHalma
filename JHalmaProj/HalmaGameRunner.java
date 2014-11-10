@@ -91,9 +91,100 @@ abstract class OfficialObserver implements Observer{
 }
 class GameBoard extends OfficialObserver{
 	
-	ArrayList<Piece> m_pieces;
-	ActorWorld m_world;
-	Grid g;
+	private final static int BOARD_SIZE = 18, MAX_COORD = BOARD_SIZE - 1;
+	private ArrayList<Piece> m_pieces;
+	private ActorWorld m_world;
+	Grid m_grid;
+
+	
+	private ArrayList<Move> splitPlayerMoves(String inMoves){
+		ArrayList<Move>moves = new ArrayList<Move>();
+		JsonArray array = null;
+		try{ array = JsonParser.array().from(inMoves);  }
+		catch(Exception e){ e.printStackTrace(); }
+		for(Object o : array){
+			Move m = new Move(o.toString());
+			moves.add(m);
+		}
+		return moves;
+	}
+
+	public boolean isCollision(ArrayList<Move> moves){
+		Iterator<Move>moveItr = moves.iterator();
+		return moveItr.next().sameToAs( moveItr.next() );
+	}
+	
+	@Override 
+	public void handleUpdate(){
+		if( "grid".equalsIgnoreCase( getMessageRecipient() ) ){
+			ArrayList<Move> playerMoves = this.splitPlayerMoves( super.getMessage() );
+			System.out.println("Collsion: " + isCollision(playerMoves));
+			Move move = playerMoves.get(0);
+			Location toLoc = new Location( move.getToRow(), move.getToColumn() );
+			m_pieces.get(0).moveTo( toLoc );
+			m_pieces.get(0).setColor(Color.ORANGE);
+			m_world.setMessage( "Move to " + toLoc );
+			try{Thread.sleep(1000); }
+			catch(Exception e) {}
+			m_pieces.get(0).setColor(Color.GREEN);
+			m_world.setMessage( "Collision complete" );
+			movePiece();
+		}
+	}
+	
+	public void movePiece(){
+		for (int count = 0; count < 10; count++){
+				try{Thread.sleep(1000); }
+				catch(Exception e) {}
+				m_world.setMessage( "Timer: " + count );
+				for(int k = 0; k < 1; k++){
+					Piece p = m_pieces.get(k);
+					int row = (int) (Math.random() * 10);
+					int column = (int) (Math.random() * 10);
+					if(p.getGrid() != null)
+						p.moveTo(new Location (row, column));
+				}
+			}
+	}
+	
+	public GameBoard(){
+		m_world = new ActorWorld();
+		m_grid = new BoundedGrid( BOARD_SIZE , BOARD_SIZE);
+		m_world.setGrid( m_grid );
+		m_pieces = new ArrayList<Piece>();
+		addPieces(); //populates m_pieces & m_world with Pieces!	
+		m_world.show();
+	}
+	private void addPieces(){
+		Piece p = null;
+		Location loc = null;
+		Color red = Color.red, blue = Color.blue;
+		//add Red Team
+		for(int row = MAX_COORD; row >= MAX_COORD - 2; row--){
+			for(int column = 0; column <= 2; column++){
+				p = new Piece(red);
+				loc = new Location(row, column);
+				//world.add(location, actor)
+				m_world.add(loc, p);
+				m_pieces.add(p);
+			}
+		}
+		//add Blue Team
+		for(int column = MAX_COORD; column >= MAX_COORD - 2; column--){
+			for(int row = 0; row <= 2; row++){
+				p = new Piece(blue);
+				loc = new Location(row, column);
+				m_world.add(loc, p);
+				m_pieces.add(p);
+			}
+		}
+	}
+	
+	
+	
+	
+	
+	
 	private class Move{
 	
 		private ArrayList<Integer>mList;
@@ -166,72 +257,6 @@ class GameBoard extends OfficialObserver{
 		}
 	}//end class Move
 	
-	
-	private ArrayList<Move> splitPlayerMoves(String inMoves){
-		ArrayList<Move>moves = new ArrayList<Move>();
-		JsonArray array = null;
-		try{ array = JsonParser.array().from(inMoves);  }
-		catch(Exception e){ e.printStackTrace(); }
-		for(Object o : array){
-			Move m = new Move(o.toString());
-			moves.add(m);
-		}
-		return moves;
-	}
-
-	public boolean isCollision(ArrayList<Move> moves){
-		Iterator<Move>moveItr = moves.iterator();
-		return moveItr.next().sameToAs( moveItr.next() );
-	}
-	
-	@Override 
-	public void handleUpdate(){
-		if( "grid".equalsIgnoreCase( getMessageRecipient() ) ){
-			ArrayList<Move> playerMoves = this.splitPlayerMoves( super.getMessage() );
-			System.out.println("Collsion: " + isCollision(playerMoves));
-			Move move = playerMoves.get(0);
-			Location toLoc = new Location( move.getToRow(), move.getToColumn() );
-			m_pieces.get(0).moveTo( toLoc );
-			m_pieces.get(0).setColor(Color.ORANGE);
-			m_world.setMessage( "Move to " + toLoc );
-			try{Thread.sleep(1000); }
-			catch(Exception e) {}
-			m_pieces.get(0).setColor(Color.GREEN);
-			m_world.setMessage( "Collision complete" );
-			movePiece();
-		}
-	}
-	
-	public void movePiece(){
-		for (int count = 0; count < 10; count++){
-				try{Thread.sleep(1000); }
-				catch(Exception e) {}
-				m_world.setMessage( "Timer: " + count );
-				for(int k = 0; k < 1; k++){
-					Piece p = m_pieces.get(k);
-					int row = (int) (Math.random() * 10);
-					int column = (int) (Math.random() * 10);
-					if(p.getGrid() != null)
-						p.moveTo(new Location (row, column));
-				}
-			}
-	}
-	
-	public GameBoard(){
-		m_world = new ActorWorld();
-		//m_world.setGrid(new BoundedGrid(18,18));
-		m_pieces = new ArrayList<Piece>();
-		int dir = Location.SOUTHEAST;
-		int num = 9;
-		for (int y = 0; y <= 2; y++){
-			for (int x = 0; x <= 2; x++){
-				Piece p = new Piece( 0 , dir);
-				m_pieces.add(p);
-				m_world.add(new Location(y, x), p);
-			}
-		}
-		m_world.show();
-	}
 }//end GameBoard
 
 class HalmaMessenger extends OfficialObserver{

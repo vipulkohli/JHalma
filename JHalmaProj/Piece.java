@@ -28,16 +28,6 @@ public class Piece extends Actor
     private int number;
    	private static String finished;
    	private static Location target;
-    /**
-     * Constructs a red Piece.
-     */
-    public Piece(int inval, int dir)
-    {
-        number = inval;
-        finished = "0";
-        setDirection(dir);
-        //setColor(Color.RED);
-    }
 
     /**
      * Constructs a Piece of a given color.
