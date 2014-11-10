@@ -99,7 +99,17 @@ class GameBoard extends OfficialObserver{
 			Move move = playerMoves.get(0);
 			Location toLoc = new Location( move.getToRow(), move.getToColumn() );
 			m_pieces.get(0).moveTo( toLoc );
+			m_pieces.get(0).setColor(Color.ORANGE);
 			m_world.setMessage( "Move to " + toLoc );
+			try{Thread.sleep(1000); }
+			catch(Exception e) {}
+			m_pieces.get(0).setColor(Color.GREEN);
+			m_world.setMessage( "Collision complete" );
+			for (int count = 0; count < 10; count++){
+				try{Thread.sleep(1000); }
+				catch(Exception e) {}
+				m_world.setMessage( "Timer: " + count );
+			}
 		}
 	}
 	public GameBoard(){
@@ -109,7 +119,7 @@ class GameBoard extends OfficialObserver{
 		int num = 9;
 		for (int y = 0; y <= 2; y++){
 			for (int x = 0; x <= 2; x++){
-				Piece p = new Piece( --num , dir);
+				Piece p = new Piece( 0 , dir);
 				m_pieces.add(p);
 				m_world.add(new Location(y, x), p);
 			}

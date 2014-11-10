@@ -47,6 +47,4 @@ public class Piece extends Actor
     {
         setColor(PieceColor);
     }
-
-    
 }
