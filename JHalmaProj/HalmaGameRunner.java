@@ -21,7 +21,7 @@
  */
 
 import info.gridworld.actor.ActorWorld;
-import info.gridworld.grid.Location;
+import info.gridworld.grid.*;
 
 import com.grack.nanojson.*;
 import java.awt.Color;
@@ -93,7 +93,7 @@ class GameBoard extends OfficialObserver{
 	
 	ArrayList<Piece> m_pieces;
 	ActorWorld m_world;
-	
+	Grid g;
 	private class Move{
 	
 		private ArrayList<Integer>mList;
@@ -198,16 +198,28 @@ class GameBoard extends OfficialObserver{
 			catch(Exception e) {}
 			m_pieces.get(0).setColor(Color.GREEN);
 			m_world.setMessage( "Collision complete" );
-			for (int count = 0; count < 10; count++){
+			movePiece();
+		}
+	}
+	
+	public void movePiece(){
+		for (int count = 0; count < 10; count++){
 				try{Thread.sleep(1000); }
 				catch(Exception e) {}
 				m_world.setMessage( "Timer: " + count );
+				for(int k = 0; k < 1; k++){
+					Piece p = m_pieces.get(k);
+					int row = (int) (Math.random() * 10);
+					int column = (int) (Math.random() * 10);
+					if(p.getGrid() != null)
+						p.moveTo(new Location (row, column));
+				}
 			}
-		}
 	}
 	
 	public GameBoard(){
 		m_world = new ActorWorld();
+		//m_world.setGrid(new BoundedGrid(18,18));
 		m_pieces = new ArrayList<Piece>();
 		int dir = Location.SOUTHEAST;
 		int num = 9;
@@ -218,9 +230,6 @@ class GameBoard extends OfficialObserver{
 				m_world.add(new Location(y, x), p);
 			}
 		}
-		for(int k = 0; k < m_pieces.size(); k++)
-			if(k % 2 == 1)
-				m_pieces.get(k).setColor(Color.RED);
 		m_world.show();
 	}
 }//end GameBoard
