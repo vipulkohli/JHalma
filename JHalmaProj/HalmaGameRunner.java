@@ -95,9 +95,11 @@ abstract class OfficialObserver implements Observer{
 class CollisionAnalyst extends OfficialObserver{
 	@Override
 	protected void handleUpdate(){
+		if( !"c".equalsIgnoreCase( getMessageRecipient() ) )
+			return;
 		Official o = getOfficial();
 		String movesStr = getMessage();	
-		System.out.println(MoveParser.toMoveList(movesStr));		
+		MoveParser.splitPlayerMoves( movesStr );		
 	}
 }
 
@@ -108,12 +110,16 @@ class HalmaMessenger extends OfficialObserver{
 		m_url2 = inPlayer2addy;
 	}
 	@Override
+	//**TODO: SEND MESSAGE VIA POST
 	protected void handleUpdate(){
 		if(!"m".equalsIgnoreCase(getMessageRecipient()))
 			return;
-		String jsonMovesAI1 = getData(m_url1);
-		System.out.println(getMessageRecipient() + getMessage());
-		String [] replyArray = { jsonMovesAI1 , getData(m_url2) };
+		//System.out.println(getMessageRecipient() + getMessage());
+		String [] replyArray = 
+		{ 
+		  getData(m_url1), 
+		  getData(m_url2) 
+		};
 		this.reply( "m",  replyArray);
 	}
 	public String getData(String address){
@@ -162,7 +168,6 @@ class Official extends Observable{
 		ArrayList<String>playerMoves = new ArrayList<String>();
 		playerMoves.add( MoveParser.getMovesFromJSON(messages[0]) );
 		playerMoves.add( MoveParser.getMovesFromJSON(messages[1]) );
-		System.out.println(playerMoves);
 		return playerMoves.toString();
 	}
 	
@@ -261,8 +266,11 @@ class MoveParser{
 		}
 		return sequence.toString();
 	}
-	public static ArrayList<Move> toMoveList(String inMoves){
-		System.out.println(inMoves);
+	public static ArrayList<Move> splitPlayerMoves(String inMoves){
+		JsonArray array = null;
+		try{ array = JsonParser.array().from(inMoves);  }
+		catch(Exception e){ e.printStackTrace(); }
+		System.out.println(  );
 		return null;
 	}
 

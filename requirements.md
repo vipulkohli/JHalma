@@ -32,20 +32,21 @@ Functional requirements:
     "from":{"row":0,"column":0},
     "to":[{"row":1,"column":1},{"row":2,"column":2}]
   }
--"to" field shall consist of sequence of jump moves
--1 piece of each team shall move.
-	-It is the AI's responsibility to check if a move is possible.
-	-The game engine shall not check for move possiblilities.
+  -"to" field shall consist of sequence of jump moves
 -Using a timer, the game engine shall repeat a cycle of sending the teams their data, receiving information on each team's next move, verifying each move's validity, and performing the moves.
   -Each cycle lasts 1 second.
 -The game engine shall make 1 move for each team whenever the timer completes.
 	-If either team has not submitted a move, the game engine shall not enact either move.
 -The game engine shall ensure all submitted moves are valid by the rules of Halma.
 	-If either team submitted an invalid move, the game engine shall not enact either move, and the UI shall display an error.
+  -The rules are available at: http://lyle.smu.edu/~coyle/halmagame/halma1.0/canvas.html#halma
+-The AIs shall only send information for a single move of a single piece at a time.
+  -Otherwise, the move shall be considered invalid, so the game engine shall not enact either player's move, and the UI shall display an error.
 -Collisions shall result in both colliding pieces to become "damaged" and unable to jump for the next 5 turns.
 -Repeat collisions will result in the "damage" count being reset to 5.
 -The damage count will decrement upon each successful move with a lower limit of 0.
   -Upon reaching damage of 0, the piece is able to jump again.
+-Collisions shall be determined by matching destination squares only, not by intermediate jumps.
 -Upon a player's victory, the UI shall declare "halmate" and stop requesting moves.
 -Messages displayed by the UI shall include the most recent moves made, a list of any "damaged" pieces, the number of turns elapsed, any errors that have occurred, and if "halmate" has occurred.
 -Each team shall have different colored pieces.
