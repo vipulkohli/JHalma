@@ -13,18 +13,10 @@ Functional requirements:
   -Formatted as:
   {
     "boardSize":18,
-    "home":
-    {
-      "color":"red",
-      "pieces":[{"row":0,"column":0,"damage":0},{"row":1,"column":1,"damage":1}],
-      "destinations":[{"row":0,"column":0},{"row":1,"column":1}]
-    },
-    "enemy":
-    {
-      "color":"blue",
-      "pieces":[{"row":0,"column":0,"damage":0},{"row":1,"column":1,"damage":1}],
-      "destinations":[{"row":0,"column":0},{"row":1,"column":1}]
-    }
+    "pieces":[{"row":0,"column":0,"damage":0},{"row":1,"column":1,"damage":1}],
+    "destinations":[{"row":0,"column":0},{"row":1,"column":1}],
+    "enemy":[{"row":0,"column":0,"damage":0},{"row":1,"column":1,"damage":1}],
+    "enemydestinations":[{"row":0,"column":0},{"row":1,"column":1}]
   }
 -The game engine shall receive data from each AI on its next move, including where it is moving from and to.
   -Formatted as:
