@@ -13,16 +13,16 @@ Functional requirements:
   -Formatted as:
   {
     "boardSize":18,
-    "pieces":[{"row":0,"column":0,"damage":0},{"row":1,"column":1,"damage":1}],
-    "destinations":[{"row":0,"column":0},{"row":1,"column":1}],
-    "enemy":[{"row":0,"column":0,"damage":0},{"row":1,"column":1,"damage":1}],
-    "enemydestinations":[{"row":0,"column":0},{"row":1,"column":1}]
+    "pieces":[{"x":0,"y":0,"damage":0},{"x":1,"y":1,"damage":1}],
+    "destinations":[{"x":0,"y":0},{"x":1,"y":1}],
+    "enemy":[{"x":0,"y":0,"damage":0},{"x":1,"y":1,"damage":1}],
+    "enemydestinations":[{"x":0,"y":0},{"x":1,"y":1}]
   }
 -The game engine shall receive data from each AI on its next move, including where it is moving from and to.
   -Formatted as:
   {
-    "from":{"row":0,"column":0},
-    "to":[{"row":1,"column":1},{"row":2,"column":2}]
+    "from":{"x":0,"y":0},
+    "to":[{"x":1,"y":1},{"x":2,"y":2}]
   }
   -"to" field shall consist of sequence of jump moves
 -Using a timer, the game engine shall repeat a cycle of sending the teams their data, receiving information on each team's next move, verifying each move's validity, and performing the moves.
