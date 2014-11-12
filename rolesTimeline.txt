@@ -1,0 +1,21 @@
+Feedback & Response:
+Feedback: GameBoard needs to only display pieces without any halma knowledge
+Response: Use CollisionAnalyst to determine damage counts, and move validity to AIs 
+
+Time permitting (a.k.a not gonna happen):
+Validate moves in Java
+Modify UI to allow for other URLs
+
+
+Vipul:
+Tues. Nov 11-Modify GameBoard to Draw & Redraw GridWorld Halma Board based on an ArrayList of moves
+Wed. Nov 12-Have Messenger send moves & convert to sample URL via HTTP POST
+Thu. Nov 13-Integrate CollisionAnalyst & GameBoard with Official
+Fri. Nov 14-Process moves from a Web AI
+Tell Andrew how much work this all is....
+
+Andrew: (write your timeline & break into specific steps)
+Design data flow/architecture to convert 2D multiplayer game to 3D multiplayer game
+Validate moves with collision & damage in Web AIs-->not gonna happen in Java
+Output 3D moves in JSON at the AI's URL
+Tell Vipul what the URLs are.
