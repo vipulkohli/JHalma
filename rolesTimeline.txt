@@ -4,6 +4,7 @@ Response: Use CollisionAnalyst to determine damage counts, and move validity to 
 
 Time permitting (a.k.a not gonna happen):
 Validate moves in Java
+Show intermediate jumps on GUI
 Modify UI to allow for other URLs
 
 
