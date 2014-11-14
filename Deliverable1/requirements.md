@@ -44,6 +44,9 @@ Functional requirements:
 -Upon a player's victory, the UI shall declare "halmate" and stop requesting moves.
 -Messages displayed by the UI shall include the most recent moves made, a list of any "damaged" pieces, the number of turns elapsed, any errors that have occurred, and if "halmate" has occurred.
 -Each team shall have different colored pieces.
--Only accidental head-on collisions are permitted.
-	-Intentional collisions onto already occupied squares are prohibited.
-	-A head-on collision is both pieces move to the same square from different teams.
+Collision Penalties:
+-Intentional collisions onto already occupied squares will result in:
+	Damage = 1 for enemy piece
+	Chance of Damage = 5 for home piece
+-An accidental head-on collision is when both teams move to the same square on the same tuen:
+	Damage = 5 for both the home and enemy piece
