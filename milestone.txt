@@ -1,0 +1,5 @@
+Team Members: Vipul KOhli and Andrew Socha
+Team Chair: Vipul Kohli
+
+List of Functionality for 2 weeks:
+2 AIs will deliver moves based on "damage"
