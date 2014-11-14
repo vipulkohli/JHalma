@@ -9,6 +9,9 @@ public class Piece extends Actor{
     private String mColor;    
     private static final String DEFAULT_COLOR_STRING = "default";
     
+    public Piece(){
+    }
+    
     public Piece(int x, int y, int d, int t){
         this.x = x;
         this.y = y;
@@ -46,7 +49,7 @@ public class Piece extends Actor{
     }
 }
 
-class Five extends Actor{
+class Five extends Piece{
 	
 	public Five(){
 		setColor(Color.black);

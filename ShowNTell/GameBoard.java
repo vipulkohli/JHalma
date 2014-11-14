@@ -40,9 +40,17 @@ public class GameBoard extends OfficialObserver{
     }    
     
     private void clearBoard(){
-    	for(int x = 0; x < BOARD_SIZE; x++)
-    		for(int y = 0; y < BOARD_SIZE; y++)
-    			WORLD.remove( new Location(x,y) );
+    	for(int x = 0; x < BOARD_SIZE; x++){
+    		for(int y = 0; y < BOARD_SIZE; y++){
+    			Object obj = WORLD.remove( new Location(x,y) );
+    			if(obj instanceof Piece){
+    				Piece p = (Piece) obj;
+    				Actor a = new Flower();
+    				a.setColor( p.getColor() );
+    				WORLD.add(new Location(x,y), a);
+    			}
+    		}
+    	}
     }
     
     protected void drawBoard(String inDimensions){
