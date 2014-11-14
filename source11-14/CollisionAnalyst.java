@@ -1,28 +1,39 @@
-/**
- * @(#)CollisionPart.java
- *
- *
- * @author 
- * @version 1.00 2014/11/12
- */
 import info.gridworld.grid.*;
 import java.util.*;
-public class CollisionPart {
+import java.net.*;
+
+public class CollisionAnalyst extends OfficialObserver{
     
-    private static final int DAMAGE_START = 5;
-       /**
-     * @param args the command line arguments
-     */
-    public static void main(String[] args) {
-    	ArrayList<String>playerMoves = new ArrayList<String>();
-        playerMoves.add("[0,0,0,4,5,6]");
-        playerMoves.add("[9,8,1,2,2,2]");
-        String board = "[0,0,4,9,8,1]";
-      	String outBoard = getNewPieces(board, playerMoves );
-        System.out.println(outBoard);
+    private static final String 
+        SPLIT_PHRASE = "SPLITSPLIT",
+        MY_EMAIL = "c";
+    private static final int 
+        DAMAGE_START = 5;
+    
+    protected void handleUpdate(){
+        if( !super.checkRecipient( MY_EMAIL ) )
+            return;
+        super.replyToOfficial(
+            MY_EMAIL,
+            getNewBoardPosition( super.getMessage() )
+        );
     }
     
-    public static String getNewPieces(String oldBoard, ArrayList<String>movesList ){
+    private static String [] toStrArray(String multiData){
+        return multiData.replace(" ", "").split(SPLIT_PHRASE);
+    }
+    
+    public static String getNewBoardPosition(String multiData){
+        ArrayList<String>playerMoves = new ArrayList<String>();
+        String [] data = toStrArray( multiData );
+        String board = data[0];
+        playerMoves.add(data[1]);
+        playerMoves.add(data[2]);
+      	String outBoard = getNewPieceData( board, playerMoves );
+        return outBoard;
+    }
+    
+    public static String getNewPieceData(String oldBoard, ArrayList<String>movesList ){
     	Location fromLoc0 = getFromLocation( movesList.get(0) );
     	Location toLoc0 = getToLocation( movesList.get(0) );
         Location fromLoc1 = getFromLocation( movesList.get(1) );
@@ -31,33 +42,34 @@ public class CollisionPart {
     	ArrayList<XYDLocation> nextBoard = getXYDList(oldBoard);
     	for(XYDLocation xyd : nextBoard){
             if(!isCollision){
-                if(xyd.equals(fromLoc0))
+                if(xyd.equals(fromLoc0, 0))
                     xyd.setXY(toLoc0).heal();
-                else if (xyd.equals(fromLoc1))
+                else if (xyd.equals(fromLoc1, 1))
                     xyd.setXY(toLoc1).heal();
             }
             else{
-                if(xyd.equals(fromLoc0)){
+                if(xyd.equals(fromLoc0, 0)){
                     xyd.setXYD(toLoc0, DAMAGE_START);
                 }
-                else if (xyd.equals(fromLoc1)){
+                else if (xyd.equals(fromLoc1, 1)){
                     xyd.setXYD(toLoc1, DAMAGE_START);
                 }
             }
     	}
         return nextBoard.toString().replace(" ", "");
     }
-    
-    private static ArrayList<XYDLocation> getXYDList( String inBoard ){
-    	int[]coords = toIntArray(inBoard);
-    	ArrayList<Integer>coordList = new ArrayList<Integer>();
-    	ArrayList<XYDLocation> xydlist = new ArrayList<XYDLocation>();
-    	for(int coordinate : coords){
+    private static ArrayList<Integer> toIntList(int [] coords){
+        ArrayList<Integer>coordList = new ArrayList<Integer>();
+        for(int coordinate : coords)
     		coordList.add( coordinate );
-    	}
+    	return coordList;
+    }
+    private static ArrayList<XYDLocation> getXYDList( String inBoard ){
+    	ArrayList<Integer>coordList = toIntList( toIntArray(inBoard) );
+    	ArrayList<XYDLocation> xydlist = new ArrayList<XYDLocation>();
     	Iterator<Integer> itr = coordList.iterator();
     	while( itr.hasNext() )
-    		xydlist.add( new XYDLocation( itr.next(), itr.next(), itr.next() ) );
+    		xydlist.add( new XYDLocation( itr.next(), itr.next(), itr.next(), itr.next() ) );
     	return xydlist;
     }
     
@@ -90,11 +102,22 @@ public class CollisionPart {
     	
     	int mDamage;
     	Location mLoc;
-    	
-    	public XYDLocation(int x, int y, int d){
+    	int mTeam;
+        
+    	public XYDLocation(int x, int y, int d, int t){
     		mLoc = new Location( x , y );
     		mDamage = d;
+            mTeam = t;
     	}
+        
+        public XYDLocation setTeam(int t){
+            mTeam = t;
+            return this;
+        }
+        
+        public int getTeam(){
+            return mTeam;
+        }
         
         public XYDLocation heal(){
             if (mDamage > 0)
@@ -138,11 +161,11 @@ public class CollisionPart {
     	public int getD(){
     		return mDamage;
     	}
-    	public boolean equals(Location other){
-    		return mLoc.equals(other);
+    	public boolean equals(Location other, int otherTeam){
+            return mLoc.equals(other) && otherTeam == mTeam;
     	}
     	public String toString(){
-    		return getX() + "," + getY() + "," + getD();  
+    		return getX() + "," + getY() + "," + getD() + "," + getTeam();  
     	}
     }
 

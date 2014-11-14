@@ -117,9 +117,6 @@ class GameBoard extends OfficialObserver{
 	@Override 
 	public void handleUpdate(){
 		if( "grid".equalsIgnoreCase( getMessageRecipient() ) ){
-			m_world.setMessage("Moving");
-			movePieces();
-			/*
 			ArrayList<Move> playerMoves = this.splitPlayerMoves( super.getMessage() );
 			System.out.println("Collsion: " + isCollision(playerMoves));
 			Move move = playerMoves.get(0);
@@ -132,7 +129,6 @@ class GameBoard extends OfficialObserver{
 			m_pieces.get(0).setColor(Color.GREEN);
 			m_world.setMessage( "Collision complete" );
 			movePiece();
-			*/
 		}
 	}
 	
@@ -150,29 +146,7 @@ class GameBoard extends OfficialObserver{
 				}
 			}
 	}
-	private ArrayList<Integer> toArrayList(String movesList){
-		ArrayList<Integer>list = new ArrayList<Integer>();
-		String [] coords = movesList.replace("[","").replace("]","").split(",");
-		for(String coord : coords){
-			list.add( Integer.parseInt(coord, 10) );
-		}
-		return list;
-	}
-	private void movePieces(){
-		String move = "[0,17,0,0,5,0]";
-		ArrayList<Integer>list = toArrayList(move);
-		Iterator<Integer>itr = list.iterator();
-		while( itr.hasNext() ){
-			Location from = new Location(itr.next(), itr.next());
-			itr.next();
-			Location to = new Location(itr.next(), itr.next());
-			itr.next();
-			for(Piece p : m_pieces){
-				if(p.getLocation().equals(from))
-					p.moveTo(to);
-			}
-		}
-	}
+	
 	public GameBoard(){
 		m_world = new ActorWorld();
 		m_grid = new BoundedGrid( BOARD_SIZE , BOARD_SIZE);
@@ -355,6 +329,7 @@ class Official extends Observable{
 		ArrayList<String>playerMoves = new ArrayList<String>();
 		playerMoves.add( this.getMovesFromJSON(messages[0]) );
 		playerMoves.add( this.getMovesFromJSON(messages[1]) );
+		System.out.println(messages[1]);
 		return playerMoves.toString();
 	}
 	
