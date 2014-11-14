@@ -32,10 +32,14 @@ public class GameBoard extends OfficialObserver{
         ArrayList<Piece>pieces;
         pieces = toPieceList( inDimensions ) ;
         for (Piece p : pieces){
-            if(p.team == 0)
-                System.out.println( p.setColor( "red" ));
-            else
-                System.out.println( p.setColor( "blue" ));
-        }
+            switch (p.team){
+                case 0: p.setColor( "red" );
+                break;
+                default: p.setColor( "blue" );
+                break;
+            }
+            //GridWorld locations are (row, column);
+            Location cell = new Location( p.y , p.x );
+        }//end for loop
     }
 }
