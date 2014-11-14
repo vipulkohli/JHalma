@@ -65,19 +65,27 @@ public class GameBoard extends OfficialObserver{
       		WORLD.setMessage(p.toString());
       		switch(p.damage){
       			case 5:
-    				WORLD.add(p.getXYLocation(), new Five());
+    				Actor a = new Five();
+    				WORLD.add(p.getXYLocation(), a);
     				break;
     			case 4:
-    				WORLD.add(p.getXYLocation(), new Four());
+    				a = new Four();
+    				a.setColor(p.getColor());
+    				WORLD.add(p.getXYLocation(), a);
     				break;
     			case 3:
-    				WORLD.add(p.getXYLocation(), new Three());
+    				a = new Three();
+    				a.setColor(p.getColor());
+    				WORLD.add(p.getXYLocation(), a);
     				break;
     			case 2:
-    				WORLD.add(p.getXYLocation(), new Two());
+    				a = new Two();
+    				a.setColor(p.getColor());
+    				WORLD.add(p.getXYLocation(), a);
     				break;
     			case 1:
-    				WORLD.add(p.getXYLocation(), new One());
+    				a = new One();
+    				WORLD.add(p.getXYLocation(), a);
     				break;
     		}
       	}
