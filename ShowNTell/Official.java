@@ -2,10 +2,9 @@ import java.util.*;
 
 public class Official extends Observable{
     
-    private static final 
+    /*private static final 
     	String [] TEST_MOVES = 
         {
-            /*  DEMO MOVES   */
             //concat(redTeamMove, blueTeamMove)
             concat("[0,0,0,0]", "[0,0,0,0]"),
             concat("[2,3,2,2]", "[3,2,2,2]"),
@@ -18,13 +17,13 @@ public class Official extends Observable{
             concat("[2,3,2,2]", "[3,2,2,2]"),
             concat("[0,1,0,2]", "[2,2,1,3]"),
             concat("[0,2,1,3]", "[0,0,1,0]")		
-        };
+        };*/
     
     private String mBoard;
     private int mCount;
     private static final int
     	DELAY_DEFAULT = 3,
-    	RUN_COUNT = TEST_MOVES.length;
+    	RUN_COUNT = 100;//TEST_MOVES.length;
     private static final String
         SPLIT_PHRASE = "SPLITSPLIT",
         SUPER_SPLIT = "SPLITSPLITSPLIT",
