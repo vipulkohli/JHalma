@@ -1,7 +1,9 @@
 import java.util.*;
 import java.awt.Color;
+import info.gridworld.actor.*;
+import info.gridworld.grid.*;
 
-public class Piece{
+public class Piece extends Actor{
     
     public int x, y, damage, team;
     private String mColor;    
@@ -16,6 +18,7 @@ public class Piece{
     }
     
     public String setColor(Color c, boolean local){
+    	super.setColor(c);
         return c.toString();
     }
     public String setColor(String inColor){
@@ -34,7 +37,24 @@ public class Piece{
         return list;
     }
     
+    public Location getXYLocation(){
+    	return new Location(y, x);
+    }
+    
     public String toString(){
         return "P(" + x +"," + y +"," + damage + "," + team + ")"; 
     }
 }
+
+class Five extends Actor{
+	
+	public Five(){
+		setColor(Color.black);
+	}
+    
+}
+class Four extends Five{}
+class Three extends Five{}
+class Two extends Five{}
+class One extends Five{}
+

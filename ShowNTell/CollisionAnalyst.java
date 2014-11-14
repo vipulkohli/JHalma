@@ -58,7 +58,7 @@ public class CollisionAnalyst extends OfficialObserver{
                     xyd.setD( DAMAGE_START );
                 if( isEnemyCollision(toLoc0, toLoc1, xyd) ){
                     xyd.setD( DAMAGE_LITE );
-                    isHeadOnCollision = true;
+                    //isHeadOnCollision = true;
                 }
                 if( xyd.equals(fromLoc0, 0) )
                     xyd.setXY(toLoc0);

@@ -20,8 +20,9 @@ public class Official extends Observable{
     public String getDefaultStartBoard(){
         ArrayList<Integer> iBoard = new ArrayList<Integer>();
         //build teams
+        int size = 6;
         for(int x = 0; x < 3; x++){
-            for(int y = 18-3; y < 18; y++){
+            for(int y = size-3; y < size; y++){
                 Piece red = new Piece(x, y, 0, 0);
                 Piece blue = new Piece(y, x, 0, 1);
                 iBoard.addAll( red.toIntList() );
@@ -44,9 +45,8 @@ public class Official extends Observable{
         //send( AI_RELAY, inBoard);
         String [] moves = 
         {
-            concat("[0,15,15,1]", "[0,0,0,0]"),
-            concat("[1,15,15,2]", "[0,0,0,0]"),
-            concat("[2,15,15,0]", "[0,0,0,0]"),
+            concat("[1,3,3,2]", "[5,5,4,4]"),
+            concat("[3,2,1,2]", "[4,5,5,5]")
         };
         reply(AI_RELAY, moves[mCount % moves.length] );
         return this;
@@ -57,13 +57,20 @@ public class Official extends Observable{
         mCount++; 
         return this;
     }
-    
+    public Official delay(int seconds){
+    	try{
+    		Thread.sleep(seconds * 1000);
+    	}
+    	catch(Exception e){e.printStackTrace();}
+    	return this;
+    }
     public void reply(String sender, String message){
         if( AI_RELAY.equals(sender) ){ 
             send( COLLISIONS , composeForCollisions(message) );
         }
-        else if ( COLLISIONS.equals(sender) && mCount < 5)
-            setBoard(message).send( GRID, message).getRemoteAIMoves( message );
+        else if ( COLLISIONS.equals(sender) && mCount < 10)
+            setBoard(message).send( GRID, message).delay(1)
+            	.getRemoteAIMoves( message );
     }
     
     private static String concat(String inFront, String inTail){
