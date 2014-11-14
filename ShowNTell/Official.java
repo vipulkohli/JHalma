@@ -74,20 +74,15 @@ public class Official extends Observable{
         mCount++; 
         return this;
     }
-    
     public Official delay(int seconds){
     	try{
-            Thread.sleep(seconds * 1000);
+    		Thread.sleep(seconds * 1000);
     	}
     	catch(Exception e){e.printStackTrace();}
     	return this;
     }
-    
-    //receive a message from an observer and respond appropriately
     public void reply(String sender, String message){
-        //System.out.println(message);
-        if( AI_RELAY.equals(sender) ){
-            //check for move validity here?
+        if( AI_RELAY.equals(sender) ){ 
             send( COLLISIONS , composeForCollisions(message) );
         }
         else if ( COLLISIONS.equals(sender) && mCount < RUN_COUNT)
@@ -104,9 +99,9 @@ public class Official extends Observable{
     }
     
     protected Official send(String recipient, String message){
-        setChanged();
-        notifyObservers(recipient + SUPER_SPLIT + message);
+		setChanged();
+		notifyObservers(recipient + SUPER_SPLIT + message);
         return this;
-    }
+	}
 	
 }

@@ -1,5 +1,6 @@
 import info.gridworld.grid.*;
 import java.util.*;
+import java.net.*;
 
 public class CollisionAnalyst extends OfficialObserver{
     
@@ -10,7 +11,6 @@ public class CollisionAnalyst extends OfficialObserver{
         DAMAGE_START = 5,
         DAMAGE_LITE = 1;
     
-    @Override
     protected void handleUpdate(){
         if( !super.checkRecipient( MY_EMAIL ) )
             return;

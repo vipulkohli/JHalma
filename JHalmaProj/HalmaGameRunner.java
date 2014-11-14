@@ -1,7 +1,6 @@
 /* 
  * JHalma
  * SMU CSE 4345 Fall 2014 Team Project
- *
  * AP(r) Computer Science GridWorld Case Study:
  * Copyright(c) 2005-2006 Cay S. Horstmann (http://horstmann.com)
  *
@@ -16,8 +15,6 @@
  * 
  * @author Vipul Kohli
  * @author Andrew Socha
- *
- * Gridworld authors:
  * @author Cay Horstmann
  * @author Chris Nevison
  * @author Barbara Cloud Wells
@@ -31,7 +28,8 @@ import java.awt.Color;
 import java.util.*;
 import java.net.*;
 /**
- * This class runs the Halma game
+ * This class runs a world that contains box bugs. <br />
+ * This class is not tested on the AP CS A and AB exams.
  */ 
 // 	password z00mz00m
 public class HalmaGameRunner
@@ -284,15 +282,15 @@ class HalmaMessenger extends OfficialObserver{
 	}
 	
 	public String getData(String address){
-                try{
-                        URL url = new URL(address);
-                                Scanner scanner = new Scanner(url.openStream());
-                                return scanner.useDelimiter("\\z").next();
-                }
-                catch(Exception e){
-                        e.printStackTrace();
-                        return "";
-                }
+    	try{
+    		URL url = new URL(address);
+			Scanner scanner = new Scanner(url.openStream());
+			return scanner.useDelimiter("\\z").next();
+    	}
+    	catch(Exception e){
+    		e.printStackTrace();
+    		return "";
+    	}
 	}
 }
 
