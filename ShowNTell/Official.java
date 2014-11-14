@@ -2,8 +2,27 @@ import java.util.*;
 
 public class Official extends Observable{
     
+    private static final 
+    	String [] TEST_MOVES = 
+        {
+        	concat("[0,0,0,0]", "[0,0,0,0]"),
+            concat("[2,3,2,2]", "[3,2,2,2]"),
+            concat("[1,3,3,1]", "[3,0,2,0]"),
+            concat("[3,1,2,1]", "[3,1,3,0]"),
+            concat("[0,3,0,2]", "[2,0,1,0]"),
+            concat("[0,2,0,1]", "[2,2,3,3]"),
+            concat("[0,1,0,0]", "[1,0,0,0]"),
+            concat("[0,0,0,1]", "[3,3,3,2]"),
+            concat("[2,3,2,2]", "[3,2,2,2]"),
+            concat("[0,1,0,2]", "[2,2,1,3]"),
+            concat("[0,2,1,3]", "[0,0,1,0]")		
+        };
+    
     private String mBoard;
     private int mCount;
+    private static final int
+    	DELAY_DEFAULT = 3,
+    	RUN_COUNT = TEST_MOVES.length;
     private static final String
         SPLIT_PHRASE = "SPLITSPLIT",
         SUPER_SPLIT = "SPLITSPLITSPLIT",
@@ -43,12 +62,8 @@ public class Official extends Observable{
     
     private Official getRemoteAIMoves(String inBoard){
         //send( AI_RELAY, inBoard);
-        String [] moves = 
-        {
-            concat("[1,3,3,2]", "[5,5,4,4]"),
-            concat("[3,2,1,2]", "[4,5,5,5]")
-        };
-        reply(AI_RELAY, moves[mCount % moves.length] );
+        
+        reply(AI_RELAY, TEST_MOVES[mCount % TEST_MOVES.length] );
         return this;
     }
     
@@ -68,8 +83,8 @@ public class Official extends Observable{
         if( AI_RELAY.equals(sender) ){ 
             send( COLLISIONS , composeForCollisions(message) );
         }
-        else if ( COLLISIONS.equals(sender) && mCount < 10)
-            setBoard(message).send( GRID, message).delay(1)
+        else if ( COLLISIONS.equals(sender) && mCount < RUN_COUNT)
+            setBoard(message).send( GRID, message).delay(DELAY_DEFAULT)
             	.getRemoteAIMoves( message );
     }
     

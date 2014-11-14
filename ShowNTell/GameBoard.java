@@ -10,7 +10,7 @@ public class GameBoard extends OfficialObserver{
     private static final ActorWorld
     	WORLD = new ActorWorld();
     private static final int
-    	BOARD_SIZE = 6;
+    	BOARD_SIZE = 4;
     
     public GameBoard(){
     	WORLD.setGrid( new BoundedGrid(BOARD_SIZE, BOARD_SIZE) );
@@ -47,6 +47,7 @@ public class GameBoard extends OfficialObserver{
     
     protected void drawBoard(String inDimensions){
     	clearBoard();
+    	WORLD.setMessage("Pieces removed");
         ArrayList<Piece>pieces;
         pieces = toPieceList( inDimensions ) ;
         System.out.println(pieces);
