@@ -10,13 +10,14 @@ public class GameBoard extends OfficialObserver{
     private static final ActorWorld
     	WORLD = new ActorWorld();
     private static final int
-    	BOARD_SIZE = 4;
+    	BOARD_SIZE = 18; //also change size in Official -> default board
     
     public GameBoard(){
     	WORLD.setGrid( new BoundedGrid(BOARD_SIZE, BOARD_SIZE) );
     	WORLD.show();
     }
     
+    @Override
     protected void handleUpdate(){
         if( !super.checkRecipient( MY_EMAIL ) )
             return;
@@ -56,7 +57,7 @@ public class GameBoard extends OfficialObserver{
     protected void drawBoard(String inDimensions){
     	clearBoard();
     	WORLD.setMessage("Pieces removed");
-        ArrayList<Piece>pieces;
+        ArrayList<Piece> pieces;
         pieces = toPieceList( inDimensions ) ;
         System.out.println(pieces);
         for (Piece p : pieces){
