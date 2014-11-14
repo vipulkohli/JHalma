@@ -12,11 +12,18 @@ public class Official extends Observable{
         GRID = "g";
     
     public Official(){
-        mBoard = START_BOARD;
+        mBoard = getDefaultStartBoard();
     }
     
+    public String getDefaultStartBoard(){
+        return START_BOARD;
+    }
+    
+    public void startBoard(String board){
+        mBoard = board;
+    }
     public void startGame(){
-        getRemoteAIMoves( "inBoard" );
+        getRemoteAIMoves( mBoard );
     }
     
     private void getRemoteAIMoves(String inBoard){
