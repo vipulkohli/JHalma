@@ -18,6 +18,7 @@ public class HalmaMessenger extends OfficialObserver{
         return list;
     }
     
+    @Override
     public void handleUpdate(){
         if( "m".equals( super.getMessageRecipient() ) ) 
             super.replyToOfficial( "m" , respondWithAIMoves() );
