@@ -3,6 +3,7 @@ import java.util.*;
 public class Official extends Observable{
     
     private String mBoard;
+    private int mCount;
     private static final String
         SPLIT_PHRASE = "SPLITSPLIT",
         SUPER_SPLIT = "SPLITSPLITSPLIT",
@@ -13,6 +14,7 @@ public class Official extends Observable{
     
     public Official(){
         mBoard = getDefaultStartBoard();
+        mCount = 0;
     }
     
     public String getDefaultStartBoard(){
@@ -26,16 +28,23 @@ public class Official extends Observable{
         getRemoteAIMoves( mBoard );
     }
     
-    private void getRemoteAIMoves(String inBoard){
+    private Official getRemoteAIMoves(String inBoard){
         send( AI_RELAY, inBoard);
+        return this;
+    }
+    
+    private Official upCount(){
+        mCount++; 
+        return this;
     }
     
     public void reply(String sender, String message){
         if( AI_RELAY.equals(sender) ){ 
             send( COLLISIONS , composeForCollisions(message) );
+            System.out.println(message);
         }
-        else if ( COLLISIONS.equals(sender) )
-            send( GRID, message);
+        else if ( COLLISIONS.equals(sender) && mCount < 5)
+            upCount().send( GRID, message).getRemoteAIMoves( message );
     }
     
     private static String concat(String inFront, String inTail){
@@ -46,9 +55,10 @@ public class Official extends Observable{
         return concat(mBoard , AIMoves);
     }
     
-    protected void send(String recipient, String message){
+    protected Official send(String recipient, String message){
 		setChanged();
 		notifyObservers(recipient + SUPER_SPLIT + message);
+        return this;
 	}
 	
 }
