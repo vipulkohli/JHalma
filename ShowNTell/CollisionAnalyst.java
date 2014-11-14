@@ -1,6 +1,5 @@
 import info.gridworld.grid.*;
 import java.util.*;
-import java.net.*;
 
 public class CollisionAnalyst extends OfficialObserver{
     
@@ -11,6 +10,7 @@ public class CollisionAnalyst extends OfficialObserver{
         DAMAGE_START = 5,
         DAMAGE_LITE = 1;
     
+    @Override
     protected void handleUpdate(){
         if( !super.checkRecipient( MY_EMAIL ) )
             return;
@@ -123,8 +123,8 @@ public class CollisionAnalyst extends OfficialObserver{
     	int mTeam;
         
     	public XYDLocation(int x, int y, int d, int t){
-    		mLoc = new Location( x , y );
-    		mDamage = d;
+            mLoc = new Location( x , y );
+            mDamage = d;
             mTeam = t;
     	}
         
@@ -187,8 +187,9 @@ public class CollisionAnalyst extends OfficialObserver{
     	public boolean equals(Location other, int otherTeam){
             return mLoc.equals(other) && otherTeam == mTeam;
     	}
+        
     	public String toString(){
-    		return getX() + "," + getY() + "," + getD() + "," + getTeam();  
+            return getX() + "," + getY() + "," + getD() + "," + getTeam();  
     	}
     }
 

@@ -41,7 +41,7 @@ public class Official extends Observable{
     public String getDefaultStartBoard(){
         ArrayList<Integer> iBoard = new ArrayList<Integer>();
         //build teams
-        int size = 6;
+        int size = 18;
         for(int x = 0; x < 3; x++){
             for(int y = size-3; y < size; y++){
                 Piece red = new Piece(x, y, 0, 0);
@@ -63,9 +63,9 @@ public class Official extends Observable{
     }
     
     private Official getRemoteAIMoves(String inBoard){
-        //send( AI_RELAY, inBoard);
+        send( AI_RELAY, inBoard);
         
-        reply(AI_RELAY, TEST_MOVES[mCount % TEST_MOVES.length] );
+        //reply(AI_RELAY, TEST_MOVES[mCount % TEST_MOVES.length] ); //use test moves (comment send too)
         return this;
     }
     
@@ -74,6 +74,7 @@ public class Official extends Observable{
         mCount++; 
         return this;
     }
+    
     public Official delay(int seconds){
     	try{
     		Thread.sleep(seconds * 1000);
@@ -81,6 +82,7 @@ public class Official extends Observable{
     	catch(Exception e){e.printStackTrace();}
     	return this;
     }
+    
     public void reply(String sender, String message){
         if( AI_RELAY.equals(sender) ){ 
             send( COLLISIONS , composeForCollisions(message) );
@@ -99,9 +101,9 @@ public class Official extends Observable{
     }
     
     protected Official send(String recipient, String message){
-		setChanged();
-		notifyObservers(recipient + SUPER_SPLIT + message);
+        setChanged();
+        notifyObservers(recipient + SUPER_SPLIT + message);
         return this;
-	}
+    }
 	
 }

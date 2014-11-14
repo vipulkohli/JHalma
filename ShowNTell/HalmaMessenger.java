@@ -1,16 +1,15 @@
 import com.grack.nanojson.*;
-import java.io.*;
 import java.util.*;
 import java.net.*;
 
 public class HalmaMessenger extends OfficialObserver{
     
-	private String m_url1, m_url2;
-	
-	public HalmaMessenger(String inPlayer1addy, String inPlayer2addy){
-		m_url1 = inPlayer1addy;
-		m_url2 = inPlayer2addy;
-	}
+    private String m_url1, m_url2;
+
+    public HalmaMessenger(String inPlayer1addy, String inPlayer2addy){
+            m_url1 = inPlayer1addy;
+            m_url2 = inPlayer2addy;
+    }
 	
     private static ArrayList<String> toJSONList(String [] jsons){
         ArrayList<String> list = new ArrayList<String>();
@@ -63,15 +62,15 @@ public class HalmaMessenger extends OfficialObserver{
 	}
     
 	public static String getRemoteData(String address){
-    	try{
-    		URL url = new URL(address);
-			Scanner scanner = new Scanner(url.openStream());
-			return scanner.useDelimiter("\\z").next();
-    	}
-    	catch(Exception e){
-    		e.printStackTrace();
-    		return "";
-    	}
+                try{
+                        URL url = new URL(address);
+                                Scanner scanner = new Scanner(url.openStream());
+                                return scanner.useDelimiter("\\z").next();
+                }
+                catch(Exception e){
+                        e.printStackTrace();
+                        return "";
+                }
 	}
 
 }
