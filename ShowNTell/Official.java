@@ -5,7 +5,9 @@ public class Official extends Observable{
     private static final 
     	String [] TEST_MOVES = 
         {
-        	concat("[0,0,0,0]", "[0,0,0,0]"),
+            /*  DEMO MOVES   */
+            //concat(redTeamMove, blueTeamMove)
+            concat("[0,0,0,0]", "[0,0,0,0]"),
             concat("[2,3,2,2]", "[3,2,2,2]"),
             concat("[1,3,3,1]", "[3,0,2,0]"),
             concat("[3,1,2,1]", "[3,1,3,0]"),
