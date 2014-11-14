@@ -17,6 +17,7 @@ public class GameBoard extends OfficialObserver{
     	WORLD.show();
     }
     
+    @Override
     protected void handleUpdate(){
         if( !super.checkRecipient( MY_EMAIL ) )
             return;

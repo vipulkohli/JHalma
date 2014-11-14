@@ -48,5 +48,5 @@ Collision Penalties:
 -Intentional collisions onto already occupied squares will result in:
 	Damage = 1 for enemy piece
 	Chance of Damage = 5 for home piece
--An accidental head-on collision is when both teams move to the same square on the same tuen:
+-An accidental head-on collision is when both teams move to the same square on the same turn:
 	Damage = 5 for both the home and enemy piece
