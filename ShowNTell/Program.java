@@ -42,7 +42,7 @@ class GameBoard extends OfficialObserver{
         TEAM_B_WINS = "Blue Team Victory!",
         SPLIT_PHRASE = "SPLITSPLIT";
         
-    private static final ActorWorld
+    private final ActorWorld
     	WORLD = new ActorWorld();
     	
     private static final int
@@ -51,7 +51,7 @@ class GameBoard extends OfficialObserver{
     	
     private int mTimer;
     
-    private final static ArrayList<String> 
+    private final ArrayList<String> 
     	PAST_MOVES = new ArrayList<String>();
     
     
