@@ -20,6 +20,7 @@ public class Program {
      	new HalmaGame(player1, player2);  
     }
 }
+
 class GameBoard extends OfficialObserver{
     
     private static final String
@@ -34,6 +35,7 @@ class GameBoard extends OfficialObserver{
     	WORLD.show();
     }
     
+    @Override
     protected void handleUpdate(){
         if( !super.checkRecipient( MY_EMAIL ) )
             return;
@@ -41,10 +43,10 @@ class GameBoard extends OfficialObserver{
     }
     
     private ArrayList<Piece> toPieceList(String officialData){
-        ArrayList<Piece> list = new ArrayList<Piece>();
+        ArrayList<Piece> list = new ArrayList<>();
         JsonArray array = null;
 		try{ array = JsonParser.array().from(officialData);  }
-		catch(Exception e){ e.printStackTrace(); return null; }
+		catch(JsonParserException e){ e.printStackTrace(); return null; }
         int offset = 4;
         for(int k = 0; k < array.size(); k += offset)
             list.add( new Piece(

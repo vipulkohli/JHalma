@@ -10,7 +10,6 @@ import java.net.URL;
 import java.util.logging.Level;
 import java.util.logging.Logger;
  
-import javax.net.ssl.HttpsURLConnection;
 
 public class HalmaMessenger extends OfficialObserver{
     
@@ -48,17 +47,17 @@ public class HalmaMessenger extends OfficialObserver{
     public ArrayList<String> getRemoteAIMoves(String message){
         String [] moveArray = 
 		{ 
-		  getRemoteData(m_url1, message), 
-		  getRemoteData(m_url2, message) 
+		  getRemoteData(m_url1, message, 0), 
+		  getRemoteData(m_url2, message, 1) 
 		};
         return toJSONList(moveArray);
     }
     
     public static String toSequence(String json){
             ArrayList<Integer>sequence = new ArrayList<Integer>();
-            JsonObject obj = null;
+            JsonObject obj;
             try{ obj = JsonParser.object().from(json); }
-            catch(Exception e){ e.printStackTrace();}
+            catch(JsonParserException e){ e.printStackTrace(); return "";}
             JsonObject fromObj = obj.getObject("from");
             JsonArray toArray = obj.getArray("to");
             int fromRow = fromObj.getInt("row");
@@ -73,24 +72,23 @@ public class HalmaMessenger extends OfficialObserver{
             return sequence.toString();
     }
 
-    public static String getRemoteData(String address, String board){
+    public static String getRemoteData(String address, String board, int playerNum){
         try {
             URL obj = new URL(address);
-            HttpsURLConnection con = (HttpsURLConnection) obj.openConnection();
+            HttpURLConnection con = (HttpURLConnection) obj.openConnection();
             
             con.setRequestMethod("POST");
             con.setRequestProperty("User-Agent", "Mozilla/5.0");
             con.setRequestProperty("Accept-Language", "en-US,en;q=0.5");
             
             //board data
-            String urlParameters = "";
-            System.out.println(board);
-            System.console().writer().print(board);
+            ArrayList<CollisionAnalyst.XYDLocation> boardList = CollisionAnalyst.getXYDList(board);
+            String urlParameters = convertBoardToJSON(boardList, playerNum);
             
             // Send post request
             con.setDoOutput(true);
             DataOutputStream wr = new DataOutputStream(con.getOutputStream());
-            wr.writeBytes(board);
+            wr.writeBytes(urlParameters);
             wr.flush();
             wr.close();
             
@@ -114,6 +112,36 @@ public class HalmaMessenger extends OfficialObserver{
         
         return "";
     }
-
+    
+    private static String convertBoardToJSON(ArrayList<CollisionAnalyst.XYDLocation> boardList, int playerNum){
+        String JSON = "{boardSize=18,pieces=[";
+        for (CollisionAnalyst.XYDLocation piece : boardList){
+            if (piece.getTeam() == playerNum){
+                JSON += piece.toString();
+            }
+        }
+        JSON += "], enemy=[";
+        for (CollisionAnalyst.XYDLocation piece : boardList){
+            if (piece.getTeam() != playerNum){
+                JSON += piece.toString();
+            }
+        }
+        JSON += "],destinations=[";
+        
+        if (playerNum == 0){
+            JSON += "{x=0,y=0},{x=1,y=1}";
+            JSON += "],enemydestinations=[";
+            JSON += "{x=17,y=17},{x=16,y=16}";
+        }
+        else{
+            JSON += "{x=17,y=17},{x=16,y=16}";
+            JSON += "],enemydestinations=[";
+            JSON += "{x=0,y=0},{x=1,y=1}";
+        }
+        
+        JSON += "]}";
+        
+        return JSON;
+    }
 }
 

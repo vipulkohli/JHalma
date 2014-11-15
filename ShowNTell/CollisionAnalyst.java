@@ -83,7 +83,7 @@ public class CollisionAnalyst extends OfficialObserver{
     		coordList.add( coordinate );
     	return coordList;
     }
-    private static ArrayList<XYDLocation> getXYDList( String inBoard ){
+    public static ArrayList<XYDLocation> getXYDList( String inBoard ){
     	ArrayList<Integer>coordList = toIntList( toIntArray(inBoard) );
     	ArrayList<XYDLocation> xydlist = new ArrayList<XYDLocation>();
     	Iterator<Integer> itr = coordList.iterator();
@@ -117,7 +117,7 @@ public class CollisionAnalyst extends OfficialObserver{
     	return new Location( moveArray[moveArray.length - 2] , moveArray[moveArray.length - 1]);
     }
     
-    private static class XYDLocation{
+    public static class XYDLocation{
     	
     	int mDamage;
     	Location mLoc;
