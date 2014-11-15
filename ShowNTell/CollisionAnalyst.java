@@ -45,7 +45,7 @@ public class CollisionAnalyst extends OfficialObserver{
                 || (xyd.equals(toLoc1) && xyd.getTeam() == 0);
     }
     
-    public static String getNewPieceData(String oldBoard, ArrayList<String>movesList ){
+    public static String getNewPieceData(String oldBoard, ArrayList<String> movesList ){
     	Location fromLoc0 = getFromLocation( movesList.get(0) );
     	Location toLoc0 = getToLocation( movesList.get(0) );
         Location fromLoc1 = getFromLocation( movesList.get(1) );

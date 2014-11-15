@@ -77,7 +77,7 @@ public class Official extends Observable{
     	try{
     		Thread.sleep(seconds * 1000);
     	}
-    	catch(Exception e){e.printStackTrace();}
+    	catch(InterruptedException e){e.printStackTrace();}
     	return this;
     }
     
