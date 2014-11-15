@@ -90,7 +90,7 @@ public class HalmaMessenger extends OfficialObserver{
             con.setRequestProperty("Accept-Language", "en-US,en;q=0.5");
             
             //board data
-            ArrayList<CollisionAnalyst.XYDLocation> boardList = CollisionAnalyst.getXYDList(board);
+            ArrayList<XYDLocation> boardList = CollisionAnalyst.getXYDList(board);
             String urlParameters = convertBoardToJSON(boardList, playerNum);
             
             // Send post request
@@ -122,9 +122,9 @@ public class HalmaMessenger extends OfficialObserver{
         return "";
     }
     
-    private static String convertBoardToJSON(ArrayList<CollisionAnalyst.XYDLocation> boardList, int playerNum){
+    private static String convertBoardToJSON(ArrayList<XYDLocation> boardList, int playerNum){
         String JSON = "{\"boardSize\":18,\"pieces\":[";
-        for (CollisionAnalyst.XYDLocation piece : boardList){
+        for (XYDLocation piece : boardList){
             if (piece.getTeam() == playerNum){
                 JSON += "{" + piece.toJSONString() + "},";
             }
@@ -132,7 +132,7 @@ public class HalmaMessenger extends OfficialObserver{
         JSON = JSON.substring(0, JSON.length()-1);
         
         JSON += "],\"enemy\":[";
-        for (CollisionAnalyst.XYDLocation piece : boardList){
+        for (XYDLocation piece : boardList){
             if (piece.getTeam() != playerNum){
                 JSON += "{" + piece.toJSONString() + "},";
             }
