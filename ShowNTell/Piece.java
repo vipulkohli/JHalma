@@ -29,6 +29,10 @@ public class Piece extends Actor{
             return setColor( Color.red, true );
         if( "blue".equalsIgnoreCase(inColor) )
             return setColor( Color.blue, true );
+        if( "cyan".equalsIgnoreCase(inColor) )
+            return setColor( Color.cyan, true );
+        if( "magenta".equalsIgnoreCase(inColor) )
+        	return setColor( Color.magenta, true );
         return mColor;
     }
     
@@ -60,4 +64,5 @@ class Four extends Five{}
 class Three extends Five{}
 class Two extends Five{}
 class One extends Five{}
+class XPiece extends Five{}
 

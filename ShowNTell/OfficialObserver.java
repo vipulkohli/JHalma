@@ -8,7 +8,12 @@ public abstract class OfficialObserver implements Observer{
     	SPLIT_PHRASE = "SPLITSPLITSPLIT";
     private Official m_official;
     private String m_message, m_recipient;
-
+	
+	public static void freezeProgram(){
+		try{ Thread.sleep(100 * 1000);  }
+		catch(Exception e){}
+	}
+	
     @Override
     public void update(Observable o, Object arg){
             if(arg instanceof String && o instanceof Official){

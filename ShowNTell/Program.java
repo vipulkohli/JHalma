@@ -8,7 +8,7 @@
 import com.grack.nanojson.*;
 import info.gridworld.actor.*;
 import info.gridworld.grid.*;
-import java.awt.AWTException;
+import java.awt.*;
 import java.awt.Robot;
 import java.awt.event.KeyEvent;
 import java.util.*;
@@ -20,33 +20,46 @@ public class Program {
      * @param args the command line arguments
      */
     public static void main(String[] args){
-        String player1 = "http://lyle.smu.edu/~sochaa/4345/FinalHalma/finalHalmaWithDamage.php";
-     	String player2 = "http://lyle.smu.edu/~sochaa/4345/FinalHalma/finalHalmaWithDamage.php";
+        String player1 = "http://lyle.smu.edu/~tbgeorge/cse4345/a1/getMove.php";
+     	String player2 = "http://lyle.smu.edu/~tbgeorge/cse4345/a1/getMove.php";
      	new HalmaGame(player1, player2);  
     }
 }
 
 class GameBoard extends OfficialObserver{
     
+    private static final Color	
+    	TEAM_A_COLOR = new Color(204,0,153),
+        TEAM_B_COLOR = new Color(0,102,153);
+    
     private static final String
         MY_EMAIL = "g",
         TIMER = "Move: ",
-        TEAM_A = "\nRED: ",
-        TEAM_B = "  BLUE: ",
-        HALMATE = "HALMATE!",
+        TEAM_A = "\nJETS: ",
+        TEAM_B = "  BOZOS: ",
+        HALMATE = "HALMATE!  ",
+        TEAM_A_WINS = "Red Team Victory!",
+        TEAM_B_WINS = "Blue Team Victory!",
         SPLIT_PHRASE = "SPLITSPLIT";
+        
     private static final ActorWorld
     	WORLD = new ActorWorld();
+    	
     private static final int
     	TIMER_START = 0,
     	BOARD_SIZE = 18;
+    	
     private int mTimer;
-    private String mMove;
+    
+    private final static ArrayList<String> 
+    	PAST_MOVES = new ArrayList<String>();
+    
+    
+    
     public GameBoard(){
     	WORLD.setGrid( new BoundedGrid(BOARD_SIZE, BOARD_SIZE) );
     	WORLD.show();
         mTimer = TIMER_START;
-        mMove = new String();
         //the most complicated way to ZOOM OUT ever
         try {
             Robot robot = new Robot();
@@ -96,17 +109,60 @@ class GameBoard extends OfficialObserver{
     	}
     }
     
-    private boolean isNewMove(String team1Move, String team2Move){
+    private int isNewMove(String team1Move, String team2Move, ArrayList<String>past){
     	String inMoves = team1Move + team2Move;
-    	if( mMove.equals(inMoves) )
-    		return false;
-    	mMove = inMoves;
-    	return true;
+    	for (String oldMove : past){
+    		if( oldMove.equals(team1Move) )
+    			return 1;
+    		if( oldMove.equals(team2Move) )
+    			return 2;
+    	}
+    	if(past.size() == 0){
+    		past.add(team1Move);
+    		past.add(team2Move);
+    	}
+    	past.set(0, team1Move);
+    	past.set(1, team2Move);
+    	return 0;
     }
     
     private String upTimer(){
     	mTimer++;
     	return "" + mTimer;
+    }
+    
+    private static Location getToLocation(String move){
+    	ArrayList<Location> moveLocs = toLocationList(move);
+    	Location target = moveLocs.get( moveLocs.size() - 1 );
+    	return new Location(target.getCol(), target.getRow());
+    }
+    private void addToPieces(String team1Move, String team2Move, ActorWorld world){
+    	Location
+    		redLoc = getToLocation( team1Move ), 
+    		blueLoc = getToLocation( team2Move );
+    	XPiece
+    		redPiece = new XPiece(),
+    		bluePiece = new XPiece();
+    	redPiece.setColor( TEAM_A_COLOR );
+    	bluePiece.setColor( TEAM_B_COLOR );
+    	world.add(redLoc, redPiece);
+    	world.add(blueLoc, bluePiece);
+    	//print(bluePiece.getLocation().toString());
+    }
+    private static ArrayList<Location> toLocationList(String move){
+    	JsonArray array = null;
+    	ArrayList<Location>locs = new ArrayList<Location>();
+    	try{ array = JsonParser.array().from(move); }
+    	catch(Exception e){
+    		return null;
+    	}
+    	ArrayList<Integer>coordList = new ArrayList<Integer>();
+		for(int k = 0; k < array.size(); k++)
+			coordList.add( array.getInt(k)  );
+		Iterator<Integer>itr = coordList.iterator();
+		while(itr.hasNext())
+			locs.add( new Location(itr.next(), itr.next()) );
+		return locs;
     }
     
     private String formatMove(String move){
@@ -127,26 +183,34 @@ class GameBoard extends OfficialObserver{
     
     protected void drawBoard(String inData){
     	clearBoard();
-    	String onMessageField;
+    	String onMessageField, p1Move, p2Move, pieceStr;
+    	int winner;
     	ArrayList<Piece> pieces;
     	String [] data = inData.split( SPLIT_PHRASE );
+    	pieceStr = data[0];
+    	p1Move = data[1];
+    	p2Move = data[2];
     	onMessageField = TIMER + upTimer() + TEAM_A 
-    		+ formatMove(data[1]) + TEAM_B + formatMove(data[2]);
-    	if( !isNewMove(data[1], data[2] ) )
-    		onMessageField = HALMATE;
-        pieces = toPieceList( data[0] ) ;
+    		+ formatMove(p1Move) + TEAM_B + formatMove(p2Move);
+    	winner = isNewMove(p1Move, p2Move, PAST_MOVES );
+    	if( winner == 1)
+    		onMessageField = HALMATE + TEAM_A_WINS;
+    	if( winner == 2 )
+    		onMessageField = HALMATE + TEAM_B_WINS;
+        pieces = toPieceList( pieceStr ) ;
         print( pieces.toString() );
         for (Piece p : pieces){
             switch (p.team){
-                case 0: p.setColor( "red" );
+                case 0: p.setColor( TEAM_A_COLOR );
                 break;
-                default: p.setColor( "blue" );
+                default: p.setColor( TEAM_B_COLOR );
                 break;
             }
             //GridWorld locations are (row, column);
             Location cell = new Location( p.y , p.x );
             WORLD.add(cell, p);
         }//end for loop
+		addToPieces(p1Move, p2Move, WORLD);
       	for (Piece p : pieces){
       		WORLD.setMessage( onMessageField );
       		switch(p.damage){

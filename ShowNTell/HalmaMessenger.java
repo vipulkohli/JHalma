@@ -67,8 +67,8 @@ public class HalmaMessenger extends OfficialObserver{
             catch(JsonParserException e){ e.printStackTrace(); return "";}
             JsonObject fromObj = obj.getObject( FROM_KEY );
             JsonArray toArray = obj.getArray( TO_KEY );
-            int fromRow = fromObj.getInt( ROW_INDEX );
-            int fromColumn = fromObj.getInt( COLUMN_INDEX );
+            int fromRow = fromObj.getInt( COLUMN_INDEX );
+            int fromColumn = fromObj.getInt( ROW_INDEX );
             sequence.add(fromRow);
             sequence.add(fromColumn);
             for(Object o : toArray){
@@ -110,7 +110,7 @@ public class HalmaMessenger extends OfficialObserver{
             }
             in.close();
             
-            super.print("AI Response: " + response.toString());
+            print("AI Response: " + response.toString());
             return response.toString();
             
         } catch (MalformedURLException ex) {
@@ -118,7 +118,7 @@ public class HalmaMessenger extends OfficialObserver{
         } catch (IOException ex) {
             Logger.getLogger(HalmaMessenger.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+        freezeProgram();
         return "";
     }
     

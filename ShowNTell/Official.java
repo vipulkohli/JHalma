@@ -5,7 +5,7 @@ public class Official extends Observable{
     private String mBoard, mMove;
     private int mCount;
     private static final int
-    	DELAY_DEFAULT = 3,
+    	DELAY_DEFAULT = 0,
     	RUN_COUNT = 1000;//TEST_MOVES.length;
     private static final String
         SPLIT_PHRASE = "SPLITSPLIT",
