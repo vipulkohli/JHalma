@@ -38,7 +38,7 @@ public class Official extends Observable{
     }
     
     public String getDefaultStartBoard(){
-        ArrayList<Integer> iBoard = new ArrayList<Integer>();
+        ArrayList<Integer> iBoard = new ArrayList<>();
         //build teams
         int size = 18;
         for(int x = 0; x < 3; x++){

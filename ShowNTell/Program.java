@@ -5,10 +5,15 @@
  * @author 
  * @version 1.00 2014/4/27
  */
-import java.util.*;
 import com.grack.nanojson.*;
 import info.gridworld.actor.*;
 import info.gridworld.grid.*;
+import java.awt.AWTException;
+import java.awt.Robot;
+import java.awt.event.KeyEvent;
+import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Program {
     /**
@@ -33,6 +38,17 @@ class GameBoard extends OfficialObserver{
     public GameBoard(){
     	WORLD.setGrid( new BoundedGrid(BOARD_SIZE, BOARD_SIZE) );
     	WORLD.show();
+        
+        //the most complicated way to ZOOM OUT ever
+        try {
+            Robot robot = new Robot();
+            robot.keyPress(KeyEvent.VK_CONTROL);
+            robot.keyPress(KeyEvent.VK_PAGE_DOWN);
+            robot.keyRelease(KeyEvent.VK_PAGE_DOWN);
+            robot.keyRelease(KeyEvent.VK_CONTROL);
+        } catch (AWTException ex) {
+            Logger.getLogger(GameBoard.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
     @Override
