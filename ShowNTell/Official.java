@@ -23,11 +23,11 @@ public class Official extends Observable{
     private int mCount;
     private static final int
     	DELAY_DEFAULT = 3,
-    	RUN_COUNT = 100;//TEST_MOVES.length;
+    	RUN_COUNT = 1000;//TEST_MOVES.length;
     private static final String
         SPLIT_PHRASE = "SPLITSPLIT",
         SUPER_SPLIT = "SPLITSPLITSPLIT",
-        START_BOARD = "[-1,-2,4,0,-1,-2,4,1]",
+        //START_BOARD = "[-1,-2,4,0,-1,-2,4,1]",
         AI_RELAY = "m",
         COLLISIONS = "c",
         GRID = "g";
@@ -47,7 +47,6 @@ public class Official extends Observable{
                 Piece blue = new Piece(y, x, 0, 1);
                 iBoard.addAll( red.toIntList() );
                 iBoard.addAll( blue.toIntList() );
-                break;
             }
         }
         return iBoard.toString();
@@ -62,7 +61,7 @@ public class Official extends Observable{
     }
     
     private Official getRemoteAIMoves(String inBoard){
-        send( AI_RELAY, inBoard);
+        send(AI_RELAY, inBoard);
         
         //reply(AI_RELAY, TEST_MOVES[mCount % TEST_MOVES.length] ); //use test moves (comment send too)
         return this;
@@ -96,7 +95,7 @@ public class Official extends Observable{
     }
     
     private String composeForCollisions(String AIMoves){
-        return concat(mBoard , AIMoves);
+        return concat(mBoard, AIMoves);
     }
     
     protected Official send(String recipient, String message){

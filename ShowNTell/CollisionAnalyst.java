@@ -11,6 +11,7 @@ public class CollisionAnalyst extends OfficialObserver{
         DAMAGE_LITE = 1;
     
     @Override
+    //called whenever an update is received from the observable
     protected void handleUpdate(){
         if( !super.checkRecipient( MY_EMAIL ) )
             return;
@@ -162,6 +163,7 @@ public class CollisionAnalyst extends OfficialObserver{
             setY(y);
             return this;
         }
+        
         public void setX(int x){
             int y = getY();
             mLoc = new Location(x, y);

@@ -18,6 +18,7 @@ public class GameBoard extends OfficialObserver{
     }
     
     @Override
+    //called whenever an update is received from the observable
     protected void handleUpdate(){
         if( !super.checkRecipient( MY_EMAIL ) )
             return;

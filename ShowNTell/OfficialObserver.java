@@ -20,18 +20,23 @@ public abstract class OfficialObserver implements Observer{
                     }
             }
     }
+    
     protected void replyToOfficial(String sender, String message){
             m_official.reply(sender, message);
     }
+    
     protected Official getOfficial(){
             return m_official;
     }
+    
     protected String getMessageRecipient(){
             return new String(m_recipient);
     }
+    
     protected String getMessage(){
             return new String(m_message);
     }
+    
     protected boolean checkRecipient( String inCode ){
             return inCode.equals(m_recipient);
     }
