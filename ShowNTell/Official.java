@@ -42,9 +42,9 @@ public class Official extends Observable{
         //build teams
         int size = 18;
         for(int x = 0; x < 3; x++){
-            for(int y = size-3; y < size; y++){
-                Piece red = new Piece(x, y, 0, 0);
-                Piece blue = new Piece(y, x, 0, 1);
+            for(int y = 0; y < 4; y++){
+                Piece red = new Piece(x, size-1-y, 0, 0);
+                Piece blue = new Piece(size-1-x, size-1-y, 0, 1);
                 iBoard.addAll( red.toIntList() );
                 iBoard.addAll( blue.toIntList() );
             }
