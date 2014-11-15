@@ -38,7 +38,6 @@ public class HalmaMessenger extends OfficialObserver{
     public void handleUpdate(){
         if( !super.checkRecipient( MY_EMAIL ) )
             return; 
-        System.out.println("in M:" + respondWithAIMoves( super.getMessage() ) );
         super.replyToOfficial( MY_EMAIL , respondWithAIMoves( super.getMessage() ) );
     }
     
@@ -68,14 +67,14 @@ public class HalmaMessenger extends OfficialObserver{
             catch(JsonParserException e){ e.printStackTrace(); return "";}
             JsonObject fromObj = obj.getObject( FROM_KEY );
             JsonArray toArray = obj.getArray( TO_KEY );
-            int fromRow = fromObj.getInt(ROW_INDEX);
-            int fromColumn = fromObj.getInt(COLUMN_INDEX);
+            int fromRow = fromObj.getInt( ROW_INDEX );
+            int fromColumn = fromObj.getInt( COLUMN_INDEX );
             sequence.add(fromRow);
             sequence.add(fromColumn);
             for(Object o : toArray){
                     obj = (JsonObject) o;
-                    sequence.add(obj.getInt("y"));
-                    sequence.add(obj.getInt("x"));
+                    sequence.add( obj.getInt( COLUMN_INDEX ) );
+                    sequence.add( obj.getInt( ROW_INDEX ) );
             }
             return sequence.toString();
     }

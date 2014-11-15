@@ -70,22 +70,17 @@ public class Official extends Observable{
     	}
     }
     
-    private Official log(String message){
+    private Official output(String message){
     	System.out.println(message);
     	return this;
     }
     
     public void reply(String sender, String message){
-        if( AI_RELAY.equals(sender) ){ 
-            send( COLLISIONS , composeForCollisions(message) );
-            //TODO: Respond as [0, 0, 1, 1]SPLITSPLIT[1, 1, 2, 2]
-            //Meaning red team moves from (0,0) to (1,1)
-            //Blue team moves from (1,1) to (2,2)
-            //Response from log: From M: [0, 0, 0, 0]SPLITSPLIT[0, 0, 0, 0]
-            System.out.println("From M: " + message);
-        }
+        if( AI_RELAY.equals(sender) ) 
+        	output("From M: " + message)
+        	.send( COLLISIONS , composeForCollisions(message) );
         else if ( COLLISIONS.equals(sender) && mCount < RUN_COUNT)
-            log("From C: " + message)
+            output("From C: " + message)
             .setBoard(message)
             .send( GRID, message)
             .delay(DELAY_DEFAULT)
