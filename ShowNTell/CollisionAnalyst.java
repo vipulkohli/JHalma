@@ -190,8 +190,13 @@ public class CollisionAnalyst extends OfficialObserver{
             return mLoc.equals(other) && otherTeam == mTeam;
     	}
         
+        @Override
     	public String toString(){
             return getX() + "," + getY() + "," + getD() + "," + getTeam();  
+    	}
+        
+    	public String toJSONString(){
+            return "\"x\":" + getX() + ",\"y\":" + getY() + ",\"damage\":" + getD() + ",\"team\":" + getTeam();  
     	}
     }
 

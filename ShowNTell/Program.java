@@ -44,7 +44,7 @@ class GameBoard extends OfficialObserver{
     
     private ArrayList<Piece> toPieceList(String officialData){
         ArrayList<Piece> list = new ArrayList<>();
-        JsonArray array = null;
+        JsonArray array;
 		try{ array = JsonParser.array().from(officialData);  }
 		catch(JsonParserException e){ e.printStackTrace(); return null; }
         int offset = 4;

@@ -39,17 +39,17 @@ public class HalmaMessenger extends OfficialObserver{
     }
     
     private String respondWithAIMoves(String message){
-        ArrayList<String>moves = getRemoteAIMoves(message);
-        Iterator<String>jsons = moves.iterator();
+        ArrayList<String> moves = getRemoteAIMoves(message);
+        Iterator<String> jsons = moves.iterator();
         return concat(toSequence(jsons.next()), toSequence(jsons.next()) );
     }
     
     public ArrayList<String> getRemoteAIMoves(String message){
         String [] moveArray = 
-		{ 
-		  getRemoteData(m_url1, message, 0), 
-		  getRemoteData(m_url2, message, 1) 
-		};
+            { 
+                getRemoteData(m_url1, message, 0), 
+                getRemoteData(m_url2, message, 1)
+            };
         return toJSONList(moveArray);
     }
     
@@ -72,6 +72,7 @@ public class HalmaMessenger extends OfficialObserver{
             return sequence.toString();
     }
 
+    //send JSON as a POST request to an AI and receive a JSON response
     public static String getRemoteData(String address, String board, int playerNum){
         try {
             URL obj = new URL(address);
@@ -102,7 +103,8 @@ public class HalmaMessenger extends OfficialObserver{
             }
             in.close();
             
-            System.out.println(response.toString());
+            System.out.println("AI Response: " + response.toString());
+            return response.toString();
             
         } catch (MalformedURLException ex) {
             Logger.getLogger(HalmaMessenger.class.getName()).log(Level.SEVERE, null, ex);
@@ -114,29 +116,32 @@ public class HalmaMessenger extends OfficialObserver{
     }
     
     private static String convertBoardToJSON(ArrayList<CollisionAnalyst.XYDLocation> boardList, int playerNum){
-        String JSON = "{boardSize=18,pieces=[";
+        String JSON = "{\"boardSize\":18,\"pieces\":[";
         for (CollisionAnalyst.XYDLocation piece : boardList){
             if (piece.getTeam() == playerNum){
-                JSON += piece.toString();
+                JSON += "{" + piece.toJSONString() + "},";
             }
         }
-        JSON += "], enemy=[";
+        JSON = JSON.substring(0, JSON.length()-1);
+        
+        JSON += "],\"enemy\":[";
         for (CollisionAnalyst.XYDLocation piece : boardList){
             if (piece.getTeam() != playerNum){
-                JSON += piece.toString();
+                JSON += "{" + piece.toJSONString() + "},";
             }
         }
-        JSON += "],destinations=[";
+        JSON = JSON.substring(0, JSON.length()-1);
+        JSON += "],\"destinations\":[";
         
         if (playerNum == 0){
-            JSON += "{x=0,y=0},{x=1,y=1}";
-            JSON += "],enemydestinations=[";
-            JSON += "{x=17,y=17},{x=16,y=16}";
+            JSON += "{\"x\":0,\"y\":0},{\"x\":1,\"y\":1}"; //TODO: SET DESTINATIONS
+            JSON += "],\"enemydestinations\":[";
+            JSON += "{\"x\":17,\"y\":17},{\"x\":16,\"y\":16}";
         }
         else{
-            JSON += "{x=17,y=17},{x=16,y=16}";
-            JSON += "],enemydestinations=[";
-            JSON += "{x=0,y=0},{x=1,y=1}";
+            JSON += "{\"x\":17,\"y\":17},{\"x\":16,\"y\":16}";
+            JSON += "],\"enemydestinations\":[";
+            JSON += "{\"x\":0,\"y\":0},{\"x\":1,\"y\":1}";
         }
         
         JSON += "]}";
