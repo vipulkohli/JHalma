@@ -30,16 +30,23 @@ class GameBoard extends OfficialObserver{
     
     private static final String
         MY_EMAIL = "g",
+        TIMER = "Move: ",
+        TEAM_A = "\nRED: ",
+        TEAM_B = "  BLUE: ",
+        HALMATE = "HALMATE!",
         SPLIT_PHRASE = "SPLITSPLIT";
     private static final ActorWorld
     	WORLD = new ActorWorld();
     private static final int
+    	TIMER_START = 0,
     	BOARD_SIZE = 18;
-    
+    private int mTimer;
+    private String mMove;
     public GameBoard(){
     	WORLD.setGrid( new BoundedGrid(BOARD_SIZE, BOARD_SIZE) );
     	WORLD.show();
-        
+        mTimer = TIMER_START;
+        mMove = new String();
         //the most complicated way to ZOOM OUT ever
         try {
             Robot robot = new Robot();
@@ -89,12 +96,26 @@ class GameBoard extends OfficialObserver{
     	}
     }
     
+    private boolean isNewMove(String team1Move, String team2Move){
+    	String inMoves = team1Move + team2Move;
+    	if( mMove.equals(inMoves) )
+    		return false;
+    	mMove = inMoves;
+    	return true;
+    }
+    
+    private String upTimer(){
+    	mTimer++;
+    	return "" + mTimer;
+    }
     protected void drawBoard(String inData){
     	clearBoard();
-    	String AIMoves;
+    	String onMessageField;
     	ArrayList<Piece> pieces;
     	String [] data = inData.split( SPLIT_PHRASE );
-    	AIMoves = data[1] + " " + data[2];
+    	onMessageField = TIMER + upTimer() + TEAM_A + data[1] + TEAM_B + data[2];
+    	if( !isNewMove(data[1], data[2] ) )
+    		onMessageField = HALMATE;
         pieces = toPieceList( data[0] ) ;
         print( pieces.toString() );
         for (Piece p : pieces){
@@ -109,7 +130,7 @@ class GameBoard extends OfficialObserver{
             WORLD.add(cell, p);
         }//end for loop
       	for (Piece p : pieces){
-      		WORLD.setMessage(AIMoves);
+      		WORLD.setMessage( onMessageField );
       		switch(p.damage){
       			case 5:
     				Actor a = new Five();
