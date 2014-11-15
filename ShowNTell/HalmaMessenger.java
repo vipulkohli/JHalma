@@ -13,6 +13,12 @@ import java.util.logging.Logger;
 
 public class HalmaMessenger extends OfficialObserver{
     
+    private static final String
+    	MY_EMAIL = "m",
+    	ROW_INDEX = "y",
+    	COLUMN_INDEX = "x",
+    	FROM_KEY = "from",
+    	TO_KEY = "to";
     private String m_url1, m_url2;
 
     public HalmaMessenger(String inPlayer1addy, String inPlayer2addy){
@@ -30,8 +36,10 @@ public class HalmaMessenger extends OfficialObserver{
     @Override
     //called whenever an update is received from the observable
     public void handleUpdate(){
-        if( "m".equals( super.getMessageRecipient() ) ) 
-            super.replyToOfficial( "m" , respondWithAIMoves( super.getMessage() ) );
+        if( !super.checkRecipient( MY_EMAIL ) )
+            return; 
+        System.out.println("in M:" + respondWithAIMoves( super.getMessage() ) );
+        super.replyToOfficial( MY_EMAIL , respondWithAIMoves( super.getMessage() ) );
     }
     
     private static String concat(String a, String b){
@@ -58,16 +66,16 @@ public class HalmaMessenger extends OfficialObserver{
             JsonObject obj;
             try{ obj = JsonParser.object().from(json); }
             catch(JsonParserException e){ e.printStackTrace(); return "";}
-            JsonObject fromObj = obj.getObject("from");
-            JsonArray toArray = obj.getArray("to");
-            int fromRow = fromObj.getInt("row");
-            int fromColumn = fromObj.getInt("column");
+            JsonObject fromObj = obj.getObject( FROM_KEY );
+            JsonArray toArray = obj.getArray( TO_KEY );
+            int fromRow = fromObj.getInt(ROW_INDEX);
+            int fromColumn = fromObj.getInt(COLUMN_INDEX);
             sequence.add(fromRow);
             sequence.add(fromColumn);
             for(Object o : toArray){
                     obj = (JsonObject) o;
-                    sequence.add(obj.getInt("row"));
-                    sequence.add(obj.getInt("column"));
+                    sequence.add(obj.getInt("y"));
+                    sequence.add(obj.getInt("x"));
             }
             return sequence.toString();
     }
