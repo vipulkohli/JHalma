@@ -11,7 +11,7 @@ import info.gridworld.grid.*;
 import java.awt.AWTException;
 import java.awt.Robot;
 import java.awt.event.KeyEvent;
-import java.util.ArrayList;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -108,12 +108,30 @@ class GameBoard extends OfficialObserver{
     	mTimer++;
     	return "" + mTimer;
     }
+    
+    private String formatMove(String move){
+    	JsonArray array = null;
+    	try{ array = JsonParser.array().from(move); }
+    	catch(Exception e){
+    		return move;
+    	}
+    	ArrayList<Integer>coordList = new ArrayList<Integer>();
+		for(int k = 0; k < array.size(); k++)
+			coordList.add( array.getInt(k)  );
+		Iterator<Integer>itr = coordList.iterator();
+		ArrayList<Location>locs = new ArrayList<Location>();
+		while(itr.hasNext())
+			locs.add( new Location(itr.next(), itr.next()) );
+		return locs.toString();
+    }
+    
     protected void drawBoard(String inData){
     	clearBoard();
     	String onMessageField;
     	ArrayList<Piece> pieces;
     	String [] data = inData.split( SPLIT_PHRASE );
-    	onMessageField = TIMER + upTimer() + TEAM_A + data[1] + TEAM_B + data[2];
+    	onMessageField = TIMER + upTimer() + TEAM_A 
+    		+ formatMove(data[1]) + TEAM_B + formatMove(data[2]);
     	if( !isNewMove(data[1], data[2] ) )
     		onMessageField = HALMATE;
         pieces = toPieceList( data[0] ) ;
