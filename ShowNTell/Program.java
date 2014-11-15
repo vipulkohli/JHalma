@@ -11,7 +11,7 @@ import info.gridworld.grid.*;
 import java.awt.AWTException;
 import java.awt.Robot;
 import java.awt.event.KeyEvent;
-import java.util.*;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -29,7 +29,8 @@ public class Program {
 class GameBoard extends OfficialObserver{
     
     private static final String
-        MY_EMAIL = "g";
+        MY_EMAIL = "g",
+        SPLIT_PHRASE = "SPLITSPLIT";
     private static final ActorWorld
     	WORLD = new ActorWorld();
     private static final int
@@ -88,12 +89,14 @@ class GameBoard extends OfficialObserver{
     	}
     }
     
-    protected void drawBoard(String inDimensions){
+    protected void drawBoard(String inData){
     	clearBoard();
-    	WORLD.setMessage("Pieces removed");
-        ArrayList<Piece>pieces;
-        pieces = toPieceList( inDimensions ) ;
-        System.out.println(pieces);
+    	String AIMoves;
+    	ArrayList<Piece> pieces;
+    	String [] data = inData.split( SPLIT_PHRASE );
+    	AIMoves = data[1] + " " + data[2];
+        pieces = toPieceList( data[0] ) ;
+        print( pieces.toString() );
         for (Piece p : pieces){
             switch (p.team){
                 case 0: p.setColor( "red" );
@@ -106,7 +109,7 @@ class GameBoard extends OfficialObserver{
             WORLD.add(cell, p);
         }//end for loop
       	for (Piece p : pieces){
-      		WORLD.setMessage(p.toString());
+      		WORLD.setMessage(AIMoves);
       		switch(p.damage){
       			case 5:
     				Actor a = new Five();

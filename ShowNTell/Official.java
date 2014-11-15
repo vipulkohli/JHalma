@@ -2,7 +2,7 @@ import java.util.*;
 
 public class Official extends Observable{
     
-    private String mBoard;
+    private String mBoard, mMove;
     private int mCount;
     private static final int
     	DELAY_DEFAULT = 3,
@@ -75,20 +75,30 @@ public class Official extends Observable{
     	return this;
     }
     
+    private Official setMove(String inMove){
+    	mMove = inMove;
+    	return this;
+    }
+    
     public void reply(String sender, String message){
         if( AI_RELAY.equals(sender) ) 
         	output("From M: " + message)
+        	.setMove(message)
         	.send( COLLISIONS , composeForCollisions(message) );
         else if ( COLLISIONS.equals(sender) && mCount < RUN_COUNT)
             output("From C: " + message)
             .setBoard(message)
-            .send( GRID, message)
+            .send( GRID, composeForGameBoard(message, mMove))
             .delay(DELAY_DEFAULT)
 			.getRemoteAIMoves( message );
     }
     
     private static String concat(String inFront, String inTail){
         return inFront + SPLIT_PHRASE + inTail;
+    }
+    
+    private String composeForGameBoard(String inBoard, String inMoves){
+        return concat(inBoard, inMoves);
     }
     
     private String composeForCollisions(String AIMoves){

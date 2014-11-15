@@ -110,7 +110,7 @@ public class HalmaMessenger extends OfficialObserver{
             }
             in.close();
             
-            System.out.println("AI Response: " + response.toString());
+            super.print("AI Response: " + response.toString());
             return response.toString();
             
         } catch (MalformedURLException ex) {

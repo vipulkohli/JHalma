@@ -2,8 +2,10 @@ import java.util.*;
 
 public abstract class OfficialObserver implements Observer{
 
+    protected abstract void handleUpdate();
+    
     private static final String
-    SPLIT_PHRASE = "SPLITSPLITSPLIT";
+    	SPLIT_PHRASE = "SPLITSPLITSPLIT";
     private Official m_official;
     private String m_message, m_recipient;
 
@@ -20,7 +22,9 @@ public abstract class OfficialObserver implements Observer{
                     }
             }
     }
-    
+    public static void print(String message){
+    	System.out.println(message);
+	}
     protected void replyToOfficial(String sender, String message){
             m_official.reply(sender, message);
     }
@@ -40,6 +44,4 @@ public abstract class OfficialObserver implements Observer{
     protected boolean checkRecipient( String inCode ){
             return inCode.equals(m_recipient);
     }
-
-    protected abstract void handleUpdate();
 }
