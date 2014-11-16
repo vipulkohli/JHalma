@@ -123,21 +123,25 @@ public class HalmaMessenger extends OfficialObserver{
     }
     
     private static String convertBoardToJSON(ArrayList<XYDLocation> boardList, int playerNum){
-        String JSON = "{\"boardSize\":18,\"pieces\":[";
-        for (XYDLocation piece : boardList){
+    	String [] pStr = new String[ boardList.size() ];
+    	for(int k = 0; k < boardList.size(); k++)
+    		pStr[k] = boardList.get(k).toJSONString();
+    	JsonStringWriter writ = JsonWriter.string()
+    		.object().value("boardSize", 18).array("pieces");
+    	for (XYDLocation piece : boardList){
             if (piece.getTeam() == playerNum){
-                JSON += "{" + piece.toJSONString() + "},";
+                writ.value(piece.toJSONString());
             }
         }
-        JSON = JSON.substring(0, JSON.length()-1);
-        
-        JSON += "],\"enemy\":[";
+        writ = writ.end().array("enemy");
         for (XYDLocation piece : boardList){
             if (piece.getTeam() != playerNum){
-                JSON += "{" + piece.toJSONString() + "},";
+                writ.value(piece.toJSONString());
             }
         }
-        JSON = JSON.substring(0, JSON.length()-1);
+    	String JSON = writ.end().end().done()
+    		.replace("\\\"", "\"").replace("\"{", "{").replace("}\"", "}");
+        JSON = JSON.substring(0, JSON.lastIndexOf("]"));
         JSON += "],\"destinations\":[";
         
         if (playerNum == 0){

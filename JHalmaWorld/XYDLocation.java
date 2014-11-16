@@ -1,4 +1,5 @@
 import info.gridworld.grid.Location;
+import com.grack.nanojson.*;
 
 public class XYDLocation{
 	
@@ -79,6 +80,13 @@ public class XYDLocation{
 	}
     
 	public String toJSONString(){
-        return "\"x\":" + getX() + ",\"y\":" + getY() + ",\"damage\":" + getD() + ",\"team\":" + getTeam();  
+		return JsonWriter.string()
+    		.object()
+			  .value("x", getX())
+			  .value("y", getY())
+			  .value("damage", getD())
+			  .value("team", getTeam())	
+			  .end()
+			.done(); 
 	}
 }
