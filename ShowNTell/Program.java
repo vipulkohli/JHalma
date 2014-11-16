@@ -1,8 +1,9 @@
 /**
  * @(#)Program.java
- *Includes GameBoard class
+ * Includes GameBoard class
  *
- * @author 
+ * @author Vipul Kohli
+ * @author Andrew Socha
  * @version 1.00 2014/4/27
  */
 import com.grack.nanojson.*;
@@ -16,12 +17,16 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class Program {
-    /**
-     * @param args the command line arguments
-     */
+
     public static void main(String[] args){
-        String player1 = "http://lyle.smu.edu/~tbgeorge/cse4345/a1/getMove.php";
-     	String player2 = "http://lyle.smu.edu/~sochaa/4345/FinalHalma/finalHalmaWithDamage.php";
+        //Tyler's AI
+        //String player1 = "http://lyle.smu.edu/~tbgeorge/cse4345/a1/getMove.php";
+     	//String player2 = "http://lyle.smu.edu/~tbgeorge/cse4345/a1/getMove.php";
+        
+        //Andrew's AI
+        String player1 = "http://lyle.smu.edu/~sochaa/4345/FinalHalma/finalHalmaWithDamage.php";
+        String player2 = "http://lyle.smu.edu/~sochaa/4345/FinalHalma/finalHalmaWithDamage.php";
+        
      	new HalmaGame(player1, player2);  
     }
 }
@@ -46,7 +51,9 @@ class GameBoard extends OfficialObserver{
     	WORLD = new ActorWorld();
     	
     private static final int
-    	TIMER_START = 0,
+    	TIMER_START = 0;
+    
+    public static final int
     	BOARD_SIZE = 18;
     	
     private int mTimer;
@@ -82,8 +89,8 @@ class GameBoard extends OfficialObserver{
     private ArrayList<Piece> toPieceList(String officialData){
         ArrayList<Piece> list = new ArrayList<>();
         JsonArray array;
-		try{ array = JsonParser.array().from(officialData);  }
-		catch(JsonParserException e){ e.printStackTrace(); return null; }
+        try{ array = JsonParser.array().from(officialData);  }
+        catch(JsonParserException e){ e.printStackTrace(); return null; }
         int offset = 4;
         for(int k = 0; k < array.size(); k += offset)
             list.add( new Piece(
@@ -98,26 +105,25 @@ class GameBoard extends OfficialObserver{
     private void clearBoard(){
     	for(int x = 0; x < BOARD_SIZE; x++){
     		for(int y = 0; y < BOARD_SIZE; y++){
-    			Object obj = WORLD.remove( new Location(x,y) );
+    			Object obj = WORLD.remove( new Location(y,x) );
     			if(obj instanceof Piece){
     				Piece p = (Piece) obj;
     				Actor a = new Flower();
     				a.setColor( p.getColor() );
-    				WORLD.add(new Location(x,y), a);
+    				WORLD.add(new Location(y,x), a);
     			}
     		}
     	}
     }
     
     private int isNewMove(String team1Move, String team2Move, ArrayList<String>past){
-    	String inMoves = team1Move + team2Move;
     	for (String oldMove : past){
     		if( oldMove.equals(team1Move) )
     			return 1;
     		if( oldMove.equals(team2Move) )
     			return 2;
     	}
-    	if(past.size() == 0){
+    	if( past.isEmpty() ){
     		past.add(team1Move);
     		past.add(team2Move);
     	}
@@ -134,7 +140,7 @@ class GameBoard extends OfficialObserver{
     private static Location getToLocation(String move){
     	ArrayList<Location> moveLocs = toLocationList(move);
     	Location target = moveLocs.get( moveLocs.size() - 1 );
-    	return new Location(target.getCol(), target.getRow());
+    	return new Location(target.getRow(), target.getCol());
     }
     private void addToPieces(String team1Move, String team2Move, ActorWorld world){
     	Location
@@ -147,38 +153,44 @@ class GameBoard extends OfficialObserver{
     	bluePiece.setColor( TEAM_B_COLOR );
     	world.add(redLoc, redPiece);
     	world.add(blueLoc, bluePiece);
-    	//print(bluePiece.getLocation().toString());
     }
+    
     private static ArrayList<Location> toLocationList(String move){
-    	JsonArray array = null;
-    	ArrayList<Location>locs = new ArrayList<Location>();
+    	JsonArray array;
+    	ArrayList<Location> locs = new ArrayList<Location>();
     	try{ array = JsonParser.array().from(move); }
-    	catch(Exception e){
+    	catch(JsonParserException e){
     		return null;
     	}
+        int x;
     	ArrayList<Integer>coordList = new ArrayList<Integer>();
-		for(int k = 0; k < array.size(); k++)
-			coordList.add( array.getInt(k)  );
-		Iterator<Integer>itr = coordList.iterator();
-		while(itr.hasNext())
-			locs.add( new Location(itr.next(), itr.next()) );
-		return locs;
+        for(int k = 0; k < array.size(); k++)
+                coordList.add( array.getInt(k)  );
+        Iterator<Integer>itr = coordList.iterator();
+        while(itr.hasNext()){
+                x = itr.next();
+                locs.add( new Location(itr.next(), x) );
+        }
+        return locs;
     }
     
     private String formatMove(String move){
-    	JsonArray array = null;
+    	JsonArray array;
     	try{ array = JsonParser.array().from(move); }
-    	catch(Exception e){
+    	catch(JsonParserException e){
     		return move;
     	}
+        int x;
     	ArrayList<Integer>coordList = new ArrayList<Integer>();
-		for(int k = 0; k < array.size(); k++)
-			coordList.add( array.getInt(k)  );
-		Iterator<Integer>itr = coordList.iterator();
-		ArrayList<Location>locs = new ArrayList<Location>();
-		while(itr.hasNext())
-			locs.add( new Location(itr.next(), itr.next()) );
-		return locs.toString();
+        for(int k = 0; k < array.size(); k++)
+                coordList.add( array.getInt(k)  );
+        Iterator<Integer> itr = coordList.iterator();
+        ArrayList<Location> locs = new ArrayList<Location>();
+        while(itr.hasNext()){
+                x = itr.next();
+                locs.add( new Location(itr.next(), x) );
+        }
+        return locs.toString();
     }
     
     protected void drawBoard(String inData){

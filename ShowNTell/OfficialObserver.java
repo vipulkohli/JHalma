@@ -9,10 +9,10 @@ public abstract class OfficialObserver implements Observer{
     private Official m_official;
     private String m_message, m_recipient;
 	
-	public static void freezeProgram(){
-		try{ Thread.sleep(100 * 1000);  }
-		catch(Exception e){}
-	}
+    public static void freezeProgram(){
+            try{ Thread.sleep(100 * 1000);  }
+            catch(InterruptedException e){}
+    }
 	
     @Override
     public void update(Observable o, Object arg){
@@ -27,9 +27,11 @@ public abstract class OfficialObserver implements Observer{
                     }
             }
     }
+    
     public static void print(String message){
     	System.out.println(message);
-	}
+    }
+    
     protected void replyToOfficial(String sender, String message){
             m_official.reply(sender, message);
     }
@@ -39,11 +41,11 @@ public abstract class OfficialObserver implements Observer{
     }
     
     protected String getMessageRecipient(){
-            return new String(m_recipient);
+            return m_recipient;
     }
     
     protected String getMessage(){
-            return new String(m_message);
+            return m_message;
     }
     
     protected boolean checkRecipient( String inCode ){

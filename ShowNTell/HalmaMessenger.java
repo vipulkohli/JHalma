@@ -151,7 +151,7 @@ public class HalmaMessenger extends OfficialObserver{
 						writer = writer.value( toJSONObj(x, y) );
 		return writer;
     }
-
+    
     private static String convertBoardToJSON(ArrayList<XYDLocation> boardList, int playerNum){
     	JsonStringWriter writer = JsonWriter.string().object()
     	.value("boardSize", 18)
