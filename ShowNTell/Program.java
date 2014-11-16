@@ -51,7 +51,9 @@ class GameBoard extends OfficialObserver{
     	WORLD = new ActorWorld();
     	
     private static final int
-    	TIMER_START = 0,
+    	TIMER_START = 0;
+    
+    public static final int
     	BOARD_SIZE = 18;
     	
     private int mTimer;
@@ -87,8 +89,8 @@ class GameBoard extends OfficialObserver{
     private ArrayList<Piece> toPieceList(String officialData){
         ArrayList<Piece> list = new ArrayList<>();
         JsonArray array;
-		try{ array = JsonParser.array().from(officialData);  }
-		catch(JsonParserException e){ e.printStackTrace(); return null; }
+        try{ array = JsonParser.array().from(officialData);  }
+        catch(JsonParserException e){ e.printStackTrace(); return null; }
         int offset = 4;
         for(int k = 0; k < array.size(); k += offset)
             list.add( new Piece(
@@ -115,14 +117,13 @@ class GameBoard extends OfficialObserver{
     }
     
     private int isNewMove(String team1Move, String team2Move, ArrayList<String>past){
-    	String inMoves = team1Move + team2Move;
     	for (String oldMove : past){
     		if( oldMove.equals(team1Move) )
     			return 1;
     		if( oldMove.equals(team2Move) )
     			return 2;
     	}
-    	if(past.size() == 0){
+    	if( past.isEmpty() ){
     		past.add(team1Move);
     		past.add(team2Move);
     	}
@@ -171,7 +172,7 @@ class GameBoard extends OfficialObserver{
     }
     
     private String formatMove(String move){
-    	JsonArray array = null;
+    	JsonArray array;
     	try{ array = JsonParser.array().from(move); }
     	catch(JsonParserException e){
     		return move;

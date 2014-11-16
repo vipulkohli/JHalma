@@ -22,7 +22,7 @@ public class Official extends Observable{
     public String getDefaultStartBoard(){
         ArrayList<Integer> iBoard = new ArrayList<>();
         //build teams
-        int size = 18;
+        int size = GameBoard.BOARD_SIZE;
         for(int x = 0; x < 3; x++){
             for(int y = 0; y < 4; y++){
                 Piece red = new Piece(x, size-1-y, 0, 0);
@@ -42,6 +42,7 @@ public class Official extends Observable{
         getRemoteAIMoves( mBoard );
     }
     
+    //tell the Halma Messenger to request moves
     private Official getRemoteAIMoves(String inBoard){
         send(AI_RELAY, inBoard);
         return this;
@@ -71,6 +72,7 @@ public class Official extends Observable{
     	return this;
     }
     
+    //receive a reply from an observer, and act accordingly
     public void reply(String sender, String message){
         if( AI_RELAY.equals(sender) ) 
         	output("From M: " + message)
