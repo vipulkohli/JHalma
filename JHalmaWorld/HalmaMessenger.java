@@ -145,6 +145,13 @@ public class HalmaMessenger extends OfficialObserver{
 		}
     }
     
+    private static JsonStringWriter range(JsonStringWriter writer, int xMin, int xMax, int yMin, int yMax){
+    	for(int x = xMin; x <= xMax; x++)
+	        		for(int y = yMin; y <= yMax; y++)
+						writer = writer.value( toJSONObj(x, y) );
+		return writer;
+    }
+    
     private static String convertBoardToJSON(ArrayList<XYDLocation> boardList, int playerNum){
     	JsonStringWriter writer = JsonWriter.string().object()
     	.value("boardSize", 18)
@@ -161,25 +168,15 @@ public class HalmaMessenger extends OfficialObserver{
         .array("destinations");
         switch(playerNum){
         	case 0:
-	        	for(int x = 15; x < 18; x++)
-	        		for(int y = 0; y < 3; y++)
-						writer = writer.value( toJSONObj( x, y ) ); 
-	            writer = writer.end()
-	            .array("enemydestinations");
-	            for(int x = 0; x < 3; x++)
-	        		for(int y = 0; y < 3; y++)
-	        			writer = writer.value( toJSONObj( x, y ) );
+	        	writer = range(writer, 15, 17, 0, 2);
+	            writer = writer.end().array("enemydestinations");
+	            writer = range(writer, 0, 2, 0, 2);
 	            writer = writer.end();
 	      	break;
 	      	default:
-	        	for(int x = 0; x < 3; x++)
-	        		for(int y = 0; y < 3; y++)
-	        			writer = writer.value( toJSONObj( x, y ) );
-	            writer = writer.end()
-	            .array("enemydestinations");
-	            for(int x = 15; x < 18; x++)
-	        		for(int y = 0; y < 3; y++)
-	        			writer = writer.value( toJSONObj( x, y ) );
+	        	writer = range(writer, 0, 2, 0, 2);
+	            writer = writer.end().array("enemydestinations");
+	            writer = range(writer, 15, 17, 0, 2);
 	            writer = writer.end();
         }//end playerNum switch
         return writer.end().done();
