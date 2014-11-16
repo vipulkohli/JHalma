@@ -1,4 +1,5 @@
 import com.grack.nanojson.*;
+import info.gridworld.grid.*;
 import java.net.*;
 import java.util.*;
 import java.io.BufferedReader;
@@ -122,48 +123,87 @@ public class HalmaMessenger extends OfficialObserver{
         return "";
     }
     
-    private static String convertBoardToJSON(ArrayList<XYDLocation> boardList, int playerNum){
+    private static String convertBoardToJSON
+    	(ArrayList<XYDLocation> boardList, int playerNum){
 
-    	JsonStringWriter writ = JsonWriter.string()
-    		.object().value("boardSize", 18).array("pieces");
+    	JsonStringWriter writer = JsonWriter.string().object()
+    	.value("boardSize", 18)
+    	.array("pieces");
     	for (XYDLocation piece : boardList){
             if (piece.getTeam() == playerNum){
-                writ.value(piece.toJSONString());
+                try{ 
+                	writer = writer.value( JsonParser.object()
+                		.from( piece.toJSONString() ) ); 
+                }
+                catch(Exception e){ e.printStackTrace();  }
             }
         }
-        writ = writ.end().array("enemy");
+        writer = writer.end()
+        .array("enemy");
         for (XYDLocation piece : boardList){
             if (piece.getTeam() != playerNum){
-                writ.value(piece.toJSONString());
+                try{ 
+                	writer = writer.value( JsonParser.object()
+                		.from( piece.toJSONString() ) ); 
+                }
+                catch(Exception e){ e.printStackTrace(); }
             }
         }
-    	String JSON = writ.end().end().done()
-    		.replace("\\\"", "\"").replace("\"{", "{").replace("}\"", "}");
-        JSON = JSON.substring(0, JSON.lastIndexOf("}"));
-        JSON += ",\"destinations\":[";
-        
+        writer = writer.end()
+        .array("destinations");
         if (playerNum == 0){
-            JSON += "{\"x\":17,\"y\":0},{\"x\":17,\"y\":1},{\"x\":17,\"y\":2}," +
-                    "{\"x\":16,\"y\":0},{\"x\":16,\"y\":1},{\"x\":16,\"y\":2}," +
-                    "{\"x\":15,\"y\":0},{\"x\":15,\"y\":1},{\"x\":15,\"y\":2}";
-            JSON += "],\"enemydestinations\":[";
-            JSON += "{\"x\":0,\"y\":0},{\"x\":0,\"y\":1},{\"x\":0,\"y\":2}," +
-                    "{\"x\":1,\"y\":0},{\"x\":1,\"y\":1},{\"x\":1,\"y\":2}," +
-                    "{\"x\":2,\"y\":0},{\"x\":2,\"y\":1},{\"x\":2,\"y\":2}";
+        	for(int x = 15; x < 18; x++)
+        		for(int y = 0; y < 3; y++)
+        			try{
+        				writer = writer.value( JsonParser.object()
+                			.from( (new XY(x,y)).toJSONString() ) ); 
+        			}
+        			catch(Exception e){ e.printStackTrace(); }
+            writer = writer.end()
+            .array("enemydestinations");
+            for(int x = 0; x < 3; x++)
+        		for(int y = 0; y < 3; y++)
+        			try{
+        				writer = writer.value( JsonParser.object()
+                			.from( (new XY(x,y)).toJSONString() ) ); 
+        			}
+        			catch(Exception e){ e.printStackTrace(); }
+            writer = writer.end();
         }
         else{
-            JSON += "{\"x\":0,\"y\":0},{\"x\":0,\"y\":1},{\"x\":0,\"y\":2}," +
-                    "{\"x\":1,\"y\":0},{\"x\":1,\"y\":1},{\"x\":1,\"y\":2}," +
-                    "{\"x\":2,\"y\":0},{\"x\":2,\"y\":1},{\"x\":2,\"y\":2}";
-            JSON += "],\"enemydestinations\":[";
-            JSON += "{\"x\":17,\"y\":0},{\"x\":17,\"y\":1},{\"x\":17,\"y\":2}," +
-                    "{\"x\":16,\"y\":0},{\"x\":16,\"y\":1},{\"x\":16,\"y\":2}," +
-                    "{\"x\":15,\"y\":0},{\"x\":15,\"y\":1},{\"x\":15,\"y\":2}";
+        	for(int x = 0; x < 3; x++)
+        		for(int y = 0; y < 3; y++)
+        			try{
+        				writer = writer.value( JsonParser.object()
+                			.from( (new XY(x,y)).toJSONString() ) ); 
+        			}
+        			catch(Exception e){ e.printStackTrace(); }
+            writer = writer.end()
+            .array("enemydestinations");
+            for(int x = 15; x < 18; x++)
+        		for(int y = 0; y < 3; y++)
+        			try{
+        				writer = writer.value( JsonParser.object()
+                			.from( (new XY(x,y)).toJSONString() ) ); 
+        			}
+        			catch(Exception e){ e.printStackTrace(); }
+            writer = writer.end();
         }
-        
-        JSON += "]}";
-        
-        return JSON;
+        return writer.end().done();
+    }
+    
+    private static class XY extends Location {
+		public XY(int x, int y){
+			super(x,y);
+		}
+		public String toJSONString(){
+			return JsonWriter.string()
+	    		.object()
+				  .value("x", getRow())
+				  .value("y", getCol())
+				  .end()
+				.done();
+		}
     }
 }
 
