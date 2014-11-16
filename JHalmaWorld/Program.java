@@ -21,7 +21,7 @@ public class Program {
      */
     public static void main(String[] args){
         String player1 = "http://lyle.smu.edu/~tbgeorge/cse4345/a1/getMove.php";
-     	String player2 = "http://lyle.smu.edu/~tbgeorge/cse4345/a1/getMove.php";
+     	String player2 = "http://lyle.smu.edu/~sochaa/4345/FinalHalma/finalHalmaWithDamage.php";
      	new HalmaGame(player1, player2);  
     }
 }
