@@ -1,5 +1,4 @@
 import com.grack.nanojson.*;
-import info.gridworld.grid.*;
 import java.net.*;
 import java.util.*;
 import java.io.BufferedReader;
@@ -123,87 +122,67 @@ public class HalmaMessenger extends OfficialObserver{
         return "";
     }
     
-    private static String convertBoardToJSON
-    	(ArrayList<XYDLocation> boardList, int playerNum){
-
+    private static JsonObject toJSONObj(XYDLocation piece){
+    	try{ 
+        	return JsonParser.object().from( piece.toJSONString() ); 
+        } catch(Exception ex){ 
+        	Logger.getLogger(HalmaMessenger.class.getName()).log(Level.SEVERE, null, ex);
+        	return null;
+       	}
+    }
+    
+    private static JsonObject toJSONObj(int x, int y){
+    	String json = JsonWriter.string()
+	    		.object()
+				  .value("x", x)
+				  .value("y", y)
+				  .end()
+				.done();
+		try{ return JsonParser.object().from(json); } 
+		catch(Exception ex){
+			Logger.getLogger(HalmaMessenger.class.getName()).log(Level.SEVERE, null, ex);
+			return null;
+		}
+    }
+    
+    private static String convertBoardToJSON(ArrayList<XYDLocation> boardList, int playerNum){
     	JsonStringWriter writer = JsonWriter.string().object()
     	.value("boardSize", 18)
     	.array("pieces");
-    	for (XYDLocation piece : boardList){
-            if (piece.getTeam() == playerNum){
-                try{ 
-                	writer = writer.value( JsonParser.object()
-                		.from( piece.toJSONString() ) ); 
-                }
-                catch(Exception e){ e.printStackTrace();  }
-            }
-        }
+    	for (XYDLocation piece : boardList)
+            if (piece.getTeam() == playerNum)
+                	writer = writer.value( toJSONObj( piece ) ); 
         writer = writer.end()
         .array("enemy");
-        for (XYDLocation piece : boardList){
-            if (piece.getTeam() != playerNum){
-                try{ 
-                	writer = writer.value( JsonParser.object()
-                		.from( piece.toJSONString() ) ); 
-                }
-                catch(Exception e){ e.printStackTrace(); }
-            }
-        }
+        for (XYDLocation piece : boardList)
+            if (piece.getTeam() != playerNum)
+                writer = writer.value( toJSONObj( piece ) ); 
         writer = writer.end()
         .array("destinations");
-        if (playerNum == 0){
-        	for(int x = 15; x < 18; x++)
-        		for(int y = 0; y < 3; y++)
-        			try{
-        				writer = writer.value( JsonParser.object()
-                			.from( (new XY(x,y)).toJSONString() ) ); 
-        			}
-        			catch(Exception e){ e.printStackTrace(); }
-            writer = writer.end()
-            .array("enemydestinations");
-            for(int x = 0; x < 3; x++)
-        		for(int y = 0; y < 3; y++)
-        			try{
-        				writer = writer.value( JsonParser.object()
-                			.from( (new XY(x,y)).toJSONString() ) ); 
-        			}
-        			catch(Exception e){ e.printStackTrace(); }
-            writer = writer.end();
-        }
-        else{
-        	for(int x = 0; x < 3; x++)
-        		for(int y = 0; y < 3; y++)
-        			try{
-        				writer = writer.value( JsonParser.object()
-                			.from( (new XY(x,y)).toJSONString() ) ); 
-        			}
-        			catch(Exception e){ e.printStackTrace(); }
-            writer = writer.end()
-            .array("enemydestinations");
-            for(int x = 15; x < 18; x++)
-        		for(int y = 0; y < 3; y++)
-        			try{
-        				writer = writer.value( JsonParser.object()
-                			.from( (new XY(x,y)).toJSONString() ) ); 
-        			}
-        			catch(Exception e){ e.printStackTrace(); }
-            writer = writer.end();
-        }
+        switch(playerNum){
+        	case 0:
+	        	for(int x = 15; x < 18; x++)
+	        		for(int y = 0; y < 3; y++)
+						writer = writer.value( toJSONObj( x, y ) ); 
+	            writer = writer.end()
+	            .array("enemydestinations");
+	            for(int x = 0; x < 3; x++)
+	        		for(int y = 0; y < 3; y++)
+	        			writer = writer.value( toJSONObj( x, y ) );
+	            writer = writer.end();
+	      	break;
+	      	default:
+	        	for(int x = 0; x < 3; x++)
+	        		for(int y = 0; y < 3; y++)
+	        			writer = writer.value( toJSONObj( x, y ) );
+	            writer = writer.end()
+	            .array("enemydestinations");
+	            for(int x = 15; x < 18; x++)
+	        		for(int y = 0; y < 3; y++)
+	        			writer = writer.value( toJSONObj( x, y ) );
+	            writer = writer.end();
+        }//end playerNum switch
         return writer.end().done();
-    }
-    
-    private static class XY extends Location {
-		public XY(int x, int y){
-			super(x,y);
-		}
-		public String toJSONString(){
-			return JsonWriter.string()
-	    		.object()
-				  .value("x", getRow())
-				  .value("y", getCol())
-				  .end()
-				.done();
-		}
     }
 }
 
