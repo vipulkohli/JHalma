@@ -7,7 +7,7 @@ public class XYDLocation{
 	int mTeam;
     
 	public XYDLocation(int x, int y, int d, int t){
-        mLoc = new Location( x , y );
+        mLoc = new Location( y , x );
         mDamage = d;
         mTeam = t;
 	}
@@ -37,7 +37,7 @@ public class XYDLocation{
         return this;
     }
     public XYDLocation setXY(Location moveLoc){
-        setXY(moveLoc.getRow(), moveLoc.getCol());
+        setXY(moveLoc.getCol(), moveLoc.getRow());
         return this;
     }
     
@@ -49,36 +49,36 @@ public class XYDLocation{
     
     public void setX(int x){
         int y = getY();
-        mLoc = new Location(x, y);
+        mLoc = new Location(y, x);
     }
     public void setY(int y){
         int x = getX();
-        mLoc = new Location(x, y);
+        mLoc = new Location(y, x);
     }
-	public int getX(){
-		return mLoc.getRow();
-	}
-	public int getY(){
-		return mLoc.getCol();
-	}
-	public int getD(){
-		return mDamage;
-	}
+    public int getX(){
+            return mLoc.getCol();
+    }
+    public int getY(){
+            return mLoc.getRow();
+    }
+    public int getD(){
+            return mDamage;
+    }
     
     public boolean equals( Location other  ){
         return mLoc.equals( other );
     }
     
-	public boolean equals(Location other, int otherTeam){
+    public boolean equals(Location other, int otherTeam){
         return mLoc.equals(other) && otherTeam == mTeam;
-	}
+    }
     
     @Override
-	public String toString(){
+    public String toString(){
         return getX() + "," + getY() + "," + getD() + "," + getTeam();  
-	}
+    }
     
-	public String toJSONString(){
+    public String toJSONString(){
         return "\"x\":" + getX() + ",\"y\":" + getY() + ",\"damage\":" + getD() + ",\"team\":" + getTeam();  
-	}
+    }
 }

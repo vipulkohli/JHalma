@@ -21,11 +21,11 @@ public class Program {
     public static void main(String[] args){
         //Tyler's AI
         //String player1 = "http://lyle.smu.edu/~tbgeorge/cse4345/a1/getMove.php";
-     	String player2 = "http://lyle.smu.edu/~tbgeorge/cse4345/a1/getMove.php";
+     	//String player2 = "http://lyle.smu.edu/~tbgeorge/cse4345/a1/getMove.php";
         
         //Andrew's AI
         String player1 = "http://lyle.smu.edu/~sochaa/4345/FinalHalma/finalHalmaWithDamage.php";
-        //String player2 = "http://lyle.smu.edu/~sochaa/4345/FinalHalma/finalHalmaWithDamage.php";
+        String player2 = "http://lyle.smu.edu/~sochaa/4345/FinalHalma/finalHalmaWithDamage.php";
         
      	new HalmaGame(player1, player2);  
     }
@@ -105,12 +105,12 @@ class GameBoard extends OfficialObserver{
     private void clearBoard(){
     	for(int x = 0; x < BOARD_SIZE; x++){
     		for(int y = 0; y < BOARD_SIZE; y++){
-    			Object obj = WORLD.remove( new Location(x,y) );
+    			Object obj = WORLD.remove( new Location(y,x) );
     			if(obj instanceof Piece){
     				Piece p = (Piece) obj;
     				Actor a = new Flower();
     				a.setColor( p.getColor() );
-    				WORLD.add(new Location(x,y), a);
+    				WORLD.add(new Location(y,x), a);
     			}
     		}
     	}
@@ -140,7 +140,7 @@ class GameBoard extends OfficialObserver{
     private static Location getToLocation(String move){
     	ArrayList<Location> moveLocs = toLocationList(move);
     	Location target = moveLocs.get( moveLocs.size() - 1 );
-    	return new Location(target.getCol(), target.getRow());
+    	return new Location(target.getRow(), target.getCol());
     }
     private void addToPieces(String team1Move, String team2Move, ActorWorld world){
     	Location
@@ -153,8 +153,8 @@ class GameBoard extends OfficialObserver{
     	bluePiece.setColor( TEAM_B_COLOR );
     	world.add(redLoc, redPiece);
     	world.add(blueLoc, bluePiece);
-    	//print(bluePiece.getLocation().toString());
     }
+    
     private static ArrayList<Location> toLocationList(String move){
     	JsonArray array;
     	ArrayList<Location> locs = new ArrayList<Location>();
@@ -162,13 +162,16 @@ class GameBoard extends OfficialObserver{
     	catch(JsonParserException e){
     		return null;
     	}
+        int x;
     	ArrayList<Integer>coordList = new ArrayList<Integer>();
-		for(int k = 0; k < array.size(); k++)
-			coordList.add( array.getInt(k)  );
-		Iterator<Integer>itr = coordList.iterator();
-		while(itr.hasNext())
-			locs.add( new Location(itr.next(), itr.next()) );
-		return locs;
+        for(int k = 0; k < array.size(); k++)
+                coordList.add( array.getInt(k)  );
+        Iterator<Integer>itr = coordList.iterator();
+        while(itr.hasNext()){
+                x = itr.next();
+                locs.add( new Location(itr.next(), x) );
+        }
+        return locs;
     }
     
     private String formatMove(String move){
@@ -177,14 +180,17 @@ class GameBoard extends OfficialObserver{
     	catch(JsonParserException e){
     		return move;
     	}
+        int x;
     	ArrayList<Integer>coordList = new ArrayList<Integer>();
-		for(int k = 0; k < array.size(); k++)
-			coordList.add( array.getInt(k)  );
-		Iterator<Integer>itr = coordList.iterator();
-		ArrayList<Location>locs = new ArrayList<Location>();
-		while(itr.hasNext())
-			locs.add( new Location(itr.next(), itr.next()) );
-		return locs.toString();
+        for(int k = 0; k < array.size(); k++)
+                coordList.add( array.getInt(k)  );
+        Iterator<Integer> itr = coordList.iterator();
+        ArrayList<Location> locs = new ArrayList<Location>();
+        while(itr.hasNext()){
+                x = itr.next();
+                locs.add( new Location(itr.next(), x) );
+        }
+        return locs.toString();
     }
     
     protected void drawBoard(String inData){

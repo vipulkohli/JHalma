@@ -26,7 +26,7 @@ public class CollisionAnalyst extends OfficialObserver{
     }
     
     public static String getNewBoardPosition(String multiData){
-        ArrayList<String>playerMoves = new ArrayList<String>();
+        ArrayList<String> playerMoves = new ArrayList<String>();
         String [] data = toStrArray( multiData );
         String board = data[0];
         playerMoves.add(data[1]);
@@ -92,14 +92,14 @@ public class CollisionAnalyst extends OfficialObserver{
     }
     
     private static ArrayList<Integer> toIntList(int [] coords){
-        ArrayList<Integer>coordList = new ArrayList<Integer>();
+        ArrayList<Integer> coordList = new ArrayList<Integer>();
         for(int coordinate : coords)
     		coordList.add( coordinate );
     	return coordList;
     }
     
     public static ArrayList<XYDLocation> getXYDList( String inBoard ){
-    	ArrayList<Integer>coordList = toIntList( toIntArray(inBoard) );
+    	ArrayList<Integer> coordList = toIntList( toIntArray(inBoard) );
     	ArrayList<XYDLocation> xydlist = new ArrayList<XYDLocation>();
     	Iterator<Integer> itr = coordList.iterator();
     	while( itr.hasNext() )
@@ -124,19 +124,19 @@ public class CollisionAnalyst extends OfficialObserver{
     
     public static Location getFromLocation(String move){
     	int [] moveArray = toIntArray( move );
-    	return new Location( moveArray[0] , moveArray[1]);
+    	return new Location( moveArray[1] , moveArray[0]);
     }
     
     public static Location getToLocation(String move){
     	int [] moveArray = toIntArray( move );
-    	return new Location( moveArray[moveArray.length - 2] , moveArray[moveArray.length - 1]);
+    	return new Location( moveArray[moveArray.length - 1] , moveArray[moveArray.length - 2]);
     }
     
     public static ArrayList<Location> getToLocationArray(String move){
     	int [] moveArray = toIntArray( move );
         ArrayList<Location> moveArrayList = new ArrayList<>();
         for (int i = 2; i < moveArray.length; i+=2){
-            moveArrayList.add(new Location(moveArray[i], moveArray[i+1]));
+            moveArrayList.add(new Location(moveArray[i+1], moveArray[i]));
         }
     	return moveArrayList;
     }
