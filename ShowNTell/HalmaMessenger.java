@@ -19,7 +19,7 @@ public class HalmaMessenger extends OfficialObserver{
     	COLUMN_INDEX = "x",
     	FROM_KEY = "from",
     	TO_KEY = "to";
-    private final String m_url1, m_url2;
+    private String m_url1, m_url2;
 
     public HalmaMessenger(String inPlayer1addy, String inPlayer2addy){
             m_url1 = inPlayer1addy;
@@ -122,46 +122,64 @@ public class HalmaMessenger extends OfficialObserver{
         return "";
     }
     
+    private static JsonObject toJSONObj(XYDLocation piece){
+    	try{ 
+        	return JsonParser.object().from( piece.toJSONString() ); 
+        } catch(Exception ex){ 
+        	Logger.getLogger(HalmaMessenger.class.getName()).log(Level.SEVERE, null, ex);
+        	return null;
+       	}
+    }
+    
+    private static JsonObject toJSONObj(int x, int y){
+    	String json = JsonWriter.string()
+	    		.object()
+				  .value("x", x)
+				  .value("y", y)
+				  .end()
+				.done();
+		try{ return JsonParser.object().from(json); } 
+		catch(Exception ex){
+			Logger.getLogger(HalmaMessenger.class.getName()).log(Level.SEVERE, null, ex);
+			return null;
+		}
+    }
+    
+    private static JsonStringWriter range(JsonStringWriter writer, int xMin, int xMax, int yMin, int yMax){
+    	for(int x = xMin; x <= xMax; x++)
+	        		for(int y = yMin; y <= yMax; y++)
+						writer = writer.value( toJSONObj(x, y) );
+		return writer;
+    }
+
     private static String convertBoardToJSON(ArrayList<XYDLocation> boardList, int playerNum){
-        String JSON = "{\"boardSize\":18,\"pieces\":[";
-        for (XYDLocation piece : boardList){
-            if (piece.getTeam() == playerNum){
-                JSON += "{" + piece.toJSONString() + "},";
-            }
-        }
-        JSON = JSON.substring(0, JSON.length()-1);
-        
-        JSON += "],\"enemy\":[";
-        for (XYDLocation piece : boardList){
-            if (piece.getTeam() != playerNum){
-                JSON += "{" + piece.toJSONString() + "},";
-            }
-        }
-        JSON = JSON.substring(0, JSON.length()-1);
-        JSON += "],\"destinations\":[";
-        
-        if (playerNum == 0){
-            JSON += "{\"x\":17,\"y\":0},{\"x\":17,\"y\":1},{\"x\":17,\"y\":2}," +
-                    "{\"x\":16,\"y\":0},{\"x\":16,\"y\":1},{\"x\":16,\"y\":2}," +
-                    "{\"x\":15,\"y\":0},{\"x\":15,\"y\":1},{\"x\":15,\"y\":2}";
-            JSON += "],\"enemydestinations\":[";
-            JSON += "{\"x\":0,\"y\":0},{\"x\":0,\"y\":1},{\"x\":0,\"y\":2}," +
-                    "{\"x\":1,\"y\":0},{\"x\":1,\"y\":1},{\"x\":1,\"y\":2}," +
-                    "{\"x\":2,\"y\":0},{\"x\":2,\"y\":1},{\"x\":2,\"y\":2}";
-        }
-        else{
-            JSON += "{\"x\":0,\"y\":0},{\"x\":0,\"y\":1},{\"x\":0,\"y\":2}," +
-                    "{\"x\":1,\"y\":0},{\"x\":1,\"y\":1},{\"x\":1,\"y\":2}," +
-                    "{\"x\":2,\"y\":0},{\"x\":2,\"y\":1},{\"x\":2,\"y\":2}";
-            JSON += "],\"enemydestinations\":[";
-            JSON += "{\"x\":17,\"y\":0},{\"x\":17,\"y\":1},{\"x\":17,\"y\":2}," +
-                    "{\"x\":16,\"y\":0},{\"x\":16,\"y\":1},{\"x\":16,\"y\":2}," +
-                    "{\"x\":15,\"y\":0},{\"x\":15,\"y\":1},{\"x\":15,\"y\":2}";
-        }
-        
-        JSON += "]}";
-        
-        return JSON;
+    	JsonStringWriter writer = JsonWriter.string().object()
+    	.value("boardSize", 18)
+    	.array("pieces");
+    	for (XYDLocation piece : boardList)
+            if (piece.getTeam() == playerNum)
+                	writer = writer.value( toJSONObj( piece ) ); 
+        writer = writer.end()
+        .array("enemy");
+        for (XYDLocation piece : boardList)
+            if (piece.getTeam() != playerNum)
+                writer = writer.value( toJSONObj( piece ) ); 
+        writer = writer.end()
+        .array("destinations");
+        switch(playerNum){
+        	case 0:
+	        	writer = range(writer, 15, 17, 0, 2);
+	            writer = writer.end().array("enemydestinations");
+	            writer = range(writer, 0, 2, 0, 2);
+	            writer = writer.end();
+	      	break;
+	      	default:
+	        	writer = range(writer, 0, 2, 0, 2);
+	            writer = writer.end().array("enemydestinations");
+	            writer = range(writer, 15, 17, 0, 2);
+	            writer = writer.end();
+        }//end playerNum switch
+        return writer.end().done();
     }
 }
 

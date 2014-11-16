@@ -1,4 +1,5 @@
 import info.gridworld.grid.Location;
+import com.grack.nanojson.*;
 
 public class XYDLocation{
 	
@@ -7,7 +8,7 @@ public class XYDLocation{
 	int mTeam;
     
 	public XYDLocation(int x, int y, int d, int t){
-        mLoc = new Location( y , x );
+        mLoc = new Location( x , y );
         mDamage = d;
         mTeam = t;
 	}
@@ -37,7 +38,7 @@ public class XYDLocation{
         return this;
     }
     public XYDLocation setXY(Location moveLoc){
-        setXY(moveLoc.getCol(), moveLoc.getRow());
+        setXY(moveLoc.getRow(), moveLoc.getCol());
         return this;
     }
     
@@ -49,36 +50,43 @@ public class XYDLocation{
     
     public void setX(int x){
         int y = getY();
-        mLoc = new Location(y, x);
+        mLoc = new Location(x, y);
     }
     public void setY(int y){
         int x = getX();
-        mLoc = new Location(y, x);
+        mLoc = new Location(x, y);
     }
-    public int getX(){
-            return mLoc.getCol();
-    }
-    public int getY(){
-            return mLoc.getRow();
-    }
-    public int getD(){
-            return mDamage;
-    }
+	public int getX(){
+		return mLoc.getRow();
+	}
+	public int getY(){
+		return mLoc.getCol();
+	}
+	public int getD(){
+		return mDamage;
+	}
     
     public boolean equals( Location other  ){
         return mLoc.equals( other );
     }
     
-    public boolean equals(Location other, int otherTeam){
+	public boolean equals(Location other, int otherTeam){
         return mLoc.equals(other) && otherTeam == mTeam;
-    }
+	}
     
     @Override
-    public String toString(){
+	public String toString(){
         return getX() + "," + getY() + "," + getD() + "," + getTeam();  
-    }
+	}
     
-    public String toJSONString(){
-        return "\"x\":" + getX() + ",\"y\":" + getY() + ",\"damage\":" + getD() + ",\"team\":" + getTeam();  
-    }
+	public String toJSONString(){
+		return JsonWriter.string()
+    		.object()
+			  .value("x", getX())
+			  .value("y", getY())
+			  .value("damage", getD())
+			  .value("team", getTeam())	
+			  .end()
+			.done(); 
+	}
 }

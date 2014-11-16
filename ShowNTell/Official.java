@@ -6,7 +6,7 @@ public class Official extends Observable{
     private int mCount;
     private static final int
     	DELAY_DEFAULT = 0,
-    	RUN_COUNT = 1000; //maximum moves before aborting game
+    	RUN_COUNT = 1000;//TEST_MOVES.length;
     private static final String
         SPLIT_PHRASE = "SPLITSPLIT",
         SUPER_SPLIT = "SPLITSPLITSPLIT",
@@ -22,7 +22,7 @@ public class Official extends Observable{
     public String getDefaultStartBoard(){
         ArrayList<Integer> iBoard = new ArrayList<>();
         //build teams
-        int size = GameBoard.BOARD_SIZE;
+        int size = 18;
         for(int x = 0; x < 3; x++){
             for(int y = 0; y < 4; y++){
                 Piece red = new Piece(x, size-1-y, 0, 0);
@@ -42,7 +42,6 @@ public class Official extends Observable{
         getRemoteAIMoves( mBoard );
     }
     
-    //tell the Halma Messenger to request moves
     private Official getRemoteAIMoves(String inBoard){
         send(AI_RELAY, inBoard);
         return this;
@@ -62,6 +61,15 @@ public class Official extends Observable{
     	return this;
     }
     
+    private void freezeProgram(){
+    	try{
+    		Thread.sleep(10 * 1000);
+    	}
+    	catch(InterruptedException e){
+    		return;
+    	}
+    }
+    
     private Official output(String message){
     	System.out.println(message);
     	return this;
@@ -72,7 +80,6 @@ public class Official extends Observable{
     	return this;
     }
     
-    //receive a reply from an observer, and act accordingly
     public void reply(String sender, String message){
         if( AI_RELAY.equals(sender) ) 
         	output("From M: " + message)
@@ -83,7 +90,7 @@ public class Official extends Observable{
             .setBoard(message)
             .send( GRID, composeForGameBoard(message, mMove))
             .delay(DELAY_DEFAULT)
-            .getRemoteAIMoves( message );
+			.getRemoteAIMoves( message );
     }
     
     private static String concat(String inFront, String inTail){

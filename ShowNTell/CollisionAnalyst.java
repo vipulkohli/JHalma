@@ -26,7 +26,7 @@ public class CollisionAnalyst extends OfficialObserver{
     }
     
     public static String getNewBoardPosition(String multiData){
-        ArrayList<String> playerMoves = new ArrayList<String>();
+        ArrayList<String>playerMoves = new ArrayList<String>();
         String [] data = toStrArray( multiData );
         String board = data[0];
         playerMoves.add(data[1]);
@@ -50,21 +50,8 @@ public class CollisionAnalyst extends OfficialObserver{
     	Location toLoc0 = getToLocation( movesList.get(0) );
         Location fromLoc1 = getFromLocation( movesList.get(1) );
         Location toLoc1 = getToLocation( movesList.get(1) );
-        
-        ArrayList<XYDLocation> nextBoard = getXYDList(oldBoard);
-        
-        ArrayList<Location> toLocArray0 = getToLocationArray( movesList.get(0) );
-        ArrayList<Location> toLocArray1 = getToLocationArray( movesList.get(1) );
-        
-        //Verify move is valid
-        boolean isValid0 = isValidMoveRequest(fromLoc0, toLocArray0, nextBoard);
-        boolean isValid1 = isValidMoveRequest(fromLoc1, toLocArray1, nextBoard);
-        if (!isValid0 || !isValid1){
-            print("INVALID MOVE!"+isValid0+isValid1);
-        }
-        
-        //Check if there was a collision
         boolean isHeadOnCollision = toLoc0.equals(toLoc1);
+    	ArrayList<XYDLocation> nextBoard = getXYDList(oldBoard);
     	for(XYDLocation xyd : nextBoard){
             if(!isHeadOnCollision){
                 xyd.heal(); //heals all pieces
@@ -90,16 +77,14 @@ public class CollisionAnalyst extends OfficialObserver{
     	}
         return nextBoard.toString().replace(" ", "");
     }
-    
     private static ArrayList<Integer> toIntList(int [] coords){
-        ArrayList<Integer> coordList = new ArrayList<Integer>();
+        ArrayList<Integer>coordList = new ArrayList<Integer>();
         for(int coordinate : coords)
     		coordList.add( coordinate );
     	return coordList;
     }
-    
     public static ArrayList<XYDLocation> getXYDList( String inBoard ){
-    	ArrayList<Integer> coordList = toIntList( toIntArray(inBoard) );
+    	ArrayList<Integer>coordList = toIntList( toIntArray(inBoard) );
     	ArrayList<XYDLocation> xydlist = new ArrayList<XYDLocation>();
     	Iterator<Integer> itr = coordList.iterator();
     	while( itr.hasNext() )
@@ -124,120 +109,12 @@ public class CollisionAnalyst extends OfficialObserver{
     
     public static Location getFromLocation(String move){
     	int [] moveArray = toIntArray( move );
-    	return new Location( moveArray[1] , moveArray[0]);
+    	return new Location( moveArray[0] , moveArray[1]);
     }
     
     public static Location getToLocation(String move){
     	int [] moveArray = toIntArray( move );
-    	return new Location( moveArray[moveArray.length - 1] , moveArray[moveArray.length - 2]);
-    }
-    
-    public static ArrayList<Location> getToLocationArray(String move){
-    	int [] moveArray = toIntArray( move );
-        ArrayList<Location> moveArrayList = new ArrayList<>();
-        for (int i = 2; i < moveArray.length; i+=2){
-            moveArrayList.add(new Location(moveArray[i+1], moveArray[i]));
-        }
-    	return moveArrayList;
-    }
-    
-    //------------FUNCTIONS FOR VALIDATING MOVES------------
-    private static boolean isFreeCell(Location c1, ArrayList<XYDLocation> gPiecesArr) {
-        for(int i=0; i<gPiecesArr.size(); i++) {
-            if(c1.getCol() == gPiecesArr.get(i).getX() &&
-               c1.getRow() == gPiecesArr.get(i).getY())
-            return false;
-        }
-        return true;
-    }
-    
-    private static boolean isThereAPieceBetween(Location cell1, Location cell2, ArrayList<XYDLocation> gPieces) {
-        /* note: assumes cell1 and cell2 are 2 squares away
-         either vertically, horizontally, or diagonally */
-        int rowBetween = (cell1.getRow() + cell2.getRow()) / 2;
-        int columnBetween = (cell1.getCol() + cell2.getCol()) / 2;
-        for (int i = 0; i < gPieces.size(); i++) {
-            if ((gPieces.get(i).getY() == rowBetween) &&
-                    (gPieces.get(i).getX() == columnBetween)) {
-                return true;
-            }
-        }
-        return false;
-    }
-    
-    private static boolean isOneSpaceAway(Location c1, Location c2) {
-        int diffx = Math.abs(c1.getCol() - c2.getCol());
-        int diffy = Math.abs(c1.getRow() - c2.getRow());
-        int diffxy = diffx + diffy;
-        if (diffxy == 1) return true;  // x y axis
-        if (diffx==1 && diffy==1) return true; // diagonal
-        return false;  // not linear or diagonal
-    }
-
-    private static boolean isTwoSpacesAway(Location c1, Location c2) {
-        int diffx = Math.abs(c1.getCol() - c2.getCol());
-        int diffy = Math.abs(c1.getRow() - c2.getRow());
-        // check x and y
-        if  ((diffx == 2 && diffy == 0) ||
-             (diffx == 0 && diffy == 2)  ) return true;  // x y axis
-        // check diagonal
-        if (diffx==2 && diffy==2) return true;
-        return false;  // not linear or diagonal
-    }
-
-    // checks that src & dest are one cell apart and dest is free
-    private static boolean isLegalOneSquareMove(Location src, Location dest, ArrayList<XYDLocation> gPiecesArr) {
-        return (isOneSpaceAway(src,dest) && isFreeCell(dest, gPiecesArr)); 
-    }
-
-    // checks that 1) src & dest are two cells apart 2) dest is free
-    //             3) there exists a piece between src and dest
-    private static boolean isLegalTwoSquareJump(Location src, Location dest, ArrayList<XYDLocation> gPiecesArr) {
-        return (isTwoSpacesAway(src,dest) && isFreeCell(dest, gPiecesArr) && 
-                isThereAPieceBetween(src, dest, gPiecesArr) ); 
-    }
-
-    // jumpArr will have original source piece followed by jump locations
-    private static boolean isArrayOfValidJumps(Location src, ArrayList<Location> jumpArr, ArrayList<XYDLocation> gPiecesArr) {
-        // add src cell to array
-        jumpArr.add(0, src);
-
-        while (jumpArr.size() > 1) {
-            // check first two cells for jump
-            if ( !isLegalTwoSquareJump(jumpArr.get(0), jumpArr.get(1), gPiecesArr) ) {
-                print("Illegal jump from " + jumpArr.get(0).toString() +
-                        " to: " + jumpArr.get(1).toString());
-                return false;  
-            }
-            // remove first jump
-            jumpArr.remove(0);
-        }
-
-        // all valid jumps
-        return true;
-    }
-
-    // checks if piece is holding its position
-    private static boolean isPieceHoldingPosition(Location src, Location dest) {
-        return (src.getCol() == dest.getCol() && src.getRow() == dest.getRow());
-    }
-
-
-    // checks that array of requested moves is valid.
-    // if only one move in array, check either non-jump or one jump
-    // else check if all move pairs are jumping over some piece
-    private static boolean isValidMoveRequest(Location src, ArrayList<Location> moveArr, ArrayList<XYDLocation> gPieces) {
-        if(moveArr.isEmpty()) return false;
-
-        if(moveArr.size() == 1) {
-            Location dest = moveArr.get(0);  // only one
-            return (isLegalOneSquareMove(src, dest, gPieces)  ||
-                    isLegalTwoSquareJump(src, dest, gPieces)  ||
-                    isPieceHoldingPosition(src,dest) ); 
-        } 
-
-        // we have a multi jump request
-        return isArrayOfValidJumps(src, moveArr, gPieces);
+    	return new Location( moveArray[moveArray.length - 2] , moveArray[moveArray.length - 1]);
     }
 
 }

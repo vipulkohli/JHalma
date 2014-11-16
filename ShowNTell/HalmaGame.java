@@ -8,6 +8,7 @@ public class HalmaGame {
 		{
 			new HalmaMessenger(url1, url2),
 			new CollisionAnalyst(),
+			new GameBoard(),
 			new GameBoard()
 		};
 		for( Observer keeper : array )
