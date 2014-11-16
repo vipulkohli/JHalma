@@ -19,7 +19,7 @@ public class HalmaMessenger extends OfficialObserver{
     	COLUMN_INDEX = "x",
     	FROM_KEY = "from",
     	TO_KEY = "to";
-    private String m_url1, m_url2;
+    private final String m_url1, m_url2;
 
     public HalmaMessenger(String inPlayer1addy, String inPlayer2addy){
             m_url1 = inPlayer1addy;

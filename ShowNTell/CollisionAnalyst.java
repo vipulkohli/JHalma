@@ -77,12 +77,14 @@ public class CollisionAnalyst extends OfficialObserver{
     	}
         return nextBoard.toString().replace(" ", "");
     }
+    
     private static ArrayList<Integer> toIntList(int [] coords){
         ArrayList<Integer>coordList = new ArrayList<Integer>();
         for(int coordinate : coords)
     		coordList.add( coordinate );
     	return coordList;
     }
+    
     public static ArrayList<XYDLocation> getXYDList( String inBoard ){
     	ArrayList<Integer>coordList = toIntList( toIntArray(inBoard) );
     	ArrayList<XYDLocation> xydlist = new ArrayList<XYDLocation>();

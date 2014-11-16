@@ -1,8 +1,9 @@
 /**
  * @(#)Program.java
- *Includes GameBoard class
+ * Includes GameBoard class
  *
- * @author 
+ * @author Vipul Kohli
+ * @author Andrew Socha
  * @version 1.00 2014/4/27
  */
 import com.grack.nanojson.*;
@@ -16,12 +17,16 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class Program {
-    /**
-     * @param args the command line arguments
-     */
+
     public static void main(String[] args){
-        String player1 = "http://lyle.smu.edu/~tbgeorge/cse4345/a1/getMove.php";
+        //Tyler's AI
+        //String player1 = "http://lyle.smu.edu/~tbgeorge/cse4345/a1/getMove.php";
      	String player2 = "http://lyle.smu.edu/~tbgeorge/cse4345/a1/getMove.php";
+        
+        //Andrew's AI
+        String player1 = "http://lyle.smu.edu/~sochaa/4345/FinalHalma/finalHalmaWithDamage.php";
+        //String player2 = "http://lyle.smu.edu/~sochaa/4345/FinalHalma/finalHalmaWithDamage.php";
+        
      	new HalmaGame(player1, player2);  
     }
 }
@@ -150,10 +155,10 @@ class GameBoard extends OfficialObserver{
     	//print(bluePiece.getLocation().toString());
     }
     private static ArrayList<Location> toLocationList(String move){
-    	JsonArray array = null;
-    	ArrayList<Location>locs = new ArrayList<Location>();
+    	JsonArray array;
+    	ArrayList<Location> locs = new ArrayList<Location>();
     	try{ array = JsonParser.array().from(move); }
-    	catch(Exception e){
+    	catch(JsonParserException e){
     		return null;
     	}
     	ArrayList<Integer>coordList = new ArrayList<Integer>();
@@ -168,7 +173,7 @@ class GameBoard extends OfficialObserver{
     private String formatMove(String move){
     	JsonArray array = null;
     	try{ array = JsonParser.array().from(move); }
-    	catch(Exception e){
+    	catch(JsonParserException e){
     		return move;
     	}
     	ArrayList<Integer>coordList = new ArrayList<Integer>();

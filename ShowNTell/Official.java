@@ -6,7 +6,7 @@ public class Official extends Observable{
     private int mCount;
     private static final int
     	DELAY_DEFAULT = 0,
-    	RUN_COUNT = 1000;//TEST_MOVES.length;
+    	RUN_COUNT = 1000; //maximum moves before aborting game
     private static final String
         SPLIT_PHRASE = "SPLITSPLIT",
         SUPER_SPLIT = "SPLITSPLITSPLIT",
@@ -61,15 +61,6 @@ public class Official extends Observable{
     	return this;
     }
     
-    private void freezeProgram(){
-    	try{
-    		Thread.sleep(10 * 1000);
-    	}
-    	catch(InterruptedException e){
-    		return;
-    	}
-    }
-    
     private Official output(String message){
     	System.out.println(message);
     	return this;
@@ -90,7 +81,7 @@ public class Official extends Observable{
             .setBoard(message)
             .send( GRID, composeForGameBoard(message, mMove))
             .delay(DELAY_DEFAULT)
-			.getRemoteAIMoves( message );
+            .getRemoteAIMoves( message );
     }
     
     private static String concat(String inFront, String inTail){
