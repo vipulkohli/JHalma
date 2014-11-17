@@ -10,7 +10,7 @@ public abstract class OfficialObserver implements Observer{
     private String m_message, m_recipient;
 	
     public static void freezeProgram(){
-            try{ Thread.sleep(100 * 1000);  }
+            try{ Thread.sleep(100 * 1000); }
             catch(InterruptedException e){}
     }
 	

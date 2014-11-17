@@ -147,36 +147,40 @@ public class HalmaMessenger extends OfficialObserver{
     
     private static JsonStringWriter range(JsonStringWriter writer, int xMin, int xMax, int yMin, int yMax){
     	for(int x = xMin; x <= xMax; x++)
-	        		for(int y = yMin; y <= yMax; y++)
-						writer = writer.value( toJSONObj(x, y) );
-		return writer;
+	        for(int y = yMin; y <= yMax; y++)
+			writer = writer.value( toJSONObj(x, y) );
+	return writer;
     }
     
     private static String convertBoardToJSON(ArrayList<XYDLocation> boardList, int playerNum){
     	JsonStringWriter writer = JsonWriter.string().object()
-    	.value("boardSize", 18)
-    	.array("pieces");
+            .value("boardSize", 18)
+            .array("pieces");
     	for (XYDLocation piece : boardList)
             if (piece.getTeam() == playerNum)
                 	writer = writer.value( toJSONObj( piece ) ); 
         writer = writer.end()
-        .array("enemy");
+            .array("enemy");
         for (XYDLocation piece : boardList)
             if (piece.getTeam() != playerNum)
                 writer = writer.value( toJSONObj( piece ) ); 
         writer = writer.end()
-        .array("destinations");
+            .array("destinations");
         switch(playerNum){
         	case 0:
-	        	writer = range(writer, 15, 17, 0, 2);
+                    writer = range(writer, 17, 17, 0, 2);
+                    writer = range(writer, 16, 16, 0, 2);
+                    writer = range(writer, 15, 15, 0, 2);
 	            writer = writer.end().array("enemydestinations");
 	            writer = range(writer, 0, 2, 0, 2);
 	            writer = writer.end();
-	      	break;
+                    break;
 	      	default:
-	        	writer = range(writer, 0, 2, 0, 2);
+                    writer = range(writer, 0, 2, 0, 2);
 	            writer = writer.end().array("enemydestinations");
-	            writer = range(writer, 15, 17, 0, 2);
+	            writer = range(writer, 17, 17, 0, 2);
+                    writer = range(writer, 16, 16, 0, 2);
+                    writer = range(writer, 15, 15, 0, 2);
 	            writer = writer.end();
         }//end playerNum switch
         return writer.end().done();

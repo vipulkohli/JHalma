@@ -76,7 +76,7 @@ public class XYDLocation{
     
     @Override
     public String toString(){
-        return getX() + "," + getY() + "," + getD() + "," + getTeam();  
+        return getX() + "," + getY() + "," + getD() + "," + getTeam();
     }
     
 	public String toJSONString(){
