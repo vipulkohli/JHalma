@@ -19,7 +19,7 @@ public class HalmaMessenger extends OfficialObserver{
     	COLUMN_INDEX = "x",
     	FROM_KEY = "from",
     	TO_KEY = "to";
-    private String m_url1, m_url2;
+    private final String m_url1, m_url2;
 
     public HalmaMessenger(String inPlayer1addy, String inPlayer2addy){
             m_url1 = inPlayer1addy;
@@ -125,7 +125,7 @@ public class HalmaMessenger extends OfficialObserver{
     private static JsonObject toJSONObj(XYDLocation piece){
     	try{ 
         	return JsonParser.object().from( piece.toJSONString() ); 
-        } catch(Exception ex){ 
+        } catch(JsonParserException ex){ 
         	Logger.getLogger(HalmaMessenger.class.getName()).log(Level.SEVERE, null, ex);
         	return null;
        	}
@@ -139,7 +139,7 @@ public class HalmaMessenger extends OfficialObserver{
 				  .end()
 				.done();
 		try{ return JsonParser.object().from(json); } 
-		catch(Exception ex){
+		catch(JsonParserException ex){
 			Logger.getLogger(HalmaMessenger.class.getName()).log(Level.SEVERE, null, ex);
 			return null;
 		}

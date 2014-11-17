@@ -141,7 +141,8 @@ public class CollisionAnalyst extends OfficialObserver{
     	return moveArrayList;
     }
     
-    //------------FUNCTIONS FOR VALIDATING MOVES------------
+    //---------------FUNCTIONS FOR VALIDATING MOVES---------------
+    //Based on the JavaScript version by Dr. Coyle
     private static boolean isFreeCell(Location c1, ArrayList<XYDLocation> gPiecesArr) {
         for(int i=0; i<gPiecesArr.size(); i++) {
             if(c1.getCol() == gPiecesArr.get(i).getX() &&

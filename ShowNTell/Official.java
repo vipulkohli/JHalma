@@ -7,6 +7,10 @@ public class Official extends Observable{
     private static final int
     	DELAY_DEFAULT = 0,
     	RUN_COUNT = 1000; //maximum moves before aborting game
+    
+    public static final int
+    	BOARD_SIZE = 18;
+    
     private static final String
         SPLIT_PHRASE = "SPLITSPLIT",
         SUPER_SPLIT = "SPLITSPLITSPLIT",
@@ -22,7 +26,7 @@ public class Official extends Observable{
     public String getDefaultStartBoard(){
         ArrayList<Integer> iBoard = new ArrayList<>();
         //build teams
-        int size = GameBoard.BOARD_SIZE;
+        int size = BOARD_SIZE;
         for(int x = 0; x < 3; x++){
             for(int y = 0; y < 4; y++){
                 Piece red = new Piece(x, size-1-y, 0, 0);

@@ -52,9 +52,6 @@ class GameBoard extends OfficialObserver{
     	
     private static final int
     	TIMER_START = 0;
-    
-    public static final int
-    	BOARD_SIZE = 18;
     	
     private int mTimer;
     
@@ -64,7 +61,7 @@ class GameBoard extends OfficialObserver{
     
     
     public GameBoard(){
-    	WORLD.setGrid( new BoundedGrid(BOARD_SIZE, BOARD_SIZE) );
+    	WORLD.setGrid( new BoundedGrid(Official.BOARD_SIZE, Official.BOARD_SIZE) );
     	WORLD.show();
         mTimer = TIMER_START;
         //the most complicated way to ZOOM OUT ever
@@ -103,8 +100,8 @@ class GameBoard extends OfficialObserver{
     }    
     
     private void clearBoard(){
-    	for(int x = 0; x < BOARD_SIZE; x++){
-    		for(int y = 0; y < BOARD_SIZE; y++){
+    	for(int x = 0; x < Official.BOARD_SIZE; x++){
+    		for(int y = 0; y < Official.BOARD_SIZE; y++){
     			Object obj = WORLD.remove( new Location(y,x) );
     			if(obj instanceof Piece){
     				Piece p = (Piece) obj;
