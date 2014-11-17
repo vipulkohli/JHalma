@@ -79,9 +79,9 @@ public class Official extends Observable{
     //receive a reply from an observer, and act accordingly
     public void reply(String sender, String message){
         if( AI_RELAY.equals(sender) ) 
-        	output("From M: " + message)
-        	.setMove(message)
-        	.send( COLLISIONS , composeForCollisions(message) );
+            output("From M: " + message)
+            .setMove(message)
+            .send( COLLISIONS , composeForCollisions(message) );
         else if ( COLLISIONS.equals(sender) && mCount < RUN_COUNT)
             output("From C: " + message)
             .setBoard(message)

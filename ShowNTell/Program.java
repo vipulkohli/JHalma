@@ -27,7 +27,7 @@ public class Program {
         String player1 = "http://lyle.smu.edu/~sochaa/4345/FinalHalma/finalHalmaWithDamage.php";
         String player2 = "http://lyle.smu.edu/~sochaa/4345/FinalHalma/finalHalmaWithDamage.php";
         
-     	new HalmaGame(player1, player2);  
+     	new HalmaGame(player1, player2);
     }
 }
 
