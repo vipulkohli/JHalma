@@ -21,11 +21,11 @@ public class Program {
     public static void main(String[] args){
         //Tyler's AI
         //String player1 = "http://lyle.smu.edu/~tbgeorge/cse4345/a1/getMove.php";
-     	//String player2 = "http://lyle.smu.edu/~tbgeorge/cse4345/a1/getMove.php";
+     	String player2 = "http://lyle.smu.edu/~tbgeorge/cse4345/a1/getMove.php";
         
         //Andrew's AI
         String player1 = "http://lyle.smu.edu/~sochaa/4345/FinalHalma/finalHalmaWithDamage.php";
-        String player2 = "http://lyle.smu.edu/~sochaa/4345/FinalHalma/finalHalmaWithDamage.php";
+        //String player2 = "http://lyle.smu.edu/~sochaa/4345/FinalHalma/finalHalmaWithDamage.php";
         
      	new HalmaGame(player1, player2);
     }
@@ -87,7 +87,7 @@ class GameBoard extends OfficialObserver{
         ArrayList<Piece> list = new ArrayList<>();
         JsonArray array;
         try{ array = JsonParser.array().from(officialData);  }
-        catch(JsonParserException e){ e.printStackTrace(); return null; }
+        catch(JsonParserException e){ return null; }
         int offset = 4;
         for(int k = 0; k < array.size(); k += offset)
             list.add( new Piece(

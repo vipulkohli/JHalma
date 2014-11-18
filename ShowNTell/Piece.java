@@ -48,6 +48,7 @@ public class Piece extends Actor{
     	return new Location(y, x);
     }
     
+    @Override
     public String toString(){
         return "P(" + x +"," + y +"," + damage + "," + team + ")"; 
     }
@@ -65,4 +66,3 @@ class Three extends Five{}
 class Two extends Five{}
 class One extends Five{}
 class XPiece extends Five{}
-

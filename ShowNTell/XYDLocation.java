@@ -70,9 +70,9 @@ public class XYDLocation{
         return mLoc.equals( other );
     }
     
-	public boolean equals(Location other, int otherTeam){
+    public boolean equals(Location other, int otherTeam){
         return mLoc.equals(other) && otherTeam == mTeam;
-	}
+    }
     
     @Override
     public String toString(){

@@ -9,7 +9,6 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.logging.Level;
 import java.util.logging.Logger;
- 
 
 public class HalmaMessenger extends OfficialObserver{
     
@@ -64,7 +63,7 @@ public class HalmaMessenger extends OfficialObserver{
             ArrayList<Integer>sequence = new ArrayList<Integer>();
             JsonObject obj;
             try{ obj = JsonParser.object().from(json); }
-            catch(JsonParserException e){ e.printStackTrace(); return "";}
+            catch(JsonParserException e){ return ""; }
             JsonObject fromObj = obj.getObject( FROM_KEY );
             JsonArray toArray = obj.getArray( TO_KEY );
             int fromRow = fromObj.getInt( COLUMN_INDEX );
@@ -88,10 +87,14 @@ public class HalmaMessenger extends OfficialObserver{
             con.setRequestMethod("POST");
             con.setRequestProperty("User-Agent", "Mozilla/5.0");
             con.setRequestProperty("Accept-Language", "en-US,en;q=0.5");
-            
+            try {
+                Thread.sleep(5000);
+            } catch (InterruptedException ex) {
+            }
             //board data
             ArrayList<XYDLocation> boardList = CollisionAnalyst.getXYDList(board);
             String urlParameters = convertBoardToJSON(boardList, playerNum);
+            print("From Messenger to AI: " + urlParameters);
             
             // Send post request
             con.setDoOutput(true);
@@ -118,7 +121,6 @@ public class HalmaMessenger extends OfficialObserver{
         } catch (IOException ex) {
             Logger.getLogger(HalmaMessenger.class.getName()).log(Level.SEVERE, null, ex);
         }
-        freezeProgram();
         return "";
     }
     
@@ -134,15 +136,15 @@ public class HalmaMessenger extends OfficialObserver{
     private static JsonObject toJSONObj(int x, int y){
     	String json = JsonWriter.string()
 	    		.object()
-				  .value("x", x)
-				  .value("y", y)
-				  .end()
-				.done();
-		try{ return JsonParser.object().from(json); } 
-		catch(JsonParserException ex){
-			Logger.getLogger(HalmaMessenger.class.getName()).log(Level.SEVERE, null, ex);
-			return null;
-		}
+                        .value("x", x)
+			.value("y", y)
+			.end()
+			.done();
+        try{ return JsonParser.object().from(json); } 
+        catch(JsonParserException ex){
+                Logger.getLogger(HalmaMessenger.class.getName()).log(Level.SEVERE, null, ex);
+                return null;
+        }
     }
     
     private static JsonStringWriter range(JsonStringWriter writer, int xMin, int xMax, int yMin, int yMax){
