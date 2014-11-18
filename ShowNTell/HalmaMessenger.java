@@ -87,10 +87,7 @@ public class HalmaMessenger extends OfficialObserver{
             con.setRequestMethod("POST");
             con.setRequestProperty("User-Agent", "Mozilla/5.0");
             con.setRequestProperty("Accept-Language", "en-US,en;q=0.5");
-            try {
-                Thread.sleep(5000);
-            } catch (InterruptedException ex) {
-            }
+
             //board data
             ArrayList<XYDLocation> boardList = CollisionAnalyst.getXYDList(board);
             String urlParameters = convertBoardToJSON(boardList, playerNum);
