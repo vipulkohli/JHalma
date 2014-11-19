@@ -47,11 +47,11 @@ public class ActorWorld extends World<Actor>
         super(grid);
     }
 
-    public void show()
+    public void show(int width, int height)
     {
         if (getMessage() == null)
             setMessage(DEFAULT_MESSAGE);
-        super.show();
+        super.show(width, height);
     }
 
     public void step()

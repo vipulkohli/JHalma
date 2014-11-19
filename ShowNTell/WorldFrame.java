@@ -188,10 +188,6 @@ public class WorldFrame<T> extends JFrame
         content.add(control.controlPanel(), BorderLayout.SOUTH);
 
         messageArea = new JTextArea(3, 40);
-        messageArea.setFont( new Font("Arial Black", Font.BOLD, 20) );
-        messageArea.setEditable(false);
-        messageArea.setFocusable(false);
-        messageArea.setBackground(Color.white);
         content.add(new JScrollPane(messageArea), BorderLayout.NORTH);
 
         pack();
@@ -218,7 +214,11 @@ public class WorldFrame<T> extends JFrame
     {
         return world;
     }
-
+	
+	public JTextArea getMessageArea(){
+		return messageArea;
+	}
+	
     /**
      * Sets a new grid for this world. Occupants are transferred from
      * the old world to the new.

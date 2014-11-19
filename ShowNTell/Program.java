@@ -17,6 +17,7 @@ import java.awt.event.KeyEvent;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.*;
 
 public class Program extends Thread {
     
@@ -44,7 +45,13 @@ class GameBoard extends OfficialObserver{
     
     private static final Color	
     	TEAM_A_COLOR = new Color(204,0,153),
-        TEAM_B_COLOR = new Color(0,102,153);
+        TEAM_B_COLOR = new Color(0,102,153),
+        TEXT_BGCOLOR = Color.white,
+        TEXT_SELECTION_COLOR = Color.red;
+        
+    
+    private static final Font
+    	FONT = new Font("Times New Roman", Font.BOLD, 20);
     
     private static final String
         MY_EMAIL = "g",
@@ -56,11 +63,17 @@ class GameBoard extends OfficialObserver{
         
     private final ActorWorld
     	WORLD = new ActorWorld();
-    	
+    
+    private static Integer numInstances;
+    
     private static final int
+    	BOARD_FRAME_WIDTH = (int) Toolkit.getDefaultToolkit().getScreenSize().getWidth() / 2,
+    	BOARD_FRAME_HEIGHT = 850,
+    	BOARD_SIZE = Official.BOARD_SIZE,
     	TIMER_START = 0;
     	
     private final String
+    	mWorldMessage,
     	mTeamA,
     	mTeamB;
    
@@ -71,10 +84,19 @@ class GameBoard extends OfficialObserver{
     	PAST_MOVES = new ArrayList<String>();
      
     public GameBoard(String teamA, String teamB){
+    	if(numInstances == null){
+    		numInstances = 1;
+    	}
+    	else
+    		numInstances++;
     	mTeamA = "\n" + teamA + ": ";
         mTeamB = "  " + teamB + ": ";
+        mWorldMessage = "Loading game: " + teamA + " vs. " + teamB;
+        WORLD.setMessage( mWorldMessage );
     	WORLD.setGrid( new BoundedGrid(Official.BOARD_SIZE, Official.BOARD_SIZE) );
-    	WORLD.show();
+    	WORLD.show( BOARD_FRAME_WIDTH, BOARD_FRAME_HEIGHT );
+    	centerWorldOnScreen( WORLD, numInstances);
+    	setTextArea(WORLD, FONT);
         mTimer = TIMER_START;
         //the most complicated way to ZOOM OUT ever
         try {
@@ -86,6 +108,19 @@ class GameBoard extends OfficialObserver{
         } catch (AWTException ex) {
             Logger.getLogger(GameBoard.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+    
+    private void setTextArea(ActorWorld world, Font font){
+    	JTextArea messageArea = world.getFrame().getMessageArea();
+    	messageArea.setFont( font );
+        messageArea.setEditable( true );
+        messageArea.setFocusable( true );
+        messageArea.setBackground( TEXT_BGCOLOR );
+        messageArea.setSelectionColor( TEXT_SELECTION_COLOR );
+    }
+    
+    private void centerWorldOnScreen(ActorWorld world, int instances){
+    	world.getFrame().setLocation( BOARD_FRAME_WIDTH * (instances % 2), 0 );
     }
     
     @Override
@@ -111,13 +146,30 @@ class GameBoard extends OfficialObserver{
         return list;
     }    
     
+    private void highlightDestinations(){
+    	for(int x = 0; x < 3; x++){
+    		for(int y = 0; y < 3; y++){
+    			Glitter g = new Glitter();
+    			g.setColor( TEAM_B_COLOR );
+    			WORLD.add(new Location( x, y ), g);
+    		}
+    	}
+    	for(int row = 0; row < 3; row++){
+    		for(int col = BOARD_SIZE - 1; col >= BOARD_SIZE - 3; col--){
+    			Glitter g = new Glitter();
+    			g.setColor( TEAM_A_COLOR );
+    			WORLD.add(new Location( row , col), g);
+    		}
+    	}
+    }
+    
     private void clearBoard(){
     	for(int x = 0; x < Official.BOARD_SIZE; x++){
     		for(int y = 0; y < Official.BOARD_SIZE; y++){
     			Object obj = WORLD.remove( new Location(y,x) );
     			if(obj instanceof Piece){
     				Piece p = (Piece) obj;
-    				Actor a = new Glitter();
+    				Flower a = new Flower();
     				a.setColor( p.getColor() );
     				WORLD.add(new Location(y,x), a);
     			}
@@ -151,6 +203,7 @@ class GameBoard extends OfficialObserver{
     	Location target = moveLocs.get( moveLocs.size() - 1 );
     	return new Location(target.getRow(), target.getCol());
     }
+    
     private void addToPieces(String team1Move, String team2Move, ActorWorld world){
     	Location
     		redLoc = getToLocation( team1Move ), 
@@ -204,6 +257,7 @@ class GameBoard extends OfficialObserver{
     
     protected void drawBoard(String inData){
     	clearBoard();
+    	highlightDestinations();
     	String onMessageField, p1Move, p2Move, pieceStr;
     	int winner;
     	ArrayList<Piece> pieces;

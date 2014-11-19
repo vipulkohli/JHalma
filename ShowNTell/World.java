@@ -40,7 +40,7 @@ public class World<T>
     private Set<String> occupantClassNames;
     private Set<String> gridClassNames;
     private String message;
-    private JFrame frame;
+    private WorldFrame<T> frame;
 
     private static Random generator = new Random();
 
@@ -61,7 +61,25 @@ public class World<T>
         addGridClass("info.gridworld.grid.BoundedGrid");
         addGridClass("info.gridworld.grid.UnboundedGrid");
     }
-
+	
+	public WorldFrame<T> getFrame(){
+			return frame;
+	}
+	
+	/**
+     * Constructs and shows a frame for this world.
+     */
+    public void show(int width, int height)
+    {
+        if (frame == null)
+        {
+            frame = new WorldFrame<T>(this);
+            frame.setSize( width, height );
+            frame.setVisible(true);
+        }
+        else
+            frame.repaint();
+    }
     /**
      * Constructs and shows a frame for this world.
      */
@@ -70,13 +88,13 @@ public class World<T>
         if (frame == null)
         {
             frame = new WorldFrame<T>(this);
-            frame.setSize( 700, 850);
+            frame.setSize( 700, 850 );
             frame.setVisible(true);
         }
         else
             frame.repaint();
     }
-
+	
     /**
      * Gets the grid managed by this world.
      * @return the grid
