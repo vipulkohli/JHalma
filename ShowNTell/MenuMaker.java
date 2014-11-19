@@ -434,19 +434,16 @@ class PropertySheet extends JPanel
         this.values = values;
         editors = new PropertyEditor[types.length];
         setLayout(new FormLayout());
+        String [] halmaLabels = {
+            	"Name1,URL1,Name2,URL2"
+            };
+        String [] halmaValues = {
+            	"Tyler,http://lyle.smu.edu/~tbgeorge/cse4345/a1/getMove.php,Andrew,http://lyle.smu.edu/~sochaa/4345/FinalHalma/finalHalmaWithDamage.php"
+        };
         for (int i = 0; i < values.length; i++)
         {
             String labelTitle = types[i].getName();
-            boolean isHalmaGame = types[0].getName().contains("String") && types.length == 4;
-            String [] halmaLabels = {
-            	"Name 1:", "URL1:", "Name 2:", "URL2:"
-            };
-            String [] halmaValues = {
-            	"Tyler",
-            	"http://lyle.smu.edu/~tbgeorge/cse4345/a1/getMove.php",
-            	"Andrew",
-     			"http://lyle.smu.edu/~sochaa/4345/FinalHalma/finalHalmaWithDamage.php",
-            };
+            boolean isHalmaGame = types[0].getName().contains("String");
             if( isHalmaGame )
 	        	labelTitle = halmaLabels[ i ];
             JLabel label = new JLabel( labelTitle );

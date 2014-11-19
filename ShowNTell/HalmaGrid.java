@@ -37,13 +37,24 @@ public class HalmaGrid<E> extends BoundedGrid<E>
      * @param rows number of rows in BoundedGrid
      * @param cols number of columns in BoundedGrid
      */
-    public HalmaGrid(String name1, String url1, String name2, String url2)
+    public HalmaGrid(String args)
     {
         super(18, 18);
         zoomOut();
-        new HalmaGame(url1, url2, name1, name2);
+        startGame(args);
     }
-    
+    private void startGame(String args){
+    	String url1, url2, name1, name2;
+    	String [] parts = args.replace(" ", "").split(",");
+        if(parts.length == 4){
+        	name1 = parts[0];
+	        url1 = parts[1];
+	        name2 = parts[2];
+	        url2 = parts[3];
+	        //System.out.println( name1+ url1 + name2 );
+	        new HalmaGame(url1, url2, name1, name2);
+        }
+    }
 	private HalmaGrid zoomOut(){
 		try {
 			Robot robot = new Robot();

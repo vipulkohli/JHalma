@@ -318,6 +318,10 @@ public class GridPanel extends JPanel implements Scrollable,
                 numRows * (MIN_CELL_SIZE + 1) + 1 + extraHeight());
     }
 	
+	public int getCellSize( ){
+		return cellSize;
+	}
+	
 	public void setCellSize( int inSize ){
 		cellSize = inSize;
 	}

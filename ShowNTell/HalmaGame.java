@@ -17,6 +17,7 @@ public class HalmaGame extends Thread{
 		};
 		for( Observer keeper : array )
 			o.addObserver(keeper);
+		this.start();
 	}
 	
 	@Override

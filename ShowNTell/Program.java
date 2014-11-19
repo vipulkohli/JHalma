@@ -28,15 +28,9 @@ public class Program extends Thread {
      	HalmaGame [] tournament = {
      	
      		new HalmaGame( player1, player2, "Tyler", "Andrew" ),
-     		new HalmaGame( player1, player1, "Tyler", "Tyler" )
+     		//new HalmaGame( player1, player1, "Tyler", "Tyler" )
      	
      	};
-     	startGames(tournament);
-    }
-    
-    private static void startGames(HalmaGame [] games){
-    	for(HalmaGame game : games)
-    		game.start();
     }
     
 }
@@ -69,6 +63,7 @@ class GameBoard extends OfficialObserver{
     private static final int
     	BOARD_FRAME_WIDTH = (int) Toolkit.getDefaultToolkit().getScreenSize().getWidth() / 2,
     	BOARD_FRAME_HEIGHT = 850,
+    	CELL_SIZE = BOARD_FRAME_WIDTH / 22,
     	//BOARD_SIZE = super.BOARD_SIZE,
     	TIMER_START = 0;
     	
@@ -85,7 +80,7 @@ class GameBoard extends OfficialObserver{
      
     public GameBoard(String teamA, String teamB){
     	if(numInstances == null)
-    		numInstances = 1;
+    		numInstances = 0;
     	else
     		numInstances++;
     	mTeamA = "\n" + teamA + ": ";
@@ -98,7 +93,7 @@ class GameBoard extends OfficialObserver{
     	centerWorldOnScreen( WORLD, numInstances);
     	setTextArea(WORLD, FONT);
         mTimer = TIMER_START;
-        setCellSize( BOARD_FRAME_WIDTH / 22);
+        setCellSize( CELL_SIZE );
     }
     
     
