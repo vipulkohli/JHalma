@@ -58,8 +58,7 @@ public class World<T>
         gr = g;
         gridClassNames = new TreeSet<String>();
         occupantClassNames = new TreeSet<String>();
-        addGridClass("info.gridworld.grid.BoundedGrid");
-        addGridClass("info.gridworld.grid.UnboundedGrid");
+        addGridClass("ShowNTell.HalmaGrid");
     }
 	
 	public WorldFrame<T> getFrame(){
