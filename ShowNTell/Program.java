@@ -19,25 +19,23 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class Program extends Thread {
-    private final String p1, p2;
-    
-    public Program(String ai1, String ai2){
-     	p1 = ai1;
-     	p2 = ai2;
-    }
     
     public static void main(String[] args){
         String player1 = "http://lyle.smu.edu/~tbgeorge/cse4345/a1/getMove.php";
      	String player2 = "http://lyle.smu.edu/~sochaa/4345/FinalHalma/finalHalmaWithDamage.php";
-     	Program a = new Program(player1, player2); 
-     	a.start();
-     	//a = new Program(player2, player1); 
-     	//a.start(); 
+     	
+     	HalmaGame [] tournament = {
+     	
+     		new HalmaGame( player1, player2, "Tyler", "Andrew" ),
+     		new HalmaGame( player1, player1, "Tyler", "Tyler" )
+     	
+     	};
+     	startGames(tournament);
     }
     
-    @Override
-    public void run(){
-    	new HalmaGame(p1, p2);
+    private static void startGames(HalmaGame [] games){
+    	for(HalmaGame game : games)
+    		game.start();
     }
     
 }
@@ -51,8 +49,6 @@ class GameBoard extends OfficialObserver{
     private static final String
         MY_EMAIL = "g",
         TIMER = "Move: ",
-        TEAM_A = "\nJETS: ",
-        TEAM_B = "  BOZOS: ",
         HALMATE = "HALMATE!  ",
         TEAM_A_WINS = "Red Team Victory!",
         TEAM_B_WINS = "Blue Team Victory!",
@@ -64,14 +60,19 @@ class GameBoard extends OfficialObserver{
     private static final int
     	TIMER_START = 0;
     	
-    private int mTimer;
+    private final String
+    	mTeamA,
+    	mTeamB;
+   
+    private int 
+    	mTimer;
     
     private final ArrayList<String> 
     	PAST_MOVES = new ArrayList<String>();
-    
-    
-    
-    public GameBoard(){
+     
+    public GameBoard(String teamA, String teamB){
+    	mTeamA = "\n" + teamA + ": ";
+        mTeamB = "  " + teamB + ": ";
     	WORLD.setGrid( new BoundedGrid(Official.BOARD_SIZE, Official.BOARD_SIZE) );
     	WORLD.show();
         mTimer = TIMER_START;
@@ -116,7 +117,7 @@ class GameBoard extends OfficialObserver{
     			Object obj = WORLD.remove( new Location(y,x) );
     			if(obj instanceof Piece){
     				Piece p = (Piece) obj;
-    				Actor a = new Flower();
+    				Actor a = new Glitter();
     				a.setColor( p.getColor() );
     				WORLD.add(new Location(y,x), a);
     			}
@@ -210,8 +211,8 @@ class GameBoard extends OfficialObserver{
     	pieceStr = data[0];
     	p1Move = data[1];
     	p2Move = data[2];
-    	onMessageField = TIMER + upTimer() + TEAM_A 
-    		+ formatMove(p1Move) + TEAM_B + formatMove(p2Move);
+    	onMessageField = TIMER + upTimer() + mTeamA 
+    		+ formatMove(p1Move) + mTeamB + formatMove(p2Move);
     	winner = isNewMove(p1Move, p2Move, PAST_MOVES );
     	if( winner == 1)
     		onMessageField = HALMATE + TEAM_A_WINS;

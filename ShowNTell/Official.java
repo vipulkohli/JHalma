@@ -6,8 +6,8 @@ public class Official extends Observable{
     
     private String mBoard, mMove;
     private int mCount;
-    private static final int
-    	DELAY_DEFAULT = 0,
+    private static final double
+    	DELAY_DEFAULT = 0.5,
     	RUN_COUNT = 1000; //maximum moves before aborting game
     
     public static final int
@@ -60,9 +60,9 @@ public class Official extends Observable{
         return this;
     }
     
-    public Official delay(int seconds){
+    public Official delay(double seconds){
     	try{
-    		Thread.sleep(seconds * 1000);
+    		Thread.sleep( (int) (seconds * 1000) );
     	}
     	catch(InterruptedException e){}
     	return this;
