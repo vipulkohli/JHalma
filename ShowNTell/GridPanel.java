@@ -219,7 +219,8 @@ public class GridPanel extends JPanel implements Scrollable,
      */
     private void drawWatermark(Graphics2D g2)
     {
-        if ("hide".equals(System.getProperty("info.gridworld.gui.watermark")))
+        
+        if (true || "hide".equals(System.getProperty("info.gridworld.gui.watermark")))
             return;
         g2 = (Graphics2D) g2.create();
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
@@ -316,7 +317,15 @@ public class GridPanel extends JPanel implements Scrollable,
         return new Dimension(numCols * (MIN_CELL_SIZE + 1) + 1 + extraWidth(), 
                 numRows * (MIN_CELL_SIZE + 1) + 1 + extraHeight());
     }
-
+	
+	public void setCellSize( int inSize ){
+		cellSize = inSize;
+	}
+	
+	public void zoom(double scaleFactor){
+		cellSize *= scaleFactor;
+	}
+	
     /**
      * Zooms in the display by doubling the current cell size.
      */

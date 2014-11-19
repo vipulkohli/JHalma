@@ -69,7 +69,7 @@ class GameBoard extends OfficialObserver{
     private static final int
     	BOARD_FRAME_WIDTH = (int) Toolkit.getDefaultToolkit().getScreenSize().getWidth() / 2,
     	BOARD_FRAME_HEIGHT = 850,
-    	BOARD_SIZE = Official.BOARD_SIZE,
+    	//BOARD_SIZE = super.BOARD_SIZE,
     	TIMER_START = 0;
     	
     private final String
@@ -84,9 +84,8 @@ class GameBoard extends OfficialObserver{
     	PAST_MOVES = new ArrayList<String>();
      
     public GameBoard(String teamA, String teamB){
-    	if(numInstances == null){
+    	if(numInstances == null)
     		numInstances = 1;
-    	}
     	else
     		numInstances++;
     	mTeamA = "\n" + teamA + ": ";
@@ -95,19 +94,30 @@ class GameBoard extends OfficialObserver{
         WORLD.setMessage( mWorldMessage );
     	WORLD.setGrid( new BoundedGrid(Official.BOARD_SIZE, Official.BOARD_SIZE) );
     	WORLD.show( BOARD_FRAME_WIDTH, BOARD_FRAME_HEIGHT );
+    	setTitle( "HalmaWorld - " + teamA + " vs. " + teamB );
     	centerWorldOnScreen( WORLD, numInstances);
     	setTextArea(WORLD, FONT);
         mTimer = TIMER_START;
-        //the most complicated way to ZOOM OUT ever
-        try {
-            Robot robot = new Robot();
-            robot.keyPress(KeyEvent.VK_CONTROL);
-            robot.keyPress(KeyEvent.VK_PAGE_DOWN);
-            robot.keyRelease(KeyEvent.VK_PAGE_DOWN);
-            robot.keyRelease(KeyEvent.VK_CONTROL);
-        } catch (AWTException ex) {
-            Logger.getLogger(GameBoard.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        setCellSize( BOARD_FRAME_WIDTH / 22);
+    }
+    
+    
+    /** 
+     * The following methods are 
+     * derived from WorldFrame.java
+     * or GridPanel.java
+     */
+     
+    private void setTitle(String title){
+    	WORLD.getFrame().setTitle( title );
+    }
+    
+    private void setCellSize(int size){
+    	WORLD.getFrame().getGridPanel().setCellSize( size );
+    }
+    
+    private void setZoom(double inFactor){
+    	WORLD.getFrame().getGridPanel().zoom(inFactor);
     }
     
     private void setTextArea(ActorWorld world, Font font){
@@ -164,8 +174,8 @@ class GameBoard extends OfficialObserver{
     }
     
     private void clearBoard(){
-    	for(int x = 0; x < Official.BOARD_SIZE; x++){
-    		for(int y = 0; y < Official.BOARD_SIZE; y++){
+    	for(int x = 0; x < BOARD_SIZE; x++){
+    		for(int y = 0; y < BOARD_SIZE; y++){
     			Object obj = WORLD.remove( new Location(y,x) );
     			if(obj instanceof Piece){
     				Piece p = (Piece) obj;

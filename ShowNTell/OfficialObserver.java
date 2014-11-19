@@ -5,7 +5,8 @@ import java.util.*;
 public abstract class OfficialObserver implements Observer{
 
     protected abstract void handleUpdate();
-    
+    protected static final int BOARD_SIZE = Official.BOARD_SIZE;
+   
     private static final String
     	SPLIT_PHRASE = "SPLITSPLITSPLIT";
     private Official m_official;

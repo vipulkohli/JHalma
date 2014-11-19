@@ -219,6 +219,9 @@ public class WorldFrame<T> extends JFrame
 		return messageArea;
 	}
 	
+	public GridPanel getGridPanel(){
+		return display;
+	}
     /**
      * Sets a new grid for this world. Occupants are transferred from
      * the old world to the new.
