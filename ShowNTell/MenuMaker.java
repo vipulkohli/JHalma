@@ -436,9 +436,33 @@ class PropertySheet extends JPanel
         setLayout(new FormLayout());
         for (int i = 0; i < values.length; i++)
         {
-            JLabel label = new JLabel(types[i].getName());
+            String labelTitle = types[i].getName();
+            boolean isHalmaGame = types[0].getName().contains("String") && types.length == 4;
+            String [] halmaLabels = {
+            	"Name 1:", "URL1:", "Name 2:", "URL2:"
+            };
+            String [] halmaValues = {
+            	"Tyler",
+            	"http://lyle.smu.edu/~tbgeorge/cse4345/a1/getMove.php",
+            	"Andrew",
+     			"http://lyle.smu.edu/~sochaa/4345/FinalHalma/finalHalmaWithDamage.php",
+            };
+            if( isHalmaGame )
+	        	labelTitle = halmaLabels[ i ];
+            JLabel label = new JLabel( labelTitle );
             add(label);
-            if (Grid.class.isAssignableFrom(types[i]))
+            if( isHalmaGame )
+            {
+                editors[i] = getEditor(types[i]);
+                if (editors[i] != null)
+                {
+                    editors[i].setValue( halmaValues[i] );
+                    add(getEditorComponent(editors[i]));
+                }
+                else
+                    add(new JLabel("?"));
+            }
+            else if (Grid.class.isAssignableFrom(types[i]))
             {
                 label.setEnabled(false);
                 add(new JPanel());

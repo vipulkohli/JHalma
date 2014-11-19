@@ -20,7 +20,9 @@
 package ShowNTell;
 import info.gridworld.grid.*;
 import java.util.ArrayList;
-
+import java.awt.*;
+import java.awt.event.*;
+import java.util.logging.*;
 /**
  * A <code>BoundedGrid</code> is a rectangular grid with a finite number of
  * rows and columns. <br />
@@ -35,11 +37,25 @@ public class HalmaGrid<E> extends BoundedGrid<E>
      * @param rows number of rows in BoundedGrid
      * @param cols number of columns in BoundedGrid
      */
-    public HalmaGrid(String url1, String name1, String url2, String name2)
+    public HalmaGrid(String name1, String url1, String name2, String url2)
     {
         super(18, 18);
-        new HalmaGame(url1, name1, url2, name2);
+        zoomOut();
+        new HalmaGame(url1, url2, name1, name2);
     }
-
+    
+	private HalmaGrid zoomOut(){
+		try {
+			Robot robot = new Robot();
+			robot.keyPress(KeyEvent.VK_CONTROL);
+			robot.keyPress(KeyEvent.VK_PAGE_DOWN);
+			robot.keyRelease(KeyEvent.VK_PAGE_DOWN);
+			robot.keyRelease(KeyEvent.VK_CONTROL);
+		} catch (AWTException ex) {
+			Logger.getLogger(GameBoard.class.getName()).log(Level.SEVERE, null, ex);
+		}
+		return this;
+	}
+	
     
 }
