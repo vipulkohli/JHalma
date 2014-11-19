@@ -1,3 +1,5 @@
+package ShowNTell;
+
 /**
  * @(#)Program.java
  * Includes GameBoard class
@@ -15,27 +17,25 @@ import java.awt.event.KeyEvent;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.lang.Thread;
 
 public class Program extends Thread {
-    private String p1, p2;
-    /**
-     * @param args the command line arguments
-     */
-     public Program(String ai1, String ai2){
+    private final String p1, p2;
+    
+    public Program(String ai1, String ai2){
      	p1 = ai1;
      	p2 = ai2;
-     }
+    }
+    
     public static void main(String[] args){
         String player1 = "http://lyle.smu.edu/~tbgeorge/cse4345/a1/getMove.php";
      	String player2 = "http://lyle.smu.edu/~sochaa/4345/FinalHalma/finalHalmaWithDamage.php";
-     	Program a;
-     	a = new Program(player1, player1); 
+     	Program a = new Program(player1, player2); 
      	a.start();
-     	a = new Program(player1, player2); 
-     	a.start(); 
+     	//a = new Program(player2, player1); 
+     	//a.start(); 
     }
     
+    @Override
     public void run(){
     	new HalmaGame(p1, p2);
     }

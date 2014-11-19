@@ -1,3 +1,5 @@
+package ShowNTell;
+
 import info.gridworld.grid.*;
 import java.util.*;
 
@@ -63,16 +65,16 @@ public class CollisionAnalyst extends OfficialObserver{
             print("INVALID MOVE!"+isValid0+isValid1);
         }
         
-        //Check if there was a collision
+        //Check if there was a collision and update the board
         boolean isHeadOnCollision = toLoc0.equals(toLoc1);
     	for(XYDLocation xyd : nextBoard){
+            xyd.heal(); //heals all pieces
             if(!isHeadOnCollision){
-                xyd.heal(); //heals all pieces
                 if( isOwnCollision(toLoc0, toLoc1, xyd) )
                     xyd.setD( DAMAGE_START );
                 if( isEnemyCollision(toLoc0, toLoc1, xyd) ){
                     xyd.setD( DAMAGE_LITE );
-                    isHeadOnCollision = true;
+                    //isHeadOnCollision = true;
                 }
                 if( xyd.equals(fromLoc0, 0) )
                     xyd.setXY(toLoc0);

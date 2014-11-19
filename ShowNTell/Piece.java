@@ -1,3 +1,5 @@
+package ShowNTell;
+
 import java.util.*;
 import java.awt.Color;
 import info.gridworld.actor.*;
@@ -50,7 +52,7 @@ public class Piece extends Actor{
     
     @Override
     public String toString(){
-        return "P(" + x +"," + y +"," + damage + "," + team + ")"; 
+        return "P(" + x + "," + y + "," + damage + "," + team + ")"; 
     }
 }
 
