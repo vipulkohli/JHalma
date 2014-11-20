@@ -1,7 +1,6 @@
 package ShowNTell;
 
 import java.util.*;
-import java.lang.Thread;
 
 public class HalmaGame extends Thread{
 	

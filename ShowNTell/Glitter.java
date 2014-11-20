@@ -5,7 +5,7 @@
   * Description: 
   */
 
-package info.gridworld.actor;
+package ShowNTell;
 
 public class Glitter extends Actor {
 

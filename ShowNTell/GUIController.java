@@ -16,10 +16,7 @@
  * @author Cay Horstmann
  */
 
-package info.gridworld.gui;
-
-import info.gridworld.grid.*;
-import info.gridworld.world.World;
+package ShowNTell;
 
 import java.awt.Dimension;
 import java.awt.Point;

@@ -1,6 +1,5 @@
 package ShowNTell;
 
-import info.gridworld.grid.*;
 import java.util.*;
 
 public class CollisionAnalyst extends OfficialObserver{

@@ -14,19 +14,12 @@
  * @author Cay Horstmann
  */
 
-package info.gridworld.world;
-
-import info.gridworld.grid.BoundedGrid;
-import info.gridworld.grid.Grid;
-import info.gridworld.grid.Location;
-import info.gridworld.gui.WorldFrame;
+package ShowNTell;
 
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.Set;
 import java.util.TreeSet;
-
-import javax.swing.JFrame;
 
 /**
  * 

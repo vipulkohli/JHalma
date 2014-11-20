@@ -14,9 +14,7 @@
  * @author Cay Horstmann
  */
 
-package info.gridworld.gui;
-
-import info.gridworld.grid.Location;
+package ShowNTell;
 
 import java.awt.Component;
 import java.beans.PropertyEditorSupport;

@@ -1,6 +1,5 @@
 package ShowNTell;
 
-import info.gridworld.grid.Location;
 import com.grack.nanojson.*;
 
 public class XYDLocation{

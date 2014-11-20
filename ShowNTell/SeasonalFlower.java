@@ -5,10 +5,7 @@
   * Description: 
   */
 
-/**
- * 
- */
-package info.gridworld.actor;
+package ShowNTell;
 
 import java.awt.Color;
 

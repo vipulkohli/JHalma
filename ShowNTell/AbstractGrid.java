@@ -14,7 +14,7 @@
  * @author Cay Horstmann
  */
 
-package info.gridworld.grid;
+package ShowNTell;
 
 import java.util.ArrayList;
 

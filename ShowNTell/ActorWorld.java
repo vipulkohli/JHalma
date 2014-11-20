@@ -14,16 +14,12 @@
  * @author Cay Horstmann
  */
 
-package info.gridworld.actor;
-
-import info.gridworld.grid.Grid;
-import info.gridworld.grid.Location;
-import info.gridworld.world.World;
+package ShowNTell;
 
 import java.util.ArrayList;
 
 /**
- * An <code>ActorWorld</code> is occupied by actors. <br />
+ * An ActorWorld is occupied by actors.
  * This class is not tested on the AP CS A and AB exams.
  */
 

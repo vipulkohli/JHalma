@@ -16,10 +16,7 @@
  * @author Cay Horstmann
  */
 
-package info.gridworld.gui;
-
-import info.gridworld.grid.Grid;
-import info.gridworld.grid.Location;
+package ShowNTell;
 
 import java.awt.Color;
 import java.awt.Component;

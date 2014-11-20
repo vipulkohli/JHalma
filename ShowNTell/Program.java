@@ -9,14 +9,8 @@ package ShowNTell;
  * @version 1.00 2014/4/27
  */
 import com.grack.nanojson.*;
-import info.gridworld.actor.*;
-import info.gridworld.grid.*;
 import java.awt.*;
-import java.awt.Robot;
-import java.awt.event.KeyEvent;
 import java.util.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.*;
 
 public class Program extends Thread {

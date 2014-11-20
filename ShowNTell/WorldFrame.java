@@ -17,14 +17,9 @@
  * @author Cay Horstmann
  */
 
-package info.gridworld.gui;
-
-import info.gridworld.grid.Grid;
-import info.gridworld.grid.Location;
-import info.gridworld.world.World;
+package ShowNTell;
 
 import java.awt.BorderLayout;
-import java.awt.*;
 import java.awt.Dimension;
 import java.awt.KeyEventDispatcher;
 import java.awt.KeyboardFocusManager;

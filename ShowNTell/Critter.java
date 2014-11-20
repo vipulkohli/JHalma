@@ -14,9 +14,7 @@
  * @author Cay Horstmann
  */
 
-package info.gridworld.actor;
-
-import info.gridworld.grid.Location;
+package ShowNTell;
 
 import java.util.ArrayList;
 

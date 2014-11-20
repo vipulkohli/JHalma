@@ -4,10 +4,7 @@
  *	Program: Grid World
  *  Description: This creature jumps 2 spaces and can eat anything except for rocks. 
  */
-package info.gridworld.actor;
-
-import info.gridworld.grid.Grid;
-import info.gridworld.grid.Location;
+package ShowNTell;
 
 import java.awt.Color;
 

@@ -16,7 +16,7 @@
  * @author Cay Horstmann
  */
 
-package info.gridworld.gui;
+package ShowNTell;
 
 import java.awt.Graphics2D;
 import java.awt.Component;

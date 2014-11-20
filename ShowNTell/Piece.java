@@ -2,8 +2,6 @@ package ShowNTell;
 
 import java.util.*;
 import java.awt.Color;
-import info.gridworld.actor.*;
-import info.gridworld.grid.*;
 
 public class Piece extends Actor{
     
