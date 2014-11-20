@@ -27,7 +27,7 @@ public abstract class OfficialObserver implements Observer{
     }
     
     public static void print(String message){
-    	//System.out.println(message);
+    	System.out.println(message);
     }
     
     protected void replyToOfficial(String sender, String message){

@@ -18,6 +18,7 @@ public class HalmaMessenger extends OfficialObserver{
     	MY_EMAIL = "m",
     	ROW_INDEX = "y",
     	COLUMN_INDEX = "x",
+        DAMAGE_INDEX = "damage",
     	FROM_KEY = "from",
     	TO_KEY = "to";
     private final String m_url1, m_url2;
@@ -70,8 +71,10 @@ public class HalmaMessenger extends OfficialObserver{
             JsonArray toArray = obj.getArray( TO_KEY );
             int fromRow = fromObj.getInt( COLUMN_INDEX );
             int fromColumn = fromObj.getInt( ROW_INDEX );
+            int fromDamage = fromObj.getInt( DAMAGE_INDEX );
             sequence.add(fromRow);
             sequence.add(fromColumn);
+            sequence.add(fromDamage);
             for(Object o : toArray){
                     obj = (JsonObject) o;
                     sequence.add( obj.getInt( COLUMN_INDEX ) );

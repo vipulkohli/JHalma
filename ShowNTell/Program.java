@@ -224,10 +224,14 @@ class GameBoard extends OfficialObserver{
     		return null;
     	}
         int x;
-    	ArrayList<Integer>coordList = new ArrayList<Integer>();
+    	ArrayList<Integer> coordList = new ArrayList<Integer>();
         for(int k = 0; k < array.size(); k++)
                 coordList.add( array.getInt(k)  );
-        Iterator<Integer>itr = coordList.iterator();
+        Iterator<Integer> itr = coordList.iterator();
+        
+        x = itr.next();
+        locs.add( new Location(itr.next(), x) );
+        itr.next(); //skip damage
         while(itr.hasNext()){
                 x = itr.next();
                 locs.add( new Location(itr.next(), x) );
@@ -242,11 +246,15 @@ class GameBoard extends OfficialObserver{
     		return move;
     	}
         int x;
-    	ArrayList<Integer>coordList = new ArrayList<Integer>();
+    	ArrayList<Integer> coordList = new ArrayList<Integer>();
         for(int k = 0; k < array.size(); k++)
                 coordList.add( array.getInt(k)  );
         Iterator<Integer> itr = coordList.iterator();
         ArrayList<Location> locs = new ArrayList<Location>();
+        
+        x = itr.next();
+        locs.add( new Location(itr.next(), x) );
+        itr.next(); //skip damage
         while(itr.hasNext()){
                 x = itr.next();
                 locs.add( new Location(itr.next(), x) );

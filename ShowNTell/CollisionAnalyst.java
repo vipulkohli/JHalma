@@ -58,10 +58,13 @@ public class CollisionAnalyst extends OfficialObserver{
         ArrayList<Location> toLocArray1 = getToLocationArray( movesList.get(1) );
         
         //Verify move is valid
-        boolean isValid0 = isValidMoveRequest(fromLoc0, toLocArray0, nextBoard);
-        boolean isValid1 = isValidMoveRequest(fromLoc1, toLocArray1, nextBoard);
+        int damage0 = toIntArray(movesList.get(0))[2];
+        int damage1 = toIntArray(movesList.get(1))[2];
+        
+        boolean isValid0 = isValidMoveRequest(damage0, fromLoc0, toLocArray0, nextBoard);
+        boolean isValid1 = isValidMoveRequest(damage1, fromLoc1, toLocArray1, nextBoard);
         if (!isValid0 || !isValid1){
-            print("INVALID MOVE!"+isValid0+isValid1);
+            OfficialObserver.print("INVALID MOVE!"+isValid0+isValid1);
         }
         
         //Check if there was a collision and update the board
@@ -136,7 +139,7 @@ public class CollisionAnalyst extends OfficialObserver{
     public static ArrayList<Location> getToLocationArray(String move){
     	int [] moveArray = toIntArray( move );
         ArrayList<Location> moveArrayList = new ArrayList<>();
-        for (int i = 2; i < moveArray.length; i+=2){
+        for (int i = 3; i < moveArray.length; i+=2){
             moveArrayList.add(new Location(moveArray[i+1], moveArray[i]));
         }
     	return moveArrayList;
@@ -194,19 +197,20 @@ public class CollisionAnalyst extends OfficialObserver{
 
     // checks that 1) src & dest are two cells apart 2) dest is free
     //             3) there exists a piece between src and dest
-    private static boolean isLegalTwoSquareJump(Location src, Location dest, ArrayList<XYDLocation> gPiecesArr) {
+    private static boolean isLegalTwoSquareJump(int damage, Location src, Location dest, ArrayList<XYDLocation> gPiecesArr) {
         return (isTwoSpacesAway(src,dest) && isFreeCell(dest, gPiecesArr) && 
-                isThereAPieceBetween(src, dest, gPiecesArr) ); 
+                isThereAPieceBetween(src, dest, gPiecesArr) &&
+                damage == 0); 
     }
 
     // jumpArr will have original source piece followed by jump locations
-    private static boolean isArrayOfValidJumps(Location src, ArrayList<Location> jumpArr, ArrayList<XYDLocation> gPiecesArr) {
+    private static boolean isArrayOfValidJumps(int damage, Location src, ArrayList<Location> jumpArr, ArrayList<XYDLocation> gPiecesArr) {
         // add src cell to array
         jumpArr.add(0, src);
 
         while (jumpArr.size() > 1) {
             // check first two cells for jump
-            if ( !isLegalTwoSquareJump(jumpArr.get(0), jumpArr.get(1), gPiecesArr) ) {
+            if ( !isLegalTwoSquareJump(damage, jumpArr.get(0), jumpArr.get(1), gPiecesArr) ) {
                 print("Illegal jump from " + jumpArr.get(0).toString() +
                         " to: " + jumpArr.get(1).toString());
                 return false;  
@@ -228,18 +232,18 @@ public class CollisionAnalyst extends OfficialObserver{
     // checks that array of requested moves is valid.
     // if only one move in array, check either non-jump or one jump
     // else check if all move pairs are jumping over some piece
-    private static boolean isValidMoveRequest(Location src, ArrayList<Location> moveArr, ArrayList<XYDLocation> gPieces) {
+    private static boolean isValidMoveRequest(int damage, Location src, ArrayList<Location> moveArr, ArrayList<XYDLocation> gPieces) {
         if(moveArr.isEmpty()) return false;
 
         if(moveArr.size() == 1) {
             Location dest = moveArr.get(0);  // only one
             return (isLegalOneSquareMove(src, dest, gPieces)  ||
-                    isLegalTwoSquareJump(src, dest, gPieces)  ||
+                    isLegalTwoSquareJump(damage, src, dest, gPieces)  ||
                     isPieceHoldingPosition(src,dest) ); 
         } 
 
         // we have a multi jump request
-        return isArrayOfValidJumps(src, moveArr, gPieces);
+        return isArrayOfValidJumps(damage, src, moveArr, gPieces);
     }
 
 }
