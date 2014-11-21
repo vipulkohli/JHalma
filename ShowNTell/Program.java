@@ -22,8 +22,8 @@ public class Program extends Thread {
      	
      	HalmaGame [] tournament = {
      	
-     		new HalmaGame( player1, player1, "Tyler", "Andrew" ),
-     		//new HalmaGame( player1, player1, "Tyler", "Tyler" )
+     		new HalmaGame( player1, player2, "Tyler", "Andrew" ),
+     		new HalmaGame( player1, player1, "Tyler", "Tyler" )
      	
      	};
     }
@@ -80,11 +80,11 @@ class GameBoard extends OfficialObserver{
     	else
     		numInstances++;
     	mTeamA = "\n" + teamA + ": ";
-        mTeamB = "  " + teamB + ": ";
+        mTeamB = "\n" + teamB + ": ";
         mWorldMessage = "Press \"Step\" to begin: " + teamA + " vs. " + teamB
         	+ "\n\nCheck internet connection.";
         WORLD.setMessage( mWorldMessage );
-    	WORLD.setGrid( new BoundedGrid(Official.BOARD_SIZE, Official.BOARD_SIZE) );
+    	WORLD.setGrid( new HalmaGrid("") );
     	WORLD.show( BOARD_FRAME_WIDTH, BOARD_FRAME_HEIGHT );
     	setTitle( "HalmaWorld - " + teamA + " vs. " + teamB );
     	centerWorldOnScreen( WORLD, numInstances);
@@ -129,8 +129,10 @@ class GameBoard extends OfficialObserver{
     protected void handleUpdate(){
         if( !super.checkRecipient( MY_EMAIL ) )
             return;
-        if(mTimer == TIMER_START)
+        if(mTimer == TIMER_START){
         	drawBoard( super.getMessage() );
+        	WORLD.setMessage( "Click 'Step' or 'Run' to Continue | " + WORLD.getMessage() );
+        }
         ALL_MOVES.add( super.getMessage() ); 
     }
     
@@ -199,12 +201,15 @@ class GameBoard extends OfficialObserver{
     	}
     }
     
+    //need to correct for winner situation
     private int isNewMove(String team1Move, String team2Move, ArrayList<String>past){
+    	if(true)
+    		return 0;
     	for (String oldMove : past){
     		if( oldMove.equals(team1Move) )
-    			return 0;
+    			return 1;
     		if( oldMove.equals(team2Move) )
-    			return 0;
+    			return 2;
     	}
     	if( past.isEmpty() ){
     		past.add(team1Move);

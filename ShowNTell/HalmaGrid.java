@@ -29,8 +29,7 @@ import java.util.logging.*;
  * The implementation of this class is testable on the AP CS AB exam.
  */
 public class HalmaGrid<E> extends BoundedGrid<E>
-{
-
+{ 
     /**
      * Constructs an empty bounded grid with the given dimensions.
      * (Precondition: <code>rows > 0</code> and <code>cols > 0</code>.)
@@ -39,10 +38,11 @@ public class HalmaGrid<E> extends BoundedGrid<E>
      */
     public HalmaGrid(String args)
     {
-        super(18, 18);
+        super( Official.BOARD_SIZE, Official.BOARD_SIZE );
         zoomOut();
         startGame(args);
     }
+    
     private void startGame(String args){
     	String url1, url2, name1, name2;
     	String [] parts = args.replace(" ", "").split(",");

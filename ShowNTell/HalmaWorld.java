@@ -25,17 +25,20 @@ public class HalmaWorld extends ActorWorld{
 	 	mBoard = board;
 	 }
 	 
+	 //messages received from GUIController.java 
 	 public void rewind(){
 	 	mBoard.equals( "rewind" );
 	 }
-	 
+	
+	 //messages received from GUIController.java 
 	 @Override
 	 public void step(){	
-	 	super.step();
 	 	if(mBoard != null)
         	mBoard.equals( "step" );
 	 }
-	 
+	
+	
+	//messages received from GUIController.java 
 	@Override
 	public boolean equals( Object o ){
 		if( "rewind".equals(o) )
