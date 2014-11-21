@@ -128,12 +128,14 @@ class GameBoard extends OfficialObserver{
     protected void handleUpdate(){
         if( !super.checkRecipient( MY_EMAIL ) )
             return;
+        if(mTimer == TIMER_START)
+        	drawBoard( super.getMessage() );
         ALL_MOVES.add( super.getMessage() ); 
     }
     
     @Override
     public boolean equals(Object o){
-    	if("step".equals(o.toString())){
+    	if( "step".equals( o ) ){
     		drawBoard( ALL_MOVES.get( mTimer ) );
     	}
     	return super.equals(o);

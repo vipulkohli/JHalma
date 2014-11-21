@@ -119,7 +119,7 @@ public class WorldFrame<T> extends JFrame
         setTitle(title);
         setLocation(25, 15);
 
-        URL appIconUrl = getClass().getResource("GridWorld.gif");
+        URL appIconUrl = getClass().getResource("HalmaWorld.gif");
         ImageIcon appIcon = new ImageIcon(appIconUrl);
         setIconImage(appIcon.getImage());
         
