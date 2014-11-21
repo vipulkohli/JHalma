@@ -7,7 +7,7 @@ public class Official extends Observable{
     private String mBoard, mMove;
     private int mCount;
     private static final double
-    	DELAY_DEFAULT = 0.2,
+    	DELAY_DEFAULT = 0,
     	RUN_COUNT = 1000; //maximum moves before aborting game
     
     public static final int

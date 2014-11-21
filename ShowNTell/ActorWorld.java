@@ -26,7 +26,7 @@ import java.util.ArrayList;
 public class ActorWorld extends World<Actor>
 {    
     private static final String DEFAULT_MESSAGE = "Click on a grid location to construct or manipulate an actor.";
-    private Object mBoard;
+    
     /**
      * Constructs an actor world with a default grid.
      */
@@ -34,13 +34,6 @@ public class ActorWorld extends World<Actor>
     {
     }
 	
-	/**
-     * Constructs an actor world with a default grid.
-     */
-    public ActorWorld(Object board)
-    {
-    	mBoard = board;
-    }
 	
     /**
      * Constructs an actor world with a given grid.
@@ -57,14 +50,6 @@ public class ActorWorld extends World<Actor>
             setMessage(DEFAULT_MESSAGE);
         super.show(width, height);
     }
-	
-	@Override
-	public boolean equals( Object o ){
-		if( "rewind".equals(o) && !mBoard.equals( "rewind" ))
-			return true;
-		else
-			return super.equals(o);
-	}
 
     public void step()
     {
@@ -79,8 +64,6 @@ public class ActorWorld extends World<Actor>
             if (a.getGrid() == gr)
                 a.act();
         }
-        if(mBoard != null)
-        	mBoard.equals( "step" );
     }
 
     /**
@@ -118,4 +101,33 @@ public class ActorWorld extends World<Actor>
         occupant.removeSelfFromGrid();
         return occupant;
     }
+}
+
+class HalmaWorld extends ActorWorld{
+	 
+	 private Object mBoard;
+	 
+	 public HalmaWorld( Object board ){
+	 	super();
+	 	mBoard = board;
+	 }
+	 
+	 public void rewind(){
+	 	mBoard.equals( "rewind" );
+	 }
+	 
+	 @Override
+	 public void step(){
+	 	if(mBoard != null)
+        	mBoard.equals( "step" );
+	 }
+	 
+	@Override
+	public boolean equals( Object o ){
+		if( "rewind".equals(o) )
+			rewind();
+		return super.equals(o);
+	}
+	 
+	 
 }

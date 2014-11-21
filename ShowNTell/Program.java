@@ -50,8 +50,8 @@ class GameBoard extends OfficialObserver{
         TEAM_B_WINS = "Blue Team Victory!",
         SPLIT_PHRASE = "SPLITSPLIT";
         
-    private final ActorWorld
-    	WORLD = new ActorWorld(this);
+    private final HalmaWorld
+    	WORLD = new HalmaWorld(this);
     
     private static Integer numInstances;
     
@@ -112,7 +112,7 @@ class GameBoard extends OfficialObserver{
     	WORLD.getFrame().getGridPanel().zoom(inFactor);
     }
     
-    private void setTextArea(ActorWorld world, Font font){
+    private void setTextArea(HalmaWorld world, Font font){
     	JTextArea messageArea = world.getFrame().getMessageArea();
     	messageArea.setFont( font );
         messageArea.setEditable( true );
@@ -121,7 +121,7 @@ class GameBoard extends OfficialObserver{
         messageArea.setSelectionColor( TEXT_SELECTION_COLOR );
     }
     
-    private void centerWorldOnScreen(ActorWorld world, int instances){
+    private void centerWorldOnScreen(HalmaWorld world, int instances){
     	world.getFrame().setLocation( BOARD_FRAME_WIDTH * (instances % 2), 0 );
     }
     
@@ -226,7 +226,7 @@ class GameBoard extends OfficialObserver{
     	return new Location(target.getRow(), target.getCol());
     }
     
-    private void addToPieces(String team1Move, String team2Move, ActorWorld world){
+    private void addToPieces(String team1Move, String team2Move, HalmaWorld world){
     	Location
     		redLoc = getToLocation( team1Move ), 
     		blueLoc = getToLocation( team2Move );
