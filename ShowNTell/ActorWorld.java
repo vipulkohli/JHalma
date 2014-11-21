@@ -57,6 +57,14 @@ public class ActorWorld extends World<Actor>
             setMessage(DEFAULT_MESSAGE);
         super.show(width, height);
     }
+	
+	@Override
+	public boolean equals( Object o ){
+		if( "rewind".equals(o) && !mBoard.equals( "rewind" ))
+			return true;
+		else
+			return super.equals(o);
+	}
 
     public void step()
     {

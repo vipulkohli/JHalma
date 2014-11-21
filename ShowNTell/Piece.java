@@ -3,7 +3,7 @@ package ShowNTell;
 import java.util.*;
 import java.awt.Color;
 
-public class Piece extends Actor{
+public class Piece extends Rock{
     
     public int x, y, damage, team;
     private String mColor;    

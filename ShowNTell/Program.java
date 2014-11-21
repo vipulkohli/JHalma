@@ -22,7 +22,7 @@ public class Program extends Thread {
      	
      	HalmaGame [] tournament = {
      	
-     		new HalmaGame( player1, player2, "Tyler", "Andrew" ),
+     		new HalmaGame( player1, player1, "Tyler", "Andrew" ),
      		//new HalmaGame( player1, player1, "Tyler", "Tyler" )
      	
      	};
@@ -81,7 +81,8 @@ class GameBoard extends OfficialObserver{
     		numInstances++;
     	mTeamA = "\n" + teamA + ": ";
         mTeamB = "  " + teamB + ": ";
-        mWorldMessage = "Press \"Step\" to begin: " + teamA + " vs. " + teamB;
+        mWorldMessage = "Press \"Step\" to begin: " + teamA + " vs. " + teamB
+        	+ "\n\nCheck internet connection.";
         WORLD.setMessage( mWorldMessage );
     	WORLD.setGrid( new BoundedGrid(Official.BOARD_SIZE, Official.BOARD_SIZE) );
     	WORLD.show( BOARD_FRAME_WIDTH, BOARD_FRAME_HEIGHT );
@@ -135,10 +136,20 @@ class GameBoard extends OfficialObserver{
     
     @Override
     public boolean equals(Object o){
-    	if( "step".equals( o ) ){
+    	int size = ALL_MOVES.size();
+    	boolean out = super.equals(o);
+    	if( "step".equals( o ) && size > 0){
+    		if(mTimer == size)
+    			return out;
     		drawBoard( ALL_MOVES.get( mTimer ) );
     	}
-    	return super.equals(o);
+    	if( "rewind".equals( o ) && size > 0){
+    		if(mTimer - 2 < 0)
+    			return out;
+			mTimer -= 2;
+    		drawBoard( ALL_MOVES.get( mTimer ) );
+    	}
+    	return out;
     }
     
     private ArrayList<Piece> toPieceList(String officialData){
@@ -191,9 +202,9 @@ class GameBoard extends OfficialObserver{
     private int isNewMove(String team1Move, String team2Move, ArrayList<String>past){
     	for (String oldMove : past){
     		if( oldMove.equals(team1Move) )
-    			return 1;
+    			return 0;
     		if( oldMove.equals(team2Move) )
-    			return 2;
+    			return 0;
     	}
     	if( past.isEmpty() ){
     		past.add(team1Move);
@@ -329,6 +340,7 @@ class GameBoard extends OfficialObserver{
     				break;
     			case 1:
     				a = new One();
+    				a.setColor(p.getColor());
     				WORLD.add(p.getXYLocation(), a);
     				break;
     		}
