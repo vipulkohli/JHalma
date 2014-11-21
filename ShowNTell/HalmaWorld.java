@@ -16,7 +16,7 @@
 
 package ShowNTell;
 
-class HalmaWorld extends ActorWorld{
+public class HalmaWorld extends ActorWorld{
 	 
 	 private Object mBoard;
 	 

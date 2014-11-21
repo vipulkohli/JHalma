@@ -102,32 +102,3 @@ public class ActorWorld extends World<Actor>
         return occupant;
     }
 }
-
-class HalmaWorld extends ActorWorld{
-	 
-	 private Object mBoard;
-	 
-	 public HalmaWorld( Object board ){
-	 	super();
-	 	mBoard = board;
-	 }
-	 
-	 public void rewind(){
-	 	mBoard.equals( "rewind" );
-	 }
-	 
-	 @Override
-	 public void step(){
-	 	if(mBoard != null)
-        	mBoard.equals( "step" );
-	 }
-	 
-	@Override
-	public boolean equals( Object o ){
-		if( "rewind".equals(o) )
-			rewind();
-		return super.equals(o);
-	}
-	 
-	 
-}
