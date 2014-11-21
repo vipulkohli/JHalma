@@ -26,14 +26,22 @@ import java.util.ArrayList;
 public class ActorWorld extends World<Actor>
 {    
     private static final String DEFAULT_MESSAGE = "Click on a grid location to construct or manipulate an actor.";
-    
+    private Object mBoard;
     /**
      * Constructs an actor world with a default grid.
      */
     public ActorWorld()
     {
     }
-
+	
+	/**
+     * Constructs an actor world with a default grid.
+     */
+    public ActorWorld(Object board)
+    {
+    	mBoard = board;
+    }
+	
     /**
      * Constructs an actor world with a given grid.
      * @param grid the grid for this world.
@@ -63,6 +71,8 @@ public class ActorWorld extends World<Actor>
             if (a.getGrid() == gr)
                 a.act();
         }
+        if(mBoard != null)
+        	mBoard.equals( "step" );
     }
 
     /**

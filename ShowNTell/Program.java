@@ -8,6 +8,7 @@ package ShowNTell;
  * @author Andrew Socha
  * @version 1.00 2014/4/27
  */
+
 import com.grack.nanojson.*;
 import java.awt.*;
 import java.util.*;
@@ -50,14 +51,14 @@ class GameBoard extends OfficialObserver{
         SPLIT_PHRASE = "SPLITSPLIT";
         
     private final ActorWorld
-    	WORLD = new ActorWorld();
+    	WORLD = new ActorWorld(this);
     
     private static Integer numInstances;
     
     private static final int
     	BOARD_FRAME_WIDTH = (int) Toolkit.getDefaultToolkit().getScreenSize().getWidth() / 2,
     	BOARD_FRAME_HEIGHT = 850,
-    	CELL_SIZE = BOARD_FRAME_WIDTH / 22,
+    	CELL_SIZE = BOARD_FRAME_WIDTH / 25,
     	//BOARD_SIZE = super.BOARD_SIZE,
     	TIMER_START = 0;
     	
@@ -70,8 +71,9 @@ class GameBoard extends OfficialObserver{
     	mTimer;
     
     private final ArrayList<String> 
+    	ALL_MOVES = new ArrayList<String>(),
     	PAST_MOVES = new ArrayList<String>();
-     
+    
     public GameBoard(String teamA, String teamB){
     	if(numInstances == null)
     		numInstances = 0;
@@ -79,7 +81,7 @@ class GameBoard extends OfficialObserver{
     		numInstances++;
     	mTeamA = "\n" + teamA + ": ";
         mTeamB = "  " + teamB + ": ";
-        mWorldMessage = "Loading game: " + teamA + " vs. " + teamB;
+        mWorldMessage = "Press \"Step\" to begin: " + teamA + " vs. " + teamB;
         WORLD.setMessage( mWorldMessage );
     	WORLD.setGrid( new BoundedGrid(Official.BOARD_SIZE, Official.BOARD_SIZE) );
     	WORLD.show( BOARD_FRAME_WIDTH, BOARD_FRAME_HEIGHT );
@@ -126,7 +128,15 @@ class GameBoard extends OfficialObserver{
     protected void handleUpdate(){
         if( !super.checkRecipient( MY_EMAIL ) )
             return;
-        drawBoard( super.getMessage() ); 
+        ALL_MOVES.add( super.getMessage() ); 
+    }
+    
+    @Override
+    public boolean equals(Object o){
+    	if("step".equals(o.toString())){
+    		drawBoard( ALL_MOVES.get( mTimer ) );
+    	}
+    	return super.equals(o);
     }
     
     private ArrayList<Piece> toPieceList(String officialData){
