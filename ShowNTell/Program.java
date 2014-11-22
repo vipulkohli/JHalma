@@ -86,11 +86,11 @@ class GameBoard extends OfficialObserver{
         WORLD.setMessage( mWorldMessage );
     	WORLD.setGrid( new HalmaGrid("") );
     	WORLD.show( BOARD_FRAME_WIDTH, BOARD_FRAME_HEIGHT );
-    	setTitle( "HalmaWorld - " + teamA + " vs. " + teamB );
+    	setTitle( WORLD, "HalmaWorld - " + teamA + " vs. " + teamB );
     	centerWorldOnScreen( WORLD, numInstances);
-    	setTextArea(WORLD, FONT);
+    	setTextArea( WORLD, FONT);
         mTimer = TIMER_START;
-        setCellSize( CELL_SIZE );
+        setCellSize( WORLD, CELL_SIZE );
     }
     
     
@@ -100,19 +100,19 @@ class GameBoard extends OfficialObserver{
      * or GridPanel.java
      */
      
-    private void setTitle(String title){
-    	WORLD.getFrame().setTitle( title );
+    public static void setTitle(HalmaWorld inWorld, String title){
+    	inWorld.getFrame().setTitle( title );
     }
     
-    private void setCellSize(int size){
-    	WORLD.getFrame().getGridPanel().setCellSize( size );
+    public static void setCellSize(HalmaWorld inWorld, int size){
+    	inWorld.getFrame().getGridPanel().setCellSize( size );
     }
     
-    private void setZoom(double inFactor){
-    	WORLD.getFrame().getGridPanel().zoom(inFactor);
+    public static void setZoom(HalmaWorld inWorld, double inFactor){
+    	inWorld.getFrame().getGridPanel().zoom(inFactor);
     }
     
-    private void setTextArea(HalmaWorld world, Font font){
+    public static void setTextArea(HalmaWorld world, Font font){
     	JTextArea messageArea = world.getFrame().getMessageArea();
     	messageArea.setFont( font );
         messageArea.setEditable( true );
@@ -121,7 +121,7 @@ class GameBoard extends OfficialObserver{
         messageArea.setSelectionColor( TEXT_SELECTION_COLOR );
     }
     
-    private void centerWorldOnScreen(HalmaWorld world, int instances){
+    private static void centerWorldOnScreen(HalmaWorld world, int instances){
     	world.getFrame().setLocation( BOARD_FRAME_WIDTH * (instances % 2), 0 );
     }
     
@@ -154,7 +154,7 @@ class GameBoard extends OfficialObserver{
     	return out;
     }
     
-    private ArrayList<Piece> toPieceList(String officialData){
+    private static ArrayList<Piece> toPieceList(String officialData){
         ArrayList<Piece> list = new ArrayList<>();
         JsonArray array;
         try{ array = JsonParser.array().from(officialData);  }
@@ -202,7 +202,7 @@ class GameBoard extends OfficialObserver{
     }
     
     //need to correct for winner situation
-    private int isNewMove(String team1Move, String team2Move, ArrayList<String>past){
+    private static int isNewMove(String team1Move, String team2Move, ArrayList<String>past){
     	if(true)
     		return 0;
     	for (String oldMove : past){
@@ -267,7 +267,7 @@ class GameBoard extends OfficialObserver{
         return locs;
     }
     
-    private String formatMove(String move){
+    private static String formatMove(String move){
     	JsonArray array;
     	try{ array = JsonParser.array().from(move); }
     	catch(JsonParserException e){
@@ -290,6 +290,19 @@ class GameBoard extends OfficialObserver{
         return locs.toString();
     }
     
+    public static Piece createDamagedPiece(int damage, Color color){
+    	Piece [] damageCounts ={
+    		new One(),
+    		new Two(),
+    		new Three(),
+    		new Four(),
+    		new Five()	
+    	};
+    	if(damage < 5)
+    		damageCounts[ damage - 1 ].setColor(color);
+    	return damageCounts[ damage - 1 ];
+    }
+    
     protected void drawBoard(String inData){
     	clearBoard();
     	highlightDestinations();
@@ -310,12 +323,10 @@ class GameBoard extends OfficialObserver{
         pieces = toPieceList( pieceStr ) ;
         print( pieces.toString() );
         for (Piece p : pieces){
-            switch (p.team){
-                case 0: p.setColor( TEAM_A_COLOR );
-                break;
-                default: p.setColor( TEAM_B_COLOR );
-                break;
-            }
+            if(p.team == 0)
+                p.setColor( TEAM_A_COLOR );
+            else
+                p.setColor( TEAM_B_COLOR );
             //GridWorld locations are (row, column);
             Location cell = new Location( p.y , p.x );
             WORLD.add(cell, p);
@@ -323,34 +334,9 @@ class GameBoard extends OfficialObserver{
 		addToPieces(p1Move, p2Move, WORLD);
       	for (Piece p : pieces){
       		WORLD.setMessage( onMessageField );
-      		switch(p.damage){
-      			case 5:
-    				Actor a = new Five();
-    				WORLD.add(p.getXYLocation(), a);
-    				break;
-    			case 4:
-    				a = new Four();
-    				a.setColor(p.getColor());
-    				WORLD.add(p.getXYLocation(), a);
-    				break;
-    			case 3:
-    				a = new Three();
-    				a.setColor(p.getColor());
-    				WORLD.add(p.getXYLocation(), a);
-    				break;
-    			case 2:
-    				a = new Two();
-    				a.setColor(p.getColor());
-    				WORLD.add(p.getXYLocation(), a);
-    				break;
-    			case 1:
-    				a = new One();
-    				a.setColor(p.getColor());
-    				WORLD.add(p.getXYLocation(), a);
-    				break;
-    		}
+      		if(p.damage > 0)
+    			WORLD.add(p.getXYLocation(), this.createDamagedPiece( p.damage, p.getColor() ));
       	}
-    		
     }
 
 }

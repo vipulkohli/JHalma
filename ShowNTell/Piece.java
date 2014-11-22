@@ -54,13 +54,7 @@ public class Piece extends Rock{
     }
 }
 
-class Five extends Piece{
-	
-	public Five(){
-		setColor(Color.black);
-	}
-    
-}
+class Five extends Piece{}
 class Four extends Five{}
 class Three extends Five{}
 class Two extends Five{}
