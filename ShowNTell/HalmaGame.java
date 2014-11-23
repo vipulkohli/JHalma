@@ -1,5 +1,10 @@
 package ShowNTell;
 
+/**
+ * HalmaGame
+ * Instantiates the components of the game, and runs the game.
+ */
+
 import java.util.*;
 
 public class HalmaGame extends Thread{

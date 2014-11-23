@@ -1,5 +1,10 @@
 package ShowNTell;
 
+/**
+ * Official
+ * Manages the game. Relays communication between the components of the game.
+ */
+
 import java.util.*;
 
 public class Official extends Observable{

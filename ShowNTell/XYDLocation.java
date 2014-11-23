@@ -1,5 +1,11 @@
 package ShowNTell;
 
+/**
+ * XYDLocation
+ * Represents a piece of the game board, composing of x and y coordinates,
+ * damage, and a team.
+ */
+
 import com.grack.nanojson.*;
 
 public class XYDLocation{

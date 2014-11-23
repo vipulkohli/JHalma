@@ -1,5 +1,10 @@
 package ShowNTell;
 
+/**
+ * HalmaMessenger
+ * Sends and receives messages to/from the AIs that are playing the game.
+ */
+
 import com.grack.nanojson.*;
 import java.net.*;
 import java.util.*;

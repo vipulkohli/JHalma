@@ -18,8 +18,6 @@
  */
 
 package ShowNTell;
-import info.gridworld.grid.*;
-import java.util.ArrayList;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.logging.*;
@@ -30,12 +28,6 @@ import java.util.logging.*;
  */
 public class HalmaGrid<E> extends BoundedGrid<E>
 { 
-    /**
-     * Constructs an empty bounded grid with the given dimensions.
-     * (Precondition: <code>rows > 0</code> and <code>cols > 0</code>.)
-     * @param rows number of rows in BoundedGrid
-     * @param cols number of columns in BoundedGrid
-     */
     public HalmaGrid(String args)
     {
         super( Official.BOARD_SIZE, Official.BOARD_SIZE );

@@ -2,7 +2,10 @@ package ShowNTell;
 
 /**
  * @(#)Program.java
- * Includes GameBoard class
+ * Creates one or more Halma games.
+ * 
+ * Includes GameBoard class,
+ * which represents the board UI.
  *
  * @author Vipul Kohli
  * @author Andrew Socha
@@ -59,7 +62,6 @@ class GameBoard extends OfficialObserver{
     	BOARD_FRAME_WIDTH = (int) Toolkit.getDefaultToolkit().getScreenSize().getWidth() / 2,
     	BOARD_FRAME_HEIGHT = 850,
     	CELL_SIZE = BOARD_FRAME_WIDTH / 25,
-    	//BOARD_SIZE = super.BOARD_SIZE,
     	TIMER_START = 0;
     	
     private final String

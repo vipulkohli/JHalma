@@ -1,5 +1,10 @@
 package ShowNTell;
 
+/**
+ * OfficialObserver
+ * Abstract class, representing a component of the game.
+ */
+
 import java.util.*;
 
 public abstract class OfficialObserver implements Observer{
