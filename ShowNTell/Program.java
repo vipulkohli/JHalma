@@ -157,7 +157,7 @@ class GameBoard extends OfficialObserver{
     }
     
     private static ArrayList<Piece> toPieceList(String officialData){
-        ArrayList<Piece> list = new ArrayList<>();
+        ArrayList<Piece> list = new ArrayList<Piece>();
         JsonArray array;
         try{ array = JsonParser.array().from(officialData);  }
         catch(JsonParserException e){ return null; }
@@ -172,53 +172,58 @@ class GameBoard extends OfficialObserver{
         return list;
     }    
     
-    private void highlightDestinations(){
+    public static void highlightDestinations( HalmaWorld world ){
     	for(int x = 0; x < 3; x++){
     		for(int y = 0; y < 3; y++){
     			Glitter g = new Glitter();
     			g.setColor( TEAM_B_COLOR );
-    			WORLD.add(new Location( x, y ), g);
+    			world.add(new Location( x, y ), g);
     		}
     	}
     	for(int row = 0; row < 3; row++){
     		for(int col = BOARD_SIZE - 1; col >= BOARD_SIZE - 3; col--){
     			Glitter g = new Glitter();
     			g.setColor( TEAM_A_COLOR );
-    			WORLD.add(new Location( row , col), g);
+    			world.add(new Location( row , col), g);
     		}
     	}
     }
     
-    private void clearBoard(){
+    public static void clearBoard( HalmaWorld world ){
     	for(int x = 0; x < BOARD_SIZE; x++){
     		for(int y = 0; y < BOARD_SIZE; y++){
-    			Object obj = WORLD.remove( new Location(y,x) );
+    			Object obj = world.remove( new Location(y,x) );
     			if(obj instanceof Piece){
     				Piece p = (Piece) obj;
     				Flower a = new Flower();
     				a.setColor( p.getColor() );
-    				WORLD.add(new Location(y,x), a);
+    				world.add(new Location(y,x), a);
     			}
     		}
     	}
     }
     
+    
+    
     //need to correct for winner situation
-    private static int isNewMove(String team1Move, String team2Move, ArrayList<String>past){
-    	if(true)
-    		return 0;
-    	for (String oldMove : past){
-    		if( oldMove.equals(team1Move) )
-    			return 1;
-    		if( oldMove.equals(team2Move) )
-    			return 2;
+    public static int getWinner( HalmaWorld world, Actor marker ){
+    	Grid grid = world.getGrid();
+    	int blues = 0, reds = 0;
+    	for(int x = 0; x < grid.getNumCols(); x++){
+    		for(int y = 0; y < grid.getNumRows(); y++){
+    			Object o = grid.get( new Location(y, x) );
+    			if( o instanceof Glitter 
+    				&& x < 3)
+    				blues++;
+    			if( o instanceof Glitter 
+    				&& x > 3)
+    				reds++;
+    		}
     	}
-    	if( past.isEmpty() ){
-    		past.add(team1Move);
-    		past.add(team2Move);
-    	}
-    	past.set(0, team1Move);
-    	past.set(1, team2Move);
+    	if(reds == 0)
+    		return 1;
+    	if(blues == 0)
+    		return 2;	
     	return 0;
     }
     
@@ -233,7 +238,7 @@ class GameBoard extends OfficialObserver{
     	return new Location(target.getRow(), target.getCol());
     }
     
-    private void addToPieces(String team1Move, String team2Move, HalmaWorld world){
+    private static void addToPieces(String team1Move, String team2Move, HalmaWorld world){
     	Location
     		redLoc = getToLocation( team1Move ), 
     		blueLoc = getToLocation( team2Move );
@@ -304,24 +309,21 @@ class GameBoard extends OfficialObserver{
     		damageCounts[ damage - 1 ].setColor(color);
     	return damageCounts[ damage - 1 ];
     }
-    
+    /*
+     * clears board, highlights destinations, declares move/winner
+     */
     protected void drawBoard(String inData){
-    	clearBoard();
-    	highlightDestinations();
     	String onMessageField, p1Move, p2Move, pieceStr;
     	int winner;
     	ArrayList<Piece> pieces;
+    	clearBoard( WORLD );
+    	highlightDestinations( WORLD );
     	String [] data = inData.split( SPLIT_PHRASE );
     	pieceStr = data[0];
     	p1Move = data[1];
     	p2Move = data[2];
     	onMessageField = TIMER + upTimer() + mTeamA 
     		+ formatMove(p1Move) + mTeamB + formatMove(p2Move);
-    	winner = isNewMove(p1Move, p2Move, PAST_MOVES );
-    	if( winner == 1)
-    		onMessageField = HALMATE + TEAM_A_WINS;
-    	if( winner == 2 )
-    		onMessageField = HALMATE + TEAM_B_WINS;
         pieces = toPieceList( pieceStr ) ;
         print( pieces.toString() );
         for (Piece p : pieces){
@@ -334,6 +336,11 @@ class GameBoard extends OfficialObserver{
             WORLD.add(cell, p);
         }//end for loop
 		addToPieces(p1Move, p2Move, WORLD);
+		winner = getWinner( WORLD, new Glitter() );
+    	if( winner == 1)
+    		onMessageField = HALMATE + TEAM_A_WINS;
+    	if( winner == 2 )
+    		onMessageField = HALMATE + TEAM_B_WINS;
       	for (Piece p : pieces){
       		WORLD.setMessage( onMessageField );
       		if(p.damage > 0)
