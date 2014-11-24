@@ -50,7 +50,7 @@ public class GUIController<T>
             + (MAX_DELAY_MSECS - MIN_DELAY_MSECS) / 2;
 
     private Timer timer;
-    private JButton rewindButton, stepButton, runButton, stopButton;
+    private JButton restartButton, rewindButton, stepButton, runButton, stopButton;
     private JComponent controlPanel;
     private GridPanel display;
     private WorldFrame<T> parentFrame;
@@ -122,8 +122,8 @@ public class GUIController<T>
         });
         stop();
     }
-	public void rewind(){
-		parentFrame.getWorld().equals("rewind");
+	public void sendToBoard(String inCommand){
+		parentFrame.getWorld().equals( inCommand );
 	}
     /**
      * Advances the world one step.
@@ -163,6 +163,7 @@ public class GUIController<T>
         display.setToolTipsEnabled(false); // hide tool tips while running
         parentFrame.setRunMenuItemsEnabled(false);
         stopButton.setEnabled(true);
+        restartButton.setEnabled(false);
         rewindButton.setEnabled(false);
         stepButton.setEnabled(false);
         runButton.setEnabled(false);
@@ -183,6 +184,7 @@ public class GUIController<T>
         runButton.setEnabled(true);
         stepButton.setEnabled(true);
         rewindButton.setEnabled(true);
+        restartButton.setEnabled(true);
         running = false;
     }
 
@@ -198,6 +200,7 @@ public class GUIController<T>
     private void makeControls()
     {
         controlPanel = new JPanel();
+        restartButton = new JButton("Restart");
         rewindButton = new JButton("Rewind");
         stepButton = new JButton(resources.getString("button.gui.step"));
         runButton = new JButton(resources.getString("button.gui.run"));
@@ -207,7 +210,8 @@ public class GUIController<T>
         controlPanel.setBorder(BorderFactory.createEtchedBorder());
         
         Dimension spacer = new Dimension(5, stepButton.getPreferredSize().height + 10);
-        
+        controlPanel.add(Box.createRigidArea(spacer));
+		controlPanel.add(restartButton);
         controlPanel.add(Box.createRigidArea(spacer));
 		controlPanel.add(rewindButton);
         controlPanel.add(Box.createRigidArea(spacer));
@@ -243,11 +247,19 @@ public class GUIController<T>
         controlPanel.add(new JLabel(resources.getString("slider.gui.fast")));
         controlPanel.add(Box.createRigidArea(new Dimension(5, 0)));
 
+		restartButton.addActionListener(new ActionListener()
+        {
+            public void actionPerformed(ActionEvent e)
+            {
+                sendToBoard( "restart" );
+            }
+        });
+
 		rewindButton.addActionListener(new ActionListener()
         {
             public void actionPerformed(ActionEvent e)
             {
-                rewind();
+                sendToBoard( "rewind" );
             }
         });
 

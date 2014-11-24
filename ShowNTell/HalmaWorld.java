@@ -26,8 +26,8 @@ public class HalmaWorld extends ActorWorld{
 	 }
 	 
 	 //messages received from GUIController.java 
-	 public void rewind(){
-	 	mBoard.equals( "rewind" );
+	 public void notifyBoard(String command){
+	 	mBoard.equals( command );
 	 }
 	
 	 //messages received from GUIController.java 
@@ -41,8 +41,8 @@ public class HalmaWorld extends ActorWorld{
 	//messages received from GUIController.java 
 	@Override
 	public boolean equals( Object o ){
-		if( "rewind".equals(o) )
-			rewind();
+		if( o instanceof String )
+			notifyBoard( o.toString() );
 		return super.equals(o);
 	}
 	 

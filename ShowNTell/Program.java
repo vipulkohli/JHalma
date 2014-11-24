@@ -69,6 +69,8 @@ class GameBoard extends OfficialObserver{
     	mTeamA,
     	mTeamB;
    
+    private String mStart;
+    
     private int 
     	mTimer;
     
@@ -132,27 +134,42 @@ class GameBoard extends OfficialObserver{
         if( !super.checkRecipient( MY_EMAIL ) )
             return;
         if(mTimer == TIMER_START){
-        	drawBoard( super.getMessage() );
+        	mStart = super.getMessage();
+        	drawBoard( mStart );
         	WORLD.setMessage( "Click 'Step' or 'Run' to Continue | " + WORLD.getMessage() );
         }
         ALL_MOVES.add( super.getMessage() ); 
     }
     
+    protected void stepAhead(){
+    	if( mTimer < ALL_MOVES.size() )
+    		drawBoard( ALL_MOVES.get( mTimer ) );
+    }
+    
+    protected void rewindMove(){
+    	if( mTimer <= TIMER_START )
+    		return;
+		mTimer-=2;
+		drawBoard( ALL_MOVES.get( mTimer ) );
+    }
+    
+    protected void restartGame(){
+    	mTimer = TIMER_START;
+    	drawBoard( mStart );
+    	clearFlowers( WORLD );
+    }
+    
     @Override
     public boolean equals(Object o){
-    	int size = ALL_MOVES.size();
     	boolean out = super.equals(o);
-    	if( "step".equals( o ) && size > 0){
-    		if(mTimer == size)
-    			return out;
-    		drawBoard( ALL_MOVES.get( mTimer ) );
-    	}
-    	if( "rewind".equals( o ) && size > 0){
-    		if(mTimer - 2 < 0)
-    			return out;
-			mTimer -= 2;
-    		drawBoard( ALL_MOVES.get( mTimer ) );
-    	}
+    	if( ALL_MOVES.size() <= 0 )
+    		return out;
+    	if( "step".equals( o ) )
+    		stepAhead();
+    	if( "restart".equals( o ) )
+    		restartGame();
+    	if( "rewind".equals( o ) )
+    		rewindMove();
     	return out;
     }
     
@@ -189,6 +206,17 @@ class GameBoard extends OfficialObserver{
     	}
     }
     
+    public static void clearFlowers( HalmaWorld world ){
+    	for(int x = 0; x < BOARD_SIZE; x++){
+    		for(int y = 0; y < BOARD_SIZE; y++){
+    			Object obj = world.getGrid().get( new Location(y,x) );
+    			if(obj instanceof Flower){
+    				world.remove( new Location(y,x) );
+    			}
+    		}
+    	}
+    }
+    
     public static void clearBoard( HalmaWorld world ){
     	for(int x = 0; x < BOARD_SIZE; x++){
     		for(int y = 0; y < BOARD_SIZE; y++){
@@ -206,7 +234,7 @@ class GameBoard extends OfficialObserver{
     
     
     //need to correct for winner situation
-    public static int getWinner( HalmaWorld world, Actor marker ){
+    public static int getWinner( HalmaWorld world, Object marker ){
     	Grid grid = world.getGrid();
     	int blues = 0, reds = 0;
     	for(int x = 0; x < grid.getNumCols(); x++){
