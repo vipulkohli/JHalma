@@ -212,10 +212,10 @@ class GameBoard extends OfficialObserver{
     	for(int x = 0; x < grid.getNumCols(); x++){
     		for(int y = 0; y < grid.getNumRows(); y++){
     			Object o = grid.get( new Location(y, x) );
-    			if( o instanceof Glitter 
+    			if( o != null && marker.getClass().equals( o.getClass() ) 
     				&& x < 3)
     				blues++;
-    			if( o instanceof Glitter 
+    			if( o != null && marker.getClass().equals( o.getClass() )  
     				&& x > 3)
     				reds++;
     		}
