@@ -69,7 +69,8 @@ public class CollisionAnalyst extends OfficialObserver{
         boolean isValid0 = isValidMoveRequest(damage0, fromLoc0, toLocArray0, nextBoard);
         boolean isValid1 = isValidMoveRequest(damage1, fromLoc1, toLocArray1, nextBoard);
         if (!isValid0 || !isValid1){
-            OfficialObserver.print("INVALID MOVE!"+isValid0+isValid1);
+            OfficialObserver.print("INVALID MOVE!");
+            return nextBoard.toString().replace(" ", "");
         }
         
         //Check if there was a collision and update the board
@@ -79,7 +80,7 @@ public class CollisionAnalyst extends OfficialObserver{
             if(!isHeadOnCollision){
                 if( isOwnCollision(toLoc0, toLoc1, xyd) )
                     xyd.setD( DAMAGE_START );
-                if( isEnemyCollision(toLoc0, toLoc1, xyd) ){
+                else if( isEnemyCollision(toLoc0, toLoc1, xyd) ){
                     xyd.setD( DAMAGE_LITE );
                 }
                 if( xyd.equals(fromLoc0, 0) )
@@ -151,15 +152,6 @@ public class CollisionAnalyst extends OfficialObserver{
     
     //---------------FUNCTIONS FOR VALIDATING MOVES---------------
     //Based on the JavaScript version by Dr. Coyle
-    private static boolean isFreeCell(Location c1, ArrayList<XYDLocation> gPiecesArr) {
-        for(int i=0; i<gPiecesArr.size(); i++) {
-            if(c1.getCol() == gPiecesArr.get(i).getX() &&
-               c1.getRow() == gPiecesArr.get(i).getY())
-            return false;
-        }
-        return true;
-    }
-    
     private static boolean isThereAPieceBetween(Location cell1, Location cell2, ArrayList<XYDLocation> gPieces) {
         /* note: assumes cell1 and cell2 are 2 squares away
          either vertically, horizontally, or diagonally */
@@ -196,13 +188,13 @@ public class CollisionAnalyst extends OfficialObserver{
 
     // checks that src & dest are one cell apart and dest is free
     private static boolean isLegalOneSquareMove(Location src, Location dest, ArrayList<XYDLocation> gPiecesArr) {
-        return (isOneSpaceAway(src,dest) && isFreeCell(dest, gPiecesArr)); 
+        return isOneSpaceAway(src,dest); 
     }
 
     // checks that 1) src & dest are two cells apart 2) dest is free
     //             3) there exists a piece between src and dest
     private static boolean isLegalTwoSquareJump(int damage, Location src, Location dest, ArrayList<XYDLocation> gPiecesArr) {
-        return (isTwoSpacesAway(src,dest) && isFreeCell(dest, gPiecesArr) && 
+        return (isTwoSpacesAway(src,dest) && 
                 isThereAPieceBetween(src, dest, gPiecesArr) &&
                 damage == 0); 
     }
