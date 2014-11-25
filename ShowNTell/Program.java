@@ -60,7 +60,7 @@ class GameBoard extends OfficialObserver{
     
     private static final int
     	BOARD_FRAME_WIDTH = (int) Toolkit.getDefaultToolkit().getScreenSize().getWidth() / 2,
-    	BOARD_FRAME_HEIGHT = 850,
+    	BOARD_FRAME_HEIGHT = (int) (Toolkit.getDefaultToolkit().getScreenSize().getHeight() * 0.98),
     	CELL_SIZE = BOARD_FRAME_WIDTH / 25,
     	TIMER_START = 0;
     	
