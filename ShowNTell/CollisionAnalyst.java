@@ -1,44 +1,43 @@
-package ShowNTell;
-
 /**
  * CollisionAnalyst
  * Enforces collisions between pieces. Also validates that moves follow the rules.
  */
-
+ 
+package ShowNTell;
 import java.util.*;
 
 public class CollisionAnalyst extends OfficialObserver{
-    
-    private static final String 
-        SPLIT_PHRASE = "SPLITSPLIT",
-        MY_EMAIL = "c";
-    private static final int 
-        DAMAGE_START = 5,
-        DAMAGE_LITE = 5;
     
     @Override
     //called whenever an update is received from the observable
     protected void handleUpdate(){
         if( !super.checkRecipient( MY_EMAIL ) )
             return;
-        super.replyToOfficial(
-            MY_EMAIL,
-            getNewBoardPosition( super.getMessage() )
-        );
+        super.replyToOfficial( MY_EMAIL, getNewBoardPosition( super.getMessage() ) );
     }
     
-    private static String [] toStrArray(String multiData){
-        return multiData.replace(" ", "").split(SPLIT_PHRASE);
-    }
-    
-    public static String getNewBoardPosition(String multiData){
+    //||||||||||||||MEMBER DATA|||||||||||||
+    private static final String 
+        SPLIT_PHRASE = "SPLITSPLIT",
+        INVALID_MOVE = "INVALID MOVE!",
+        MY_EMAIL = "c";
+    private static final int 
+        DAMAGE_START = 5,
+        DAMAGE_LITE = 5;
+    //||||||||||||||||||||||||||||||||||||||
+
+    public static String getNewBoardPosition(String twoPlayerMoveData){
         ArrayList<String> playerMoves = new ArrayList<String>();
-        String [] data = toStrArray( multiData );
+        String [] data = toStrArray( twoPlayerMoveData );
         String board = data[0];
         playerMoves.add(data[1]);
         playerMoves.add(data[2]);
       	String outBoard = getNewPieceData( board, playerMoves );
         return outBoard;
+    }
+    
+    private static String [] toStrArray(String multiData){
+        return multiData.replace(" ", "").split(SPLIT_PHRASE);
     }
     
     private static boolean isOwnCollision(Location toLoc0, Location toLoc1, XYDLocation xyd){
@@ -51,50 +50,49 @@ public class CollisionAnalyst extends OfficialObserver{
                 || (xyd.equals(toLoc1) && xyd.getTeam() == 0);
     }
     
-    public static String getNewPieceData(String oldBoard, ArrayList<String> movesList ){
-    	Location fromLoc0 = getFromLocation( movesList.get(0) );
-    	Location toLoc0 = getToLocation( movesList.get(0) );
-        Location fromLoc1 = getFromLocation( movesList.get(1) );
-        Location toLoc1 = getToLocation( movesList.get(1) );
-        
-        ArrayList<XYDLocation> nextBoard = getXYDList(oldBoard);
-        
-        ArrayList<Location> toLocArray0 = getToLocationArray( movesList.get(0) );
-        ArrayList<Location> toLocArray1 = getToLocationArray( movesList.get(1) );
-        
+    /*
+     * returns new board piece locations
+     * WARNING: only supports 2 player game
+     */
+    public static String getNewPieceData( String oldBoard, ArrayList<String> movesList ){
+    	Location 
+    		fromLoc0 = getFromLocation( movesList.get(0) ),
+    		fromLoc1 = getFromLocation( movesList.get(1) ),
+    		toLoc0 = getToLocation( movesList.get(0) ),
+        	toLoc1 = getToLocation( movesList.get(1) );
+        ArrayList<XYDLocation> 
+        	nextBoard = getXYDList(oldBoard);
+        ArrayList<Location>
+        	toLocArray0 = getToLocationArray( movesList.get(0) ),
+        	toLocArray1 = getToLocationArray( movesList.get(1) );
         //Verify move is valid
         int damage0 = toIntArray(movesList.get(0))[2];
         int damage1 = toIntArray(movesList.get(1))[2];
-        
         boolean isValid0 = isValidMoveRequest(damage0, fromLoc0, toLocArray0, nextBoard);
         boolean isValid1 = isValidMoveRequest(damage1, fromLoc1, toLocArray1, nextBoard);
         if (!isValid0 || !isValid1){
-            OfficialObserver.print("INVALID MOVE!");
+            print( INVALID_MOVE.toString() );
             return nextBoard.toString().replace(" ", "");
         }
-        
         //Check if there was a collision and update the board
         boolean isHeadOnCollision = toLoc0.equals(toLoc1);
-    	for(XYDLocation xyd : nextBoard){
+    	for( XYDLocation xyd : nextBoard ){
             xyd.heal(); //heals all pieces
             if(!isHeadOnCollision){
-                if( isOwnCollision(toLoc0, toLoc1, xyd) )
+                if( isOwnCollision( toLoc0, toLoc1, xyd ) )
                     xyd.setD( DAMAGE_START );
-                else if( isEnemyCollision(toLoc0, toLoc1, xyd) ){
+                else if( isEnemyCollision( toLoc0, toLoc1, xyd ) )
                     xyd.setD( DAMAGE_LITE );
-                }
-                if( xyd.equals(fromLoc0, 0) )
-                    xyd.setXY(toLoc0);
-                else if( xyd.equals(fromLoc1, 1) )
-                    xyd.setXY(toLoc1);
+                if( xyd.equals( fromLoc0, 0) )
+                    xyd.setXY( toLoc0 );
+                else if( xyd.equals( fromLoc1, 1 ) )
+                    xyd.setXY( toLoc1 );
             }
             else{
-                if(xyd.equals(fromLoc0, 0)){
-                    xyd.setXYD(toLoc0, DAMAGE_START);
-                }
-                else if (xyd.equals(fromLoc1, 1)){
-                    xyd.setXYD(toLoc1, DAMAGE_START);
-                }
+                if( xyd.equals( fromLoc0, 0 ) )
+                    xyd.setXYD( toLoc0, DAMAGE_START );
+                else if( xyd.equals( fromLoc1, 1 ) )
+                    xyd.setXYD( toLoc1, DAMAGE_START );
             }
     	}
         return nextBoard.toString().replace(" ", "");
@@ -121,9 +119,8 @@ public class CollisionAnalyst extends OfficialObserver{
     		= inStr.replace("[", "").replace("]", "")
     			.replace(" ", "").split(",");
     	ArrayList<Integer>coords = new ArrayList<Integer>();
-    	for(String num : nums){
+    	for(String num : nums)
     		coords.add(Integer.parseInt(num, 10));
-    	}
     	int [] outArray = new int[coords.size()];
     	Iterator <Integer> itr = coords.iterator();
     	for(int k = 0; k < outArray.length; k++)
@@ -203,7 +200,6 @@ public class CollisionAnalyst extends OfficialObserver{
     private static boolean isArrayOfValidJumps(int damage, Location src, ArrayList<Location> jumpArr, ArrayList<XYDLocation> gPiecesArr) {
         // add src cell to array
         jumpArr.add(0, src);
-
         while (jumpArr.size() > 1) {
             // check first two cells for jump
             if ( !isLegalTwoSquareJump(damage, jumpArr.get(0), jumpArr.get(1), gPiecesArr) ) {
@@ -214,7 +210,6 @@ public class CollisionAnalyst extends OfficialObserver{
             // remove first jump
             jumpArr.remove(0);
         }
-
         // all valid jumps
         return true;
     }
@@ -224,20 +219,18 @@ public class CollisionAnalyst extends OfficialObserver{
         return (src.getCol() == dest.getCol() && src.getRow() == dest.getRow());
     }
 
-
     // checks that array of requested moves is valid.
     // if only one move in array, check either non-jump or one jump
     // else check if all move pairs are jumping over some piece
     private static boolean isValidMoveRequest(int damage, Location src, ArrayList<Location> moveArr, ArrayList<XYDLocation> gPieces) {
-        if(moveArr.isEmpty()) return false;
-
+        if(moveArr.isEmpty()) 
+        	return false;
         if(moveArr.size() == 1) {
             Location dest = moveArr.get(0);  // only one
             return (isLegalOneSquareMove(src, dest, gPieces)  ||
                     isLegalTwoSquareJump(damage, src, dest, gPieces)  ||
                     isPieceHoldingPosition(src,dest) ); 
         } 
-
         // we have a multi jump request
         return isArrayOfValidJumps(damage, src, moveArr, gPieces);
     }

@@ -1,5 +1,3 @@
-package ShowNTell;
-
 /**
  * @(#)Program.java
  * Creates one or more Halma games.
@@ -9,25 +7,22 @@ package ShowNTell;
  *
  * @author Vipul Kohli
  * @author Andrew Socha
- * @version 1.00 2014/4/27
+ * @version 11-27-2014
  */
-
+package ShowNTell;
 import com.grack.nanojson.*;
 import java.awt.*;
 import java.util.*;
 import javax.swing.*;
 
-public class Program extends Thread {
+public class Program{
     
     public static void main(String[] args){
         String player1 = "http://lyle.smu.edu/~tbgeorge/cse4345/a1/getMove.php";
      	String player2 = "http://lyle.smu.edu/~sochaa/4345/FinalHalma/finalHalmaWithDamage.php";
-     	
      	HalmaGame [] tournament = {
-     	
      		new HalmaGame( player1, player2, "Tyler", "Andrew" ),
      		new HalmaGame( player1, player1, "Tyler", "Tyler" )
-     	
      	};
     }
     
@@ -35,12 +30,26 @@ public class Program extends Thread {
 
 class GameBoard extends OfficialObserver{
     
+    @Override
+    protected void handleUpdate(){
+        if( !super.checkRecipient( MY_EMAIL ) )
+            return;
+        if(mTimer == TIMER_START)
+        	this.startGame();
+        ALL_MOVES.add( super.getMessage() ); 
+    }
+    
     private static final Color	
     	TEAM_A_COLOR = new Color(204,0,153),
         TEAM_B_COLOR = new Color(0,102,153),
         TEXT_BGCOLOR = Color.white,
         TEXT_SELECTION_COLOR = Color.red;
-        
+   	
+   	private static final int
+    	BOARD_FRAME_WIDTH = (int) Toolkit.getDefaultToolkit().getScreenSize().getWidth() / 2,
+    	BOARD_FRAME_HEIGHT = (int) (Toolkit.getDefaultToolkit().getScreenSize().getHeight() * 0.98),
+    	CELL_SIZE = BOARD_FRAME_WIDTH / 25,
+    	TIMER_START = 0;
     
     private static final Font
     	FONT = new Font("Times New Roman", Font.BOLD, 20);
@@ -51,18 +60,13 @@ class GameBoard extends OfficialObserver{
         HALMATE = "HALMATE!  ",
         TEAM_A_WINS = "Red Team Victory!",
         TEAM_B_WINS = "Blue Team Victory!",
+        START_MESSAGE = "Click 'Step' or 'Run' to Continue | ",
         SPLIT_PHRASE = "SPLITSPLIT";
         
     private final HalmaWorld
-    	WORLD = new HalmaWorld(this);
+    	mWorld = new HalmaWorld(this);
     
     private static Integer numInstances;
-    
-    private static final int
-    	BOARD_FRAME_WIDTH = (int) Toolkit.getDefaultToolkit().getScreenSize().getWidth() / 2,
-    	BOARD_FRAME_HEIGHT = (int) (Toolkit.getDefaultToolkit().getScreenSize().getHeight() * 0.98),
-    	CELL_SIZE = BOARD_FRAME_WIDTH / 25,
-    	TIMER_START = 0;
     	
     private final String
     	mWorldMessage,
@@ -87,16 +91,21 @@ class GameBoard extends OfficialObserver{
         mTeamB = "\n" + teamB + ": ";
         mWorldMessage = "Press \"Step\" to begin: " + teamA + " vs. " + teamB
         	+ "\n\nCheck internet connection.";
-        WORLD.setMessage( mWorldMessage );
-    	WORLD.setGrid( new HalmaGrid("") );
-    	WORLD.show( BOARD_FRAME_WIDTH, BOARD_FRAME_HEIGHT );
-    	setTitle( WORLD, "HalmaWorld - " + teamA + " vs. " + teamB );
-    	centerWorldOnScreen( WORLD, numInstances);
-    	setTextArea( WORLD, FONT);
+        mWorld.setMessage( mWorldMessage );
+    	mWorld.setGrid( new HalmaGrid("") );
+    	mWorld.show( BOARD_FRAME_WIDTH, BOARD_FRAME_HEIGHT );
+    	this.setTitle( mWorld, "HalmaWorld - " + teamA + " vs. " + teamB );
+    	this.centerWorldOnScreen( mWorld, numInstances);
+    	this.setTextArea( mWorld, FONT);
         mTimer = TIMER_START;
-        setCellSize( WORLD, CELL_SIZE );
+        this.setCellSize( mWorld, CELL_SIZE );
     }
     
+    protected void startGame(){
+    	mStart = super.getMessage();
+        drawBoard( mStart );
+        mWorld.setMessage( START_MESSAGE + mWorld.getMessage() );
+    }
     
     /** 
      * The following methods are 
@@ -116,30 +125,19 @@ class GameBoard extends OfficialObserver{
     	inWorld.getFrame().getGridPanel().zoom(inFactor);
     }
     
-    public static void setTextArea(HalmaWorld world, Font font){
-    	JTextArea messageArea = world.getFrame().getMessageArea();
-    	messageArea.setFont( font );
+    public static void setTextArea(HalmaWorld inWorld, Font inFont){
+    	JTextArea messageArea = inWorld.getFrame().getMessageArea();
+    	messageArea.setFont( inFont );
         messageArea.setEditable( true );
         messageArea.setFocusable( true );
         messageArea.setBackground( TEXT_BGCOLOR );
         messageArea.setSelectionColor( TEXT_SELECTION_COLOR );
     }
     
-    private static void centerWorldOnScreen(HalmaWorld world, int instances){
-    	world.getFrame().setLocation( BOARD_FRAME_WIDTH * (instances % 2), 0 );
+    private static void centerWorldOnScreen(HalmaWorld inWorld, int numInstances){
+    	inWorld.getFrame().setLocation( BOARD_FRAME_WIDTH * (numInstances % 2), 0 );
     }
-    
-    @Override
-    protected void handleUpdate(){
-        if( !super.checkRecipient( MY_EMAIL ) )
-            return;
-        if(mTimer == TIMER_START){
-        	mStart = super.getMessage();
-        	drawBoard( mStart );
-        	WORLD.setMessage( "Click 'Step' or 'Run' to Continue | " + WORLD.getMessage() );
-        }
-        ALL_MOVES.add( super.getMessage() ); 
-    }
+
     
     protected void stepAhead(){
     	if( mTimer < ALL_MOVES.size() )
@@ -156,7 +154,7 @@ class GameBoard extends OfficialObserver{
     protected void restartGame(){
     	mTimer = TIMER_START;
     	drawBoard( mStart );
-    	clearFlowers( WORLD );
+    	clearFlowers( mWorld );
     }
     
     @Override
@@ -165,11 +163,11 @@ class GameBoard extends OfficialObserver{
     	if( ALL_MOVES.size() <= 0 )
     		return out;
     	if( "step".equals( o ) )
-    		stepAhead();
+    		this.stepAhead();
     	if( "restart".equals( o ) )
-    		restartGame();
+    		this.restartGame();
     	if( "rewind".equals( o ) )
-    		rewindMove();
+    		this.rewindMove();
     	return out;
     }
     
@@ -291,7 +289,8 @@ class GameBoard extends OfficialObserver{
         for(int k = 0; k < array.size(); k++)
                 coordList.add( array.getInt(k)  );
         Iterator<Integer> itr = coordList.iterator();
-        
+        if( !itr.hasNext() )
+        	return locs;
         x = itr.next();
         locs.add( new Location(itr.next(), x) );
         itr.next(); //skip damage
@@ -304,7 +303,9 @@ class GameBoard extends OfficialObserver{
     
     private static String formatMove(String move){
     	JsonArray array;
-    	try{ array = JsonParser.array().from(move); }
+    	try{ 
+    		array = JsonParser.array().from(move); 
+    	}
     	catch(JsonParserException e){
     		return move;
     	}
@@ -344,8 +345,8 @@ class GameBoard extends OfficialObserver{
     	String onMessageField, p1Move, p2Move, pieceStr;
     	int winner;
     	ArrayList<Piece> pieces;
-    	clearBoard( WORLD );
-    	highlightDestinations( WORLD );
+    	clearBoard( mWorld );
+    	highlightDestinations( mWorld );
     	String [] data = inData.split( SPLIT_PHRASE );
     	pieceStr = data[0];
     	p1Move = data[1];
@@ -361,18 +362,18 @@ class GameBoard extends OfficialObserver{
                 p.setColor( TEAM_B_COLOR );
             //GridWorld locations are (row, column);
             Location cell = new Location( p.y , p.x );
-            WORLD.add(cell, p);
+            mWorld.add(cell, p);
         }//end for loop
-		addToPieces(p1Move, p2Move, WORLD);
-		winner = getWinner( WORLD, new Glitter() );
+		addToPieces(p1Move, p2Move, mWorld);
+		winner = getWinner( mWorld, new Glitter() );
     	if( winner == 1)
     		onMessageField = HALMATE + TEAM_A_WINS;
     	if( winner == 2 )
     		onMessageField = HALMATE + TEAM_B_WINS;
       	for (Piece p : pieces){
-      		WORLD.setMessage( onMessageField );
+      		mWorld.setMessage( onMessageField );
       		if(p.damage > 0)
-    			WORLD.add(p.getXYLocation(), this.createDamagedPiece( p.damage, p.getColor() ));
+    			mWorld.add(p.getXYLocation(), this.createDamagedPiece( p.damage, p.getColor() ));
       	}
     }
 

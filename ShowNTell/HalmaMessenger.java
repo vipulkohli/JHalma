@@ -1,10 +1,8 @@
-package ShowNTell;
-
 /**
  * HalmaMessenger
  * Sends and receives messages to/from the AIs that are playing the game.
  */
-
+package ShowNTell;
 import com.grack.nanojson.*;
 import java.net.*;
 import java.util.*;
@@ -19,6 +17,13 @@ import java.util.logging.Logger;
 
 public class HalmaMessenger extends OfficialObserver{
     
+    @Override
+    //called whenever an update is received from the observable
+    public void handleUpdate(){
+        if( super.checkRecipient( MY_EMAIL ) ) 
+        	super.replyToOfficial( MY_EMAIL , respondWithAIMoves( super.getMessage() ) );
+    }
+    
     private static final String
     	MY_EMAIL = "m",
     	ROW_INDEX = "y",
@@ -26,6 +31,7 @@ public class HalmaMessenger extends OfficialObserver{
         DAMAGE_INDEX = "damage",
     	FROM_KEY = "from",
     	TO_KEY = "to";
+    	
     private final String m_url1, m_url2;
 
     public HalmaMessenger(String inPlayer1addy, String inPlayer2addy){
@@ -38,14 +44,6 @@ public class HalmaMessenger extends OfficialObserver{
         for(String str : jsons)
             list.add(str);
         return list;
-    }
-    
-    @Override
-    //called whenever an update is received from the observable
-    public void handleUpdate(){
-        if( !super.checkRecipient( MY_EMAIL ) )
-            return; 
-        super.replyToOfficial( MY_EMAIL , respondWithAIMoves( super.getMessage() ) );
     }
     
     private static String concat(String a, String b){
@@ -115,12 +113,11 @@ public class HalmaMessenger extends OfficialObserver{
             String inputLine;
             StringBuilder response = new StringBuilder();
             
-            while ((inputLine = in.readLine()) != null) {
+            while ((inputLine = in.readLine()) != null) 
                 response.append(inputLine);
-            }
             in.close();
-            
             print("AI Response: " + response.toString());
+            
             return response.toString();
             
         } catch (MalformedURLException ex) {
@@ -147,7 +144,9 @@ public class HalmaMessenger extends OfficialObserver{
 			.value("y", y)
 			.end()
 			.done();
-        try{ return JsonParser.object().from(json); } 
+        try{ 
+        	return JsonParser.object().from(json); 
+        } 
         catch(JsonParserException ex){
                 Logger.getLogger(HalmaMessenger.class.getName()).log(Level.SEVERE, null, ex);
                 return null;
@@ -157,8 +156,8 @@ public class HalmaMessenger extends OfficialObserver{
     private static JsonStringWriter range(JsonStringWriter writer, int xMin, int xMax, int yMin, int yMax){
     	for(int x = xMin; x <= xMax; x++)
 	        for(int y = yMin; y <= yMax; y++)
-			writer = writer.value( toJSONObj(x, y) );
-	return writer;
+				writer = writer.value( toJSONObj(x, y) );
+		return writer;
     }
     
     private static String convertBoardToJSON(ArrayList<XYDLocation> boardList, int playerNum){
@@ -177,19 +176,19 @@ public class HalmaMessenger extends OfficialObserver{
             .array("destinations");
         switch(playerNum){
         	case 0:
-                    writer = range(writer, 17, 17, 0, 2);
-                    writer = range(writer, 16, 16, 0, 2);
-                    writer = range(writer, 15, 15, 0, 2);
+                writer = range(writer, 17, 17, 0, 2);
+                writer = range(writer, 16, 16, 0, 2);
+                writer = range(writer, 15, 15, 0, 2);
 	            writer = writer.end().array("enemydestinations");
 	            writer = range(writer, 0, 2, 0, 2);
 	            writer = writer.end();
-                    break;
+                break;
 	      	default:
-                    writer = range(writer, 0, 2, 0, 2);
+                writer = range(writer, 0, 2, 0, 2);
 	            writer = writer.end().array("enemydestinations");
 	            writer = range(writer, 17, 17, 0, 2);
-                    writer = range(writer, 16, 16, 0, 2);
-                    writer = range(writer, 15, 15, 0, 2);
+                writer = range(writer, 16, 16, 0, 2);
+                writer = range(writer, 15, 15, 0, 2);
 	            writer = writer.end();
         }//end playerNum switch
         return writer.end().done();

@@ -1,15 +1,16 @@
-package ShowNTell;
-
 /**
  * OfficialObserver
  * Abstract class, representing a component of the game.
+ * Implements communication between the Official and OfficialObservers
  */
-
+ 
+package ShowNTell;
 import java.util.*;
 
 public abstract class OfficialObserver implements Observer{
 
     protected abstract void handleUpdate();
+    
     protected static final int BOARD_SIZE = Official.BOARD_SIZE;
    
     private static final String
@@ -19,16 +20,19 @@ public abstract class OfficialObserver implements Observer{
 	
     @Override
     public void update(Observable o, Object arg){
-            if(arg instanceof String && o instanceof Official){
-                    String string = arg.toString();
-                    String[] parts = string.split(SPLIT_PHRASE);
-                    if(parts.length == 2){
-                            m_official = (Official) o;
-                            m_recipient = parts[0]; // 004
-                            m_message = parts[1]; // 034556
-                            handleUpdate();
-                    }
-            }
+        if(arg instanceof String && o instanceof Official)
+        	processOfficialUpdate( (Official) o, arg.toString() );
+    }
+    
+    private void processOfficialUpdate( Official o, String arg ){
+    	String string = arg.toString();
+        String[] parts = string.split(SPLIT_PHRASE);
+        if(parts.length != 2)
+        	return;
+    	m_official = (Official) o;
+        m_recipient = parts[0]; // 004
+        m_message = parts[1]; // 034556
+        handleUpdate();
     }
     
     public static void print(String message){

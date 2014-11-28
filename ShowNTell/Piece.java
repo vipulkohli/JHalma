@@ -1,3 +1,12 @@
+/**
+ * Piece.java
+ * Contains the data to draw a halma piece.
+ * This file includes damage count pieces and XPiece.
+ *
+ * @author Vipul Kohli
+ * @author Andrew Socha
+ * @version 11-27-2014
+ */
 package ShowNTell;
 
 import java.util.*;
@@ -26,13 +35,13 @@ public class Piece extends Rock{
     }
     public String setColor(String inColor){
         if( "red".equalsIgnoreCase(inColor) )
-            return setColor( Color.red, true );
+            return this.setColor( Color.red, true );
         if( "blue".equalsIgnoreCase(inColor) )
-            return setColor( Color.blue, true );
+            return this.setColor( Color.blue, true );
         if( "cyan".equalsIgnoreCase(inColor) )
-            return setColor( Color.cyan, true );
+            return this.setColor( Color.cyan, true );
         if( "magenta".equalsIgnoreCase(inColor) )
-        	return setColor( Color.magenta, true );
+        	return this.setColor( Color.magenta, true );
         return mColor;
     }
     
@@ -55,8 +64,8 @@ public class Piece extends Rock{
 }
 
 class Five extends Piece{}
-class Four extends Five{}
-class Three extends Five{}
-class Two extends Five{}
-class One extends Five{}
-class XPiece extends Five{}
+class Four extends Piece{}
+class Three extends Piece{}
+class Two extends Piece{}
+class One extends Piece{}
+class XPiece extends Piece{}
