@@ -398,7 +398,7 @@ class GameBoard extends OfficialObserver{
     	ArrayList<Piece> pieces;
     	String [] data = inData.split( SPLIT_PHRASE );
     	pieceStr = data[0];
-        boolean isValid = pieceStr.charAt(0) == '1';
+        boolean isValid = (pieceStr.charAt(0) == 'a');
         pieceStr = pieceStr.substring(1);
     	p1Move = data[1];
     	p2Move = data[2];
@@ -447,7 +447,11 @@ class GameBoard extends OfficialObserver{
         }//end for loop
         
         if (isValid) addToPieces(p1Move, p2Move, mWorld);
-        else onMessageField = onMessageField + "\nInvalid Move Submitted!";
+        else{
+            onMessageField += "\nInvalid Move Submitted by ";
+            if (pieceStr.charAt(0) == 0) onMessageField += mTeamA;
+            else onMessageField += mTeamB;
+        }
         
         //check for victory
         winner = getWinner( mWorld, new Glitter() );
