@@ -20,9 +20,42 @@ public class Program{
     public static void main(String[] args){
         String player1 = "http://lyle.smu.edu/~tbgeorge/cse4345/a1/getMove.php";
      	String player2 = "http://lyle.smu.edu/~sochaa/4345/FinalHalma/finalHalmaWithDamage.php";
+        String player1Name = "Tyler";
+        String player2Name = "Andrew";
+        
+        JTextField pfield1 = new JTextField(35);
+        JTextField pfield2 = new JTextField(35);
+        pfield1.setText(player1);
+        pfield2.setText(player2);
+        JTextField nfield1 = new JTextField(35);
+        JTextField nfield2 = new JTextField(35);
+        nfield1.setText(player1Name);
+        nfield2.setText(player2Name);
+
+        JPanel myPanel = new JPanel();
+        myPanel.setLayout(new GridBagLayout());
+        GridBagConstraints c = new GridBagConstraints();
+        myPanel.add(new JLabel("Player 1 URL:    "));
+        myPanel.add(pfield1);
+        myPanel.add(new JLabel("Player 2 URL:  "));
+        myPanel.add(pfield2);
+        c.gridy = 1;
+        myPanel.add(new JLabel("Player 1 Name: "), c);
+        myPanel.add(nfield1, c);
+        myPanel.add(new JLabel("  Player 2 Name: "), c);
+        myPanel.add(nfield2, c);
+
+        int result = JOptionPane.showConfirmDialog(null, myPanel, 
+               "Please Enter Player Info", JOptionPane.DEFAULT_OPTION);
+
+        player1 = pfield1.getText();
+        player2 = pfield2.getText();
+        player1Name = nfield1.getText();
+        player2Name = nfield2.getText();
+        
      	HalmaGame [] tournament = {
-     		new HalmaGame( player1, player2, "Tyler", "Andrew" ),
-     		new HalmaGame( player1, player1, "Tyler", "Tyler" )
+     		new HalmaGame( player1, player2, player1Name, player2Name ),
+     		new HalmaGame( player1, player1, player1Name, player1Name )
      	};
     }
     
@@ -45,7 +78,7 @@ class GameBoard extends OfficialObserver{
         TEXT_BGCOLOR = Color.white,
         TEXT_SELECTION_COLOR = Color.red;
    	
-   	private static final int
+    private static final int
     	BOARD_FRAME_WIDTH = (int) Toolkit.getDefaultToolkit().getScreenSize().getWidth() / 2,
     	BOARD_FRAME_HEIGHT = (int) (Toolkit.getDefaultToolkit().getScreenSize().getHeight() * 0.98),
     	CELL_SIZE = BOARD_FRAME_WIDTH / 25,
@@ -359,21 +392,19 @@ class GameBoard extends OfficialObserver{
                 p.setColor( TEAM_A_COLOR );
             else
                 p.setColor( TEAM_B_COLOR );
-            //GridWorld locations are (row, column);
-            Location cell = new Location( p.y , p.x );
-            mWorld.add(cell, p);
+
+            if(p.damage > 0)
+    		mWorld.add(p.getXYLocation(), this.createDamagedPiece( p.damage, p.getColor() ));
+            else
+                mWorld.add(p.getXYLocation(), p);
         }//end for loop
         addToPieces(p1Move, p2Move, mWorld);
         winner = getWinner( mWorld, new Glitter() );
     	if( winner == 1)
     		onMessageField = HALMATE + TEAM_A_WINS;
-    	if( winner == 2 )
+        else if( winner == 2 )
     		onMessageField = HALMATE + TEAM_B_WINS;
-      	for (Piece p : pieces){
-      		mWorld.setMessage( onMessageField );
-      		if(p.damage > 0)
-    			mWorld.add(p.getXYLocation(), this.createDamagedPiece( p.damage, p.getColor() ));
-      	}
+        mWorld.setMessage( onMessageField );
     }
 
 }
