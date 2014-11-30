@@ -226,7 +226,13 @@ class GameBoard extends OfficialObserver{
         }
         else{
             int offset = 2;
-            for(int k = 3; k < array.size(); k += offset)
+            list.add( new Piece(    //from piece
+                    array.getInt(0),
+                    array.getInt(1),
+                    0,
+                    0
+                ) );
+            for(int k = 3; k < array.size(); k += offset) //jumps
                 list.add( new Piece(
                     array.getInt(k),
                     array.getInt(k + 1),
@@ -399,6 +405,7 @@ class GameBoard extends OfficialObserver{
     	String [] data = inData.split( SPLIT_PHRASE );
     	pieceStr = data[0];
         boolean isValid = (pieceStr.charAt(0) == 'a');
+        char invalidPlayer = pieceStr.charAt(0);
         pieceStr = pieceStr.substring(1);
     	p1Move = data[1];
     	p2Move = data[2];
@@ -406,27 +413,29 @@ class GameBoard extends OfficialObserver{
     	onMessageField = TIMER + upTimer() + mTeamA
     		+ formatMove(p1Move) + mTeamB + formatMove(p2Move);
         
-        //add player 1 move track
-        pieces = toPieceList( p1Move, true ) ;
-        for (Piece p : pieces){
-            p.setColor( TEAM_A_COLOR );
+        if (isValid){
+            //add player 1 move track
+            pieces = toPieceList( p1Move, true ) ;
+            for (Piece p : pieces){
+                p.setColor( TEAM_A_COLOR );
 
-            if(p.damage > 0)
-    		mWorld.add(p.getXYLocation(), this.createDamagedPiece( p.damage, p.getColor() ));
-            else
-                mWorld.add(p.getXYLocation(), p);
-        }//end for loop
-        
-        //add player 2 move track
-        pieces = toPieceList( p2Move, true ) ;
-        for (Piece p : pieces){
-            p.setColor( TEAM_B_COLOR );
+                if(p.damage > 0)
+                    mWorld.add(p.getXYLocation(), this.createDamagedPiece( p.damage, p.getColor() ));
+                else
+                    mWorld.add(p.getXYLocation(), p);
+            }//end for loop
 
-            if(p.damage > 0)
-    		mWorld.add(p.getXYLocation(), this.createDamagedPiece( p.damage, p.getColor() ));
-            else
-                mWorld.add(p.getXYLocation(), p);
-        }//end for loop
+            //add player 2 move track
+            pieces = toPieceList( p2Move, true ) ;
+            for (Piece p : pieces){
+                p.setColor( TEAM_B_COLOR );
+
+                if(p.damage > 0)
+                    mWorld.add(p.getXYLocation(), this.createDamagedPiece( p.damage, p.getColor() ));
+                else
+                    mWorld.add(p.getXYLocation(), p);
+            }//end for loop
+        }
         
         clearBoard( mWorld );
         highlightDestinations( mWorld );
@@ -449,8 +458,8 @@ class GameBoard extends OfficialObserver{
         if (isValid) addToPieces(p1Move, p2Move, mWorld);
         else{
             onMessageField += "\nInvalid Move Submitted by ";
-            if (pieceStr.charAt(0) == 0) onMessageField += mTeamA;
-            else onMessageField += mTeamB;
+            if (invalidPlayer == '0') onMessageField += mTeamA.substring(1,mTeamA.length()-2);
+            else onMessageField += mTeamB.substring(1,mTeamB.length()-2);
         }
         
         //check for victory
