@@ -18,11 +18,13 @@ import javax.swing.*;
 public class Program{
     
     public static void main(String[] args){
+        //default players
         String player1 = "http://lyle.smu.edu/~tbgeorge/cse4345/a1/getMove.php";
      	String player2 = "http://lyle.smu.edu/~sochaa/4345/FinalHalma/finalHalmaWithDamage.php";
         String player1Name = "Tyler";
         String player2Name = "Andrew";
         
+        //text fields
         JTextField pfield1 = new JTextField(35);
         JTextField pfield2 = new JTextField(35);
         pfield1.setText(player1);
@@ -32,6 +34,7 @@ public class Program{
         nfield1.setText(player1Name);
         nfield2.setText(player2Name);
 
+        //create and set up the panel
         JPanel myPanel = new JPanel();
         myPanel.setLayout(new GridBagLayout());
         GridBagConstraints c = new GridBagConstraints();
@@ -39,20 +42,23 @@ public class Program{
         myPanel.add(pfield1);
         myPanel.add(new JLabel("Player 2 URL:  "));
         myPanel.add(pfield2);
-        c.gridy = 1;
+        c.gridy = 1; //next row
         myPanel.add(new JLabel("Player 1 Name: "), c);
         myPanel.add(nfield1, c);
         myPanel.add(new JLabel("  Player 2 Name: "), c);
         myPanel.add(nfield2, c);
 
+        //display the panel
         int result = JOptionPane.showConfirmDialog(null, myPanel, 
                "Please Enter Player Info", JOptionPane.DEFAULT_OPTION);
 
+        //read user input
         player1 = pfield1.getText();
         player2 = pfield2.getText();
         player1Name = nfield1.getText();
         player2Name = nfield2.getText();
         
+        //start the games
      	HalmaGame [] tournament = {
      		new HalmaGame( player1, player2, player1Name, player2Name ),
      		new HalmaGame( player1, player1, player1Name, player1Name )
