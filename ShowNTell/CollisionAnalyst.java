@@ -79,14 +79,14 @@ public class CollisionAnalyst extends OfficialObserver{
     	for( XYDLocation xyd : nextBoard ){
             xyd.heal(); //heals all pieces
             if(!isHeadOnCollision){
-                if( isOwnCollision( toLoc0, toLoc1, xyd ) )
-                    xyd.setD( DAMAGE_START );
-                else if( isEnemyCollision( toLoc0, toLoc1, xyd ) )
-                    xyd.setD( DAMAGE_LITE );
                 if( xyd.equals( fromLoc0, 0) )
                     xyd.setXY( toLoc0 );
                 else if( xyd.equals( fromLoc1, 1 ) )
                     xyd.setXY( toLoc1 );
+                else if( isOwnCollision( toLoc0, toLoc1, xyd ) )
+                    xyd.setD( DAMAGE_START );
+                else if( isEnemyCollision( toLoc0, toLoc1, xyd ) )
+                    xyd.setD( DAMAGE_LITE );
             }
             else{
                 if( xyd.equals( fromLoc0, 0 ) )

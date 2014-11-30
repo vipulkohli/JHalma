@@ -79,8 +79,7 @@ class GameBoard extends OfficialObserver{
     	mTimer;
     
     private final ArrayList<String> 
-    	ALL_MOVES = new ArrayList<String>(),
-    	PAST_MOVES = new ArrayList<String>();
+    	ALL_MOVES = new ArrayList<String>();
     
     public GameBoard(String teamA, String teamB){
     	if(numInstances == null)
@@ -364,8 +363,8 @@ class GameBoard extends OfficialObserver{
             Location cell = new Location( p.y , p.x );
             mWorld.add(cell, p);
         }//end for loop
-		addToPieces(p1Move, p2Move, mWorld);
-		winner = getWinner( mWorld, new Glitter() );
+        addToPieces(p1Move, p2Move, mWorld);
+        winner = getWinner( mWorld, new Glitter() );
     	if( winner == 1)
     		onMessageField = HALMATE + TEAM_A_WINS;
     	if( winner == 2 )

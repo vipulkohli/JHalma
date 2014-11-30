@@ -41,7 +41,7 @@ public class Piece extends Rock{
         if( "cyan".equalsIgnoreCase(inColor) )
             return this.setColor( Color.cyan, true );
         if( "magenta".equalsIgnoreCase(inColor) )
-        	return this.setColor( Color.magenta, true );
+            return this.setColor( Color.magenta, true );
         return mColor;
     }
     
