@@ -224,12 +224,16 @@ public class CollisionAnalyst extends OfficialObserver{
     // else check if all move pairs are jumping over some piece
     private static boolean isValidMoveRequest(int damage, Location src, ArrayList<Location> moveArr, ArrayList<XYDLocation> gPieces) {
         if(moveArr.isEmpty()) 
-        	return false;
+            return false;
+        Location finalMove = moveArr.get(moveArr.size()-1);
+        if (finalMove.getCol() >= BOARD_SIZE || finalMove.getCol() < 0 ||
+                finalMove.getRow() >= BOARD_SIZE || finalMove.getRow() < 0)
+            return false;
         if(moveArr.size() == 1) {
             Location dest = moveArr.get(0);  // only one
             return (isLegalOneSquareMove(src, dest, gPieces)  ||
-                    isLegalTwoSquareJump(damage, src, dest, gPieces)  ||
-                    isPieceHoldingPosition(src,dest) ); 
+                isLegalTwoSquareJump(damage, src, dest, gPieces)  ||
+                isPieceHoldingPosition(src,dest) );
         } 
         // we have a multi jump request
         return isArrayOfValidJumps(damage, src, moveArr, gPieces);

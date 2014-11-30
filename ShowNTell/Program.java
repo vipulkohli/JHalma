@@ -209,19 +209,31 @@ class GameBoard extends OfficialObserver{
     	return out;
     }
     
-    private static ArrayList<Piece> toPieceList(String officialData){
+    private static ArrayList<Piece> toPieceList(String officialData, boolean isPlayerMove){
         ArrayList<Piece> list = new ArrayList<Piece>();
         JsonArray array;
         try{ array = JsonParser.array().from(officialData);  }
         catch(JsonParserException e){ return null; }
-        int offset = 4;
-        for(int k = 0; k < array.size(); k += offset)
-            list.add( new Piece(
-                array.getInt(k),
-                array.getInt(k + 1),
-                array.getInt(k + 2),
-                array.getInt(k + 3)
-            ) );
+        if (!isPlayerMove){
+            int offset = 4;
+            for(int k = 0; k < array.size(); k += offset)
+                list.add( new Piece(
+                    array.getInt(k),
+                    array.getInt(k + 1),
+                    array.getInt(k + 2),
+                    array.getInt(k + 3)
+                ) );
+        }
+        else{
+            int offset = 2;
+            for(int k = 3; k < array.size(); k += offset)
+                list.add( new Piece(
+                    array.getInt(k),
+                    array.getInt(k + 1),
+                    0,
+                    0
+                ) );
+        }
         return list;
     }    
     
@@ -237,7 +249,7 @@ class GameBoard extends OfficialObserver{
     		for(int col = BOARD_SIZE - 1; col >= BOARD_SIZE - 3; col--){
     			Glitter g = new Glitter();
     			g.setColor( TEAM_A_COLOR );
-    			world.add(new Location( row , col), g);
+    			world.add(new Location( row , col ), g);
     		}
     	}
     }
@@ -383,15 +395,41 @@ class GameBoard extends OfficialObserver{
     	String onMessageField, p1Move, p2Move, pieceStr;
     	int winner;
     	ArrayList<Piece> pieces;
-    	clearBoard( mWorld );
-    	highlightDestinations( mWorld );
     	String [] data = inData.split( SPLIT_PHRASE );
     	pieceStr = data[0];
     	p1Move = data[1];
     	p2Move = data[2];
+        
     	onMessageField = TIMER + upTimer() + mTeamA 
     		+ formatMove(p1Move) + mTeamB + formatMove(p2Move);
-        pieces = toPieceList( pieceStr ) ;
+        
+        //add player 1 move track
+        pieces = toPieceList( p1Move, true ) ;
+        for (Piece p : pieces){
+            p.setColor( TEAM_A_COLOR );
+
+            if(p.damage > 0)
+    		mWorld.add(p.getXYLocation(), this.createDamagedPiece( p.damage, p.getColor() ));
+            else
+                mWorld.add(p.getXYLocation(), p);
+        }//end for loop
+        
+        //add player 2 move track
+        pieces = toPieceList( p2Move, true ) ;
+        for (Piece p : pieces){
+            p.setColor( TEAM_B_COLOR );
+
+            if(p.damage > 0)
+    		mWorld.add(p.getXYLocation(), this.createDamagedPiece( p.damage, p.getColor() ));
+            else
+                mWorld.add(p.getXYLocation(), p);
+        }//end for loop
+        
+        clearBoard( mWorld );
+        highlightDestinations( mWorld );
+        
+        //add all the pieces
+        pieces = toPieceList( pieceStr, false ) ;
         print( pieces.toString() );
         for (Piece p : pieces){
             if(p.team == 0)
@@ -404,7 +442,10 @@ class GameBoard extends OfficialObserver{
             else
                 mWorld.add(p.getXYLocation(), p);
         }//end for loop
-        addToPieces(p1Move, p2Move, mWorld);
+        
+        /* if (move is valid) */addToPieces(p1Move, p2Move, mWorld);
+        
+        //check for victory
         winner = getWinner( mWorld, new Glitter() );
     	if( winner == 1)
     		onMessageField = HALMATE + TEAM_A_WINS;
