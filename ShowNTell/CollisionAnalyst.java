@@ -65,6 +65,7 @@ public class CollisionAnalyst extends OfficialObserver{
         ArrayList<Location>
         	toLocArray0 = getToLocationArray( movesList.get(0) ),
         	toLocArray1 = getToLocationArray( movesList.get(1) );
+        
         //Verify move is valid
         int damage0 = toIntArray(movesList.get(0))[2];
         int damage1 = toIntArray(movesList.get(1))[2];
@@ -72,8 +73,9 @@ public class CollisionAnalyst extends OfficialObserver{
         boolean isValid1 = isValidMoveRequest(damage1, fromLoc1, toLocArray1, nextBoard);
         if (!isValid0 || !isValid1){
             print( INVALID_MOVE.toString() );
-            return nextBoard.toString().replace(" ", "");
+            return "0"+nextBoard.toString().replace(" ", "");
         }
+        
         //Check if there was a collision and update the board
         boolean isHeadOnCollision = toLoc0.equals(toLoc1);
     	for( XYDLocation xyd : nextBoard ){
@@ -95,7 +97,7 @@ public class CollisionAnalyst extends OfficialObserver{
                     xyd.setXYD( toLoc1, DAMAGE_START );
             }
     	}
-        return nextBoard.toString().replace(" ", "");
+        return "1"+nextBoard.toString().replace(" ", "");
     }
     
     private static ArrayList<Integer> toIntList(int [] coords){

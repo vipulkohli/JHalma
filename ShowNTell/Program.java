@@ -388,6 +388,7 @@ class GameBoard extends OfficialObserver{
     		damageCounts[ damage - 1 ].setColor(color);
     	return damageCounts[ damage - 1 ];
     }
+    
     /*
      * clears board, highlights destinations, declares move/winner
      */
@@ -397,10 +398,12 @@ class GameBoard extends OfficialObserver{
     	ArrayList<Piece> pieces;
     	String [] data = inData.split( SPLIT_PHRASE );
     	pieceStr = data[0];
+        boolean isValid = pieceStr.charAt(0) == '1';
+        pieceStr = pieceStr.substring(1);
     	p1Move = data[1];
     	p2Move = data[2];
         
-    	onMessageField = TIMER + upTimer() + mTeamA 
+    	onMessageField = TIMER + upTimer() + mTeamA
     		+ formatMove(p1Move) + mTeamB + formatMove(p2Move);
         
         //add player 1 move track
@@ -443,7 +446,8 @@ class GameBoard extends OfficialObserver{
                 mWorld.add(p.getXYLocation(), p);
         }//end for loop
         
-        /* if (move is valid) */addToPieces(p1Move, p2Move, mWorld);
+        if (isValid) addToPieces(p1Move, p2Move, mWorld);
+        else onMessageField = onMessageField + "\nInvalid Move Submitted!";
         
         //check for victory
         winner = getWinner( mWorld, new Glitter() );

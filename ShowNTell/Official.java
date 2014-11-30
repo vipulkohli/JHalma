@@ -91,10 +91,10 @@ public class Official extends Observable{
             .send( COLLISIONS , composeForCollisions(message) );
         else if ( COLLISIONS.equals(sender) && mCount < RUN_COUNT)
             output("From C: " + message)
-            .setBoard(message)
+            .setBoard(message.substring(1))
             .send( GRID, composeForGameBoard(message, mMove))
             .delay(DELAY_DEFAULT)
-            .getRemoteAIMoves( message );
+            .getRemoteAIMoves( message.substring(1) );
     }
     
     private static String concat(String inFront, String inTail){
