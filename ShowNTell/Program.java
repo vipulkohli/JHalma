@@ -19,10 +19,12 @@ public class Program{
     
     public static void main(String[] args){
         //default players
-        String player1 = "http://lyle.smu.edu/~tbgeorge/cse4345/a1/getMove.php";
-     	String player2 = "http://lyle.smu.edu/~sochaa/4345/FinalHalma/finalHalmaWithDamage.php";
+        //String player1 = "http://lyle.smu.edu/~tbgeorge/cse4345/a1/getMove.php";
+        //String player2 = "http://lyle.smu.edu/~sochaa/4345/FinalHalma/finalHalmaWithDamage.php";
+     	String player1 = "http://lyle.smu.edu/~aaloqla/halmagame/WebService.php";
+     	String player2 = "http://lyle.smu.edu/~jkayse/4345/Homework9/getMoveJSON.php";
         String player1Name = "Tyler";
-        String player2Name = "Andrew";
+        String player2Name = "Jordan";
         
         //text fields
         JTextField pfield1 = new JTextField(35);
@@ -99,6 +101,8 @@ class GameBoard extends OfficialObserver{
         HALMATE = "HALMATE!  ",
         TEAM_A_WINS = "Red Team Victory!",
         TEAM_B_WINS = "Blue Team Victory!",
+        TEAM_A_REPLACE = "Red",
+        TEAM_B_REPLACE = "Blue",
         START_MESSAGE = "Click 'Step' or 'Run' to Continue | ",
         SPLIT_PHRASE = "SPLITSPLIT";
         
@@ -125,10 +129,10 @@ class GameBoard extends OfficialObserver{
     		numInstances = 0;
     	else
     		numInstances++;
-    	mTeamA = "\n" + teamA + ": ";
-        mTeamB = "\n" + teamB + ": ";
+    	mTeamA = teamA;
+        mTeamB = teamB;
         mWorldMessage = "Press \"Step\" to begin: " + teamA + " vs. " + teamB
-        	+ "\n\nCheck internet connection.";
+        	+ "\n\nCheck internet connection. Starting move may be illegal.";
         mWorld.setMessage( mWorldMessage );
     	mWorld.setGrid( new HalmaGrid("") );
     	mWorld.show( BOARD_FRAME_WIDTH, BOARD_FRAME_HEIGHT );
@@ -410,8 +414,8 @@ class GameBoard extends OfficialObserver{
     	p1Move = data[1];
     	p2Move = data[2];
         
-    	onMessageField = TIMER + upTimer() + mTeamA
-    		+ formatMove(p1Move) + mTeamB + formatMove(p2Move);
+    	onMessageField = TIMER + upTimer() + "\n" + mTeamA + ": " 
+    		+ formatMove(p1Move) + "\n" + mTeamB + ": " + formatMove(p2Move);
         
         if (isValid){
             //add player 1 move track
@@ -458,16 +462,16 @@ class GameBoard extends OfficialObserver{
         if (isValid) addToPieces(p1Move, p2Move, mWorld);
         else{
             onMessageField += "\nInvalid Move Submitted by ";
-            if (invalidPlayer == '0') onMessageField += mTeamA.substring(1,mTeamA.length()-2);
-            else onMessageField += mTeamB.substring(1,mTeamB.length()-2);
+            if (invalidPlayer == '0') onMessageField += "\n" + mTeamA;
+            else onMessageField += "\n" + mTeamB;
         }
         
         //check for victory
         winner = getWinner( mWorld, new Glitter() );
     	if( winner == 1)
-    		onMessageField = HALMATE + TEAM_A_WINS;
+    		onMessageField = HALMATE + TEAM_A_WINS.replace( TEAM_A_REPLACE , mTeamA);
         else if( winner == 2 )
-    		onMessageField = HALMATE + TEAM_B_WINS;
+    		onMessageField = HALMATE + TEAM_B_WINS.replace( TEAM_B_REPLACE , mTeamB);
         mWorld.setMessage( onMessageField );
     }
 
