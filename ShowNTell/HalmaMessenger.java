@@ -66,23 +66,45 @@ public class HalmaMessenger extends OfficialObserver{
     }
     
     public static String toSequence(String json){
-            ArrayList<Integer>sequence = new ArrayList<Integer>();
+            ArrayList<Integer> sequence = new ArrayList<Integer>();
             JsonObject obj;
             try{ obj = JsonParser.object().from(json); }
             catch(JsonParserException e){ return ""; }
             JsonObject fromObj = obj.getObject( FROM_KEY );
             JsonArray toArray = obj.getArray( TO_KEY );
-            int fromRow = fromObj.getInt( COLUMN_INDEX );
-            int fromColumn = fromObj.getInt( ROW_INDEX );
-            int fromDamage = fromObj.getInt( DAMAGE_INDEX );
-            sequence.add(fromRow);
-            sequence.add(fromColumn);
-            sequence.add(fromDamage);
-            for(Object o : toArray){
-                    obj = (JsonObject) o;
-                    sequence.add( obj.getInt( COLUMN_INDEX ) );
-                    sequence.add( obj.getInt( ROW_INDEX ) );
+            
+            if (fromObj == null){
+                sequence.add(-1);
+                sequence.add(-1);
+                sequence.add(-1);
             }
+            else{
+                int fromRow = fromObj.getInt( COLUMN_INDEX );
+                int fromColumn = fromObj.getInt( ROW_INDEX );
+                int fromDamage = fromObj.getInt( DAMAGE_INDEX );
+                sequence.add(fromRow);
+                sequence.add(fromColumn);
+                sequence.add(fromDamage);
+            }
+            
+            if (toArray == null){
+                sequence.add(-1);
+                sequence.add(-1);
+            }
+            else{
+                for(Object o : toArray){
+                    obj = (JsonObject) o;
+                    if (obj == null){
+                        sequence.add(-1);
+                        sequence.add(-1);
+                    }
+                    else{
+                        sequence.add( obj.getInt( COLUMN_INDEX ) );
+                        sequence.add( obj.getInt( ROW_INDEX ) );
+                    }
+                }
+            }
+            
             return sequence.toString();
     }
 

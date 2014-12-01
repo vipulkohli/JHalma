@@ -461,9 +461,8 @@ class GameBoard extends OfficialObserver{
         
         if (isValid) addToPieces(p1Move, p2Move, mWorld);
         else{
-            onMessageField += "\nInvalid Move Submitted by ";
-            if (invalidPlayer == '0') onMessageField += "\n" + mTeamA;
-            else onMessageField += "\n" + mTeamB;
+            if (invalidPlayer == '0' || invalidPlayer == '2') onMessageField += "\nInvalid Move Submitted by " + mTeamA;
+            if (invalidPlayer == '1' || invalidPlayer == '2') onMessageField += "\nInvalid Move Submitted by " + mTeamB;
         }
         
         //check for victory

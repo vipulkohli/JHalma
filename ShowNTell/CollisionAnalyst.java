@@ -71,6 +71,9 @@ public class CollisionAnalyst extends OfficialObserver{
         int damage1 = toIntArray(movesList.get(1))[2];
         boolean isValid0 = isValidMoveRequest(damage0, fromLoc0, toLocArray0, nextBoard);
         boolean isValid1 = isValidMoveRequest(damage1, fromLoc1, toLocArray1, nextBoard);
+        if (!isValid0 && !isValid1){
+            return "2"+nextBoard.toString().replace(" ", "");
+        }
         if (!isValid0){
             return "0"+nextBoard.toString().replace(" ", "");
         }
