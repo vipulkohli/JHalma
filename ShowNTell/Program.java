@@ -19,12 +19,12 @@ public class Program{
     
     public static void main(String[] args){
         //default players
-        //String player1 = "http://lyle.smu.edu/~tbgeorge/cse4345/a1/getMove.php";
-        //String player2 = "http://lyle.smu.edu/~sochaa/4345/FinalHalma/finalHalmaWithDamage.php";
-     	String player1 = "http://lyle.smu.edu/~aaloqla/halmagame/WebService.php";
-     	String player2 = "http://lyle.smu.edu/~jkayse/4345/Homework9/getMoveJSON.php";
+        String player1 = "http://lyle.smu.edu/~tbgeorge/cse4345/a1/getMove.php";
+        String player2 = "http://lyle.smu.edu/~sochaa/4345/FinalHalma/finalHalmaWithDamage.php";
+     	//String player1 = "http://lyle.smu.edu/~aaloqla/halmagame/WebService.php";
+     	//String player2 = "http://lyle.smu.edu/~jkayse/4345/Homework9/getMoveJSON.php";
         String player1Name = "Tyler";
-        String player2Name = "Jordan";
+        String player2Name = "Andrew";
         
         //text fields
         JTextField pfield1 = new JTextField(35);
@@ -51,7 +51,7 @@ public class Program{
         myPanel.add(nfield2, c);
 
         //display the panel
-        int result = JOptionPane.showConfirmDialog(null, myPanel, 
+        JOptionPane.showConfirmDialog(null, myPanel, 
                "Please Enter Player Info", JOptionPane.DEFAULT_OPTION);
 
         //read user input
@@ -76,7 +76,7 @@ class GameBoard extends OfficialObserver{
         if( !super.checkRecipient( MY_EMAIL ) )
             return;
         if(mTimer == TIMER_START)
-        	this.startGame();
+            this.startGame();
         ALL_MOVES.add( super.getMessage() ); 
     }
     
@@ -187,16 +187,19 @@ class GameBoard extends OfficialObserver{
     }
     
     protected void rewindMove(){
-    	if( mTimer <= TIMER_START )
+    	if( mTimer < TIMER_START + 2)
     		return;
-		mTimer-=2;
-		drawBoard( ALL_MOVES.get( mTimer ) );
+	mTimer-=2;
+        clearBoard( mWorld );
+        clearFlowers( mWorld );
+	drawBoard( ALL_MOVES.get( mTimer ) );
     }
     
     protected void restartGame(){
     	mTimer = TIMER_START;
+        clearBoard( mWorld );
+        clearFlowers( mWorld );
     	drawBoard( mStart );
-    	clearFlowers( mWorld );
     }
     
     @Override
