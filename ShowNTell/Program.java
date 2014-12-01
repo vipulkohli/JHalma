@@ -182,7 +182,7 @@ class GameBoard extends OfficialObserver{
 
     
     protected void stepAhead(){
-    	if( mTimer < ALL_MOVES.size() )
+    	if( mTimer < ALL_MOVES.size() && !mWorld.getMessage().substring(0, HALMATE.length()).equals(HALMATE))
     		drawBoard( ALL_MOVES.get( mTimer ) );
     }
     
