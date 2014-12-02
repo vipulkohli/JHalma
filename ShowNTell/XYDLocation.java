@@ -9,7 +9,7 @@ package ShowNTell;
 import com.grack.nanojson.*;
 
 public class XYDLocation{
-	
+    
     int mDamage;
     Location mLoc;
     int mTeam;
@@ -39,6 +39,7 @@ public class XYDLocation{
         mDamage = d;
         return this;
     }
+
     public XYDLocation setXYD(Location moveLoc, int d){
         setD(d);
         setXY(moveLoc);
@@ -59,18 +60,22 @@ public class XYDLocation{
         int y = getY();
         mLoc = new Location(y, x);
     }
+    
     public void setY(int y){
         int x = getX();
         mLoc = new Location(y, x);
     }
+
     public int getX(){
-            return mLoc.getCol();
+        return mLoc.getCol();
     }
+
     public int getY(){
-            return mLoc.getRow();
+        return mLoc.getRow();
     }
+
     public int getD(){
-            return mDamage;
+        return mDamage;
     }
     
     public boolean equals( Location other  ){
@@ -86,14 +91,14 @@ public class XYDLocation{
         return getX() + "," + getY() + "," + getD() + "," + getTeam();
     }
     
-	public String toJSONString(){
-		return JsonWriter.string()
-                        .object()
-                        .value("x", getX())
-                        .value("y", getY())
-                        .value("damage", getD())
-                        .value("team", getTeam())	
-                        .end()
-                        .done(); 
-	}
+    public String toJSONString(){
+        return JsonWriter.string()
+            .object()
+            .value("x", getX())
+            .value("y", getY())
+            .value("damage", getD())
+            .value("team", getTeam())   
+            .end()
+            .done();
+    }
 }

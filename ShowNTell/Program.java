@@ -1,7 +1,7 @@
 /**
  * @(#)Program.java
  * Creates one or more Halma games.
- * 
+ *
  * Includes GameBoard class,
  * which represents the board UI.
  *
@@ -16,17 +16,17 @@ import java.util.*;
 import javax.swing.*;
 
 public class Program{
-    
+
     public static void main(String[] args){
-    	String homeDemoURL, homeDemoName,
-    		   enemyDemoURL, enemyDemoName;
-    	String homeSmartURL, homeSmartName,
-    		   enemySmartURL, enemySmartName;
+        String homeDemoURL, homeDemoName,
+               enemyDemoURL, enemyDemoName;
+        String homeSmartURL, homeSmartName,
+               enemySmartURL, enemySmartName;
         //default players
         homeSmartURL = "http://lyle.smu.edu/~tbgeorge/cse4345/a1/getMove.php";
         enemySmartURL = "http://lyle.smu.edu/~sochaa/4345/FinalHalma/finalHalmaWithDamage.php";
-     	homeDemoURL = "http://lyle.smu.edu/~aaloqla/halmagame/WebService.php";
-     	enemyDemoURL = "http://lyle.smu.edu/~sochaa/4345/FinalHalma/finalHalmaWithDamage.php";
+        homeDemoURL = "http://lyle.smu.edu/~aaloqla/halmagame/WebService.php";
+        enemyDemoURL = "http://lyle.smu.edu/~sochaa/4345/FinalHalma/finalHalmaWithDamage.php";
         homeDemoName = "Jets";
         enemyDemoName = "Bozos";
         homeSmartName = "Tyler";
@@ -35,7 +35,7 @@ public class Program{
         String player1 = homeDemoURL;
         String player2Name = enemyDemoName;
         String player2 = enemyDemoURL;
-        
+
         //text fields
         JTextField pfield1 = new JTextField(35);
         JTextField pfield2 = new JTextField(35);
@@ -61,7 +61,7 @@ public class Program{
         myPanel.add(nfield2, c);
 
         //display the panel
-        JOptionPane.showConfirmDialog(null, myPanel, 
+        JOptionPane.showConfirmDialog(null, myPanel,
                "Please Enter Player Info", JOptionPane.DEFAULT_OPTION);
 
         //read user input
@@ -69,42 +69,42 @@ public class Program{
         player2 = pfield2.getText();
         player1Name = nfield1.getText();
         player2Name = nfield2.getText();
-        
+
         //start the games
-     	HalmaGame [] tournament = {
-     		new HalmaGame( player1, player2, player1Name, player2Name ),
-     		new HalmaGame( homeSmartURL, enemySmartURL, homeSmartName, enemySmartName )
-     	};
+        HalmaGame [] tournament = {
+            new HalmaGame( player1, player2, player1Name, player2Name ),
+            new HalmaGame( homeSmartURL, enemySmartURL, homeSmartName, enemySmartName )
+        };
     }
-    
+
 }
 
 class GameBoard extends OfficialObserver{
-    
+
     @Override
     protected void handleUpdate(){
         if( !super.checkRecipient( MY_EMAIL ) )
             return;
         if(mTimer == TIMER_START)
             this.startGame();
-        ALL_MOVES.add( super.getMessage() ); 
+        ALL_MOVES.add( super.getMessage() );
     }
-    
-    private static final Color	
-    	TEAM_A_COLOR = new Color(204,0,153),
+
+    private static final Color
+        TEAM_A_COLOR = new Color(204,0,153),
         TEAM_B_COLOR = new Color(0,102,153),
         TEXT_BGCOLOR = Color.white,
         TEXT_SELECTION_COLOR = Color.red;
-   	
+
     private static final int
-    	BOARD_FRAME_WIDTH = (int) Toolkit.getDefaultToolkit().getScreenSize().getWidth() / 2,
-    	BOARD_FRAME_HEIGHT = (int) (Toolkit.getDefaultToolkit().getScreenSize().getHeight() * 0.98),
-    	CELL_SIZE = BOARD_FRAME_WIDTH / 25,
-    	TIMER_START = 0;
-    
+        BOARD_FRAME_WIDTH = (int) Toolkit.getDefaultToolkit().getScreenSize().getWidth() / 2,
+        BOARD_FRAME_HEIGHT = (int) (Toolkit.getDefaultToolkit().getScreenSize().getHeight() * 0.98),
+        CELL_SIZE = BOARD_FRAME_WIDTH / 25,
+        TIMER_START = 0;
+
     private static final Font
-    	FONT = new Font("Times New Roman", Font.BOLD, 20);
-    
+        FONT = new Font("Times New Roman", Font.BOLD, 20);
+
     private static final String
         MY_EMAIL = "g",
         TIMER = "Move: ",
@@ -115,117 +115,117 @@ class GameBoard extends OfficialObserver{
         TEAM_B_REPLACE = "Blue",
         START_MESSAGE = "Click 'Step' or 'Run' to Continue | ",
         SPLIT_PHRASE = "SPLITSPLIT";
-        
+
     private final HalmaWorld
-    	mWorld = new HalmaWorld(this);
-    
+        mWorld = new HalmaWorld(this);
+
     private static Integer numInstances;
-    	
+
     private final String
-    	mWorldMessage,
-    	mTeamA,
-    	mTeamB;
-   
+        mWorldMessage,
+        mTeamA,
+        mTeamB;
+
     private String mStart;
-    
-    private int 
-    	mTimer;
-    
-    private final ArrayList<String> 
-    	ALL_MOVES = new ArrayList<String>();
-    
+
+    private int
+        mTimer;
+
+    private final ArrayList<String>
+        ALL_MOVES = new ArrayList<String>();
+
     public GameBoard(String teamA, String teamB){
-    	if(numInstances == null)
-    		numInstances = 0;
-    	else
-    		numInstances++;
-    	mTeamA = teamA;
+        if(numInstances == null)
+            numInstances = 0;
+        else
+            numInstances++;
+        mTeamA = teamA;
         mTeamB = teamB;
         mWorldMessage = "Press \"Step\" to begin: " + teamA + " vs. " + teamB
-        	+ "\n\nCheck internet connection. Starting move may be illegal.";
+            + "\n\nCheck internet connection. Starting move may be illegal.";
         mWorld.setMessage( mWorldMessage );
-    	mWorld.setGrid( new HalmaGrid("") );
-    	mWorld.show( BOARD_FRAME_WIDTH, BOARD_FRAME_HEIGHT );
-    	this.setTitle( mWorld, "HalmaWorld - " + teamA + " vs. " + teamB );
-    	this.centerWorldOnScreen( mWorld, numInstances);
-    	this.setTextArea( mWorld, FONT);
+        mWorld.setGrid( new HalmaGrid("") );
+        mWorld.show( BOARD_FRAME_WIDTH, BOARD_FRAME_HEIGHT );
+        this.setTitle( mWorld, "HalmaWorld - " + teamA + " vs. " + teamB );
+        this.centerWorldOnScreen( mWorld, numInstances);
+        this.setTextArea( mWorld, FONT);
         mTimer = TIMER_START;
         this.setCellSize( mWorld, CELL_SIZE );
     }
-    
+
     protected void startGame(){
-    	mStart = super.getMessage();
+        mStart = super.getMessage();
         drawBoard( mStart );
         mWorld.setMessage( START_MESSAGE + mWorld.getMessage() );
     }
-    
-    /** 
-     * The following methods are 
+
+    /**
+     * The following methods are
      * derived from WorldFrame.java
      * or GridPanel.java
      */
-     
+
     public static void setTitle(HalmaWorld inWorld, String title){
-    	inWorld.getFrame().setTitle( title );
+        inWorld.getFrame().setTitle( title );
     }
-    
+
     public static void setCellSize(HalmaWorld inWorld, int size){
-    	inWorld.getFrame().getGridPanel().setCellSize( size );
+        inWorld.getFrame().getGridPanel().setCellSize( size );
     }
-    
+
     public static void setZoom(HalmaWorld inWorld, double inFactor){
-    	inWorld.getFrame().getGridPanel().zoom(inFactor);
+        inWorld.getFrame().getGridPanel().zoom(inFactor);
     }
-    
+
     public static void setTextArea(HalmaWorld inWorld, Font inFont){
-    	JTextArea messageArea = inWorld.getFrame().getMessageArea();
-    	messageArea.setFont( inFont );
+        JTextArea messageArea = inWorld.getFrame().getMessageArea();
+        messageArea.setFont( inFont );
         messageArea.setEditable( true );
         messageArea.setFocusable( true );
         messageArea.setBackground( TEXT_BGCOLOR );
         messageArea.setSelectionColor( TEXT_SELECTION_COLOR );
     }
-    
+
     private static void centerWorldOnScreen(HalmaWorld inWorld, int numInstances){
-    	inWorld.getFrame().setLocation( BOARD_FRAME_WIDTH * (numInstances % 2), 0 );
+        inWorld.getFrame().setLocation( BOARD_FRAME_WIDTH * (numInstances % 2), 0 );
     }
 
-    
+
     protected void stepAhead(){
-    	if( mTimer < ALL_MOVES.size() && !mWorld.getMessage().substring(0, HALMATE.length()).equals(HALMATE))
-    		drawBoard( ALL_MOVES.get( mTimer ) );
+        if( mTimer < ALL_MOVES.size() && !mWorld.getMessage().substring(0, HALMATE.length()).equals(HALMATE))
+            drawBoard( ALL_MOVES.get( mTimer ) );
     }
-    
+
     protected void rewindMove(){
-    	if( mTimer < TIMER_START + 2)
-    		return;
-	mTimer-=2;
+        if( mTimer < TIMER_START + 2)
+            return;
+    mTimer-=2;
         clearBoard( mWorld );
         clearFlowers( mWorld );
-	drawBoard( ALL_MOVES.get( mTimer ) );
+    drawBoard( ALL_MOVES.get( mTimer ) );
     }
-    
+
     protected void restartGame(){
-    	mTimer = TIMER_START;
+        mTimer = TIMER_START;
         clearBoard( mWorld );
         clearFlowers( mWorld );
-    	drawBoard( mStart );
+        drawBoard( mStart );
     }
-    
+
     @Override
     public boolean equals(Object o){
-    	boolean out = super.equals(o);
-    	if( ALL_MOVES.size() <= 0 )
-    		return out;
-    	if( "step".equals( o ) )
-    		this.stepAhead();
-    	if( "restart".equals( o ) )
-    		this.restartGame();
-    	if( "rewind".equals( o ) )
-    		this.rewindMove();
-    	return out;
+        boolean out = super.equals(o);
+        if( ALL_MOVES.size() <= 0 )
+            return out;
+        if( "step".equals( o ) )
+            this.stepAhead();
+        if( "restart".equals( o ) )
+            this.restartGame();
+        if( "rewind".equals( o ) )
+            this.rewindMove();
+        return out;
     }
-    
+
     private static ArrayList<Piece> toPieceList(String officialData, boolean isPlayerMove){
         ArrayList<Piece> list = new ArrayList<Piece>();
         JsonArray array;
@@ -258,179 +258,179 @@ class GameBoard extends OfficialObserver{
                 ) );
         }
         return list;
-    }    
-    
+    }
+
     public static void highlightDestinations( HalmaWorld world ){
-    	for(int x = 0; x < 3; x++){
-    		for(int y = 0; y < 3; y++){
-    			Glitter g = new Glitter();
-    			g.setColor( TEAM_B_COLOR );
-    			world.add(new Location( x, y ), g);
-    		}
-    	}
-    	for(int row = 0; row < 3; row++){
-    		for(int col = BOARD_SIZE - 1; col >= BOARD_SIZE - 3; col--){
-    			Glitter g = new Glitter();
-    			g.setColor( TEAM_A_COLOR );
-    			world.add(new Location( row , col ), g);
-    		}
-    	}
+        for(int x = 0; x < 3; x++){
+            for(int y = 0; y < 3; y++){
+                Glitter g = new Glitter();
+                g.setColor( TEAM_B_COLOR );
+                world.add(new Location( x, y ), g);
+            }
+        }
+        for(int row = 0; row < 3; row++){
+            for(int col = BOARD_SIZE - 1; col >= BOARD_SIZE - 3; col--){
+                Glitter g = new Glitter();
+                g.setColor( TEAM_A_COLOR );
+                world.add(new Location( row , col ), g);
+            }
+        }
     }
-    
+
     public static void clearFlowers( HalmaWorld world ){
-    	for(int x = 0; x < BOARD_SIZE; x++){
-    		for(int y = 0; y < BOARD_SIZE; y++){
-    			Object obj = world.getGrid().get( new Location(y,x) );
-    			if(obj instanceof Flower){
-    				world.remove( new Location(y,x) );
-    			}
-    		}
-    	}
+        for(int x = 0; x < BOARD_SIZE; x++){
+            for(int y = 0; y < BOARD_SIZE; y++){
+                Object obj = world.getGrid().get( new Location(y,x) );
+                if(obj instanceof Flower){
+                    world.remove( new Location(y,x) );
+                }
+            }
+        }
     }
-    
+
     public static void clearBoard( HalmaWorld world ){
-    	for(int x = 0; x < BOARD_SIZE; x++){
-    		for(int y = 0; y < BOARD_SIZE; y++){
-    			Object obj = world.remove( new Location(y,x) );
-    			if(obj instanceof Piece){
-    				Piece p = (Piece) obj;
-    				Flower a = new Flower();
-    				a.setColor( p.getColor() );
-    				world.add(new Location(y,x), a);
-    			}
-    		}
-    	}
-    }    
-    
+        for(int x = 0; x < BOARD_SIZE; x++){
+            for(int y = 0; y < BOARD_SIZE; y++){
+                Object obj = world.remove( new Location(y,x) );
+                if(obj instanceof Piece){
+                    Piece p = (Piece) obj;
+                    Flower a = new Flower();
+                    a.setColor( p.getColor() );
+                    world.add(new Location(y,x), a);
+                }
+            }
+        }
+    }
+
     //Determine the winner by counting the number of remaining highlighted victory locations
     public static int getWinner( HalmaWorld world, Object marker ){
-    	Grid grid = world.getGrid();
-    	int blues = 0, reds = 0;
-    	for(int x = 0; x < grid.getNumCols(); x++){
-    		for(int y = 0; y < grid.getNumRows(); y++){
-    			Object o = grid.get( new Location(y, x) );
-    			if( o != null && marker.getClass().equals( o.getClass() ) 
-    				&& x < 3)
-    				blues++;
-                        else if( o != null && marker.getClass().equals( o.getClass() )  
-    				&& x > 3)
-    				reds++;
-    		}
-    	}
-        
+        Grid grid = world.getGrid();
+        int blues = 0, reds = 0;
+        for(int x = 0; x < grid.getNumCols(); x++){
+            for(int y = 0; y < grid.getNumRows(); y++){
+                Object o = grid.get( new Location(y, x) );
+                if( o != null && marker.getClass().equals( o.getClass() )
+                        && x < 3)
+                    blues++;
+                else if( o != null && marker.getClass().equals( o.getClass() )
+                        && x > 3)
+                    reds++;
+            }
+        }
+
         if(reds == 0 && blues == 0)
-                return 3;
-    	if(reds == 0)
-    		return 1;
-    	if(blues == 0)
-    		return 2;	
-    	return 0;
+            return 3;
+        if(reds == 0)
+            return 1;
+        if(blues == 0)
+            return 2;
+        return 0;
     }
-    
+
     private String upTimer(){
-    	mTimer++;
-    	return "" + mTimer;
+        mTimer++;
+        return "" + mTimer;
     }
-    
+
     private static Location getToLocation(String move){
-    	ArrayList<Location> moveLocs = toLocationList(move);
-    	Location target = moveLocs.get( moveLocs.size() - 1 );
-    	return new Location(target.getRow(), target.getCol());
+        ArrayList<Location> moveLocs = toLocationList(move);
+        Location target = moveLocs.get( moveLocs.size() - 1 );
+        return new Location(target.getRow(), target.getCol());
     }
-    
+
     private static void addToPieces(String team1Move, String team2Move, HalmaWorld world){
-    	Location
-    		redLoc = getToLocation( team1Move ), 
-    		blueLoc = getToLocation( team2Move );
-    	XPiece
-    		redPiece = new XPiece(),
-    		bluePiece = new XPiece();
-    	redPiece.setColor( TEAM_A_COLOR );
-    	bluePiece.setColor( TEAM_B_COLOR );
-    	world.add(redLoc, redPiece);
-    	world.add(blueLoc, bluePiece);
+        Location
+            redLoc = getToLocation( team1Move ),
+            blueLoc = getToLocation( team2Move );
+        XPiece
+            redPiece = new XPiece(),
+            bluePiece = new XPiece();
+        redPiece.setColor( TEAM_A_COLOR );
+        bluePiece.setColor( TEAM_B_COLOR );
+        world.add(redLoc, redPiece);
+        world.add(blueLoc, bluePiece);
     }
-    
+
     private static ArrayList<Location> toLocationList(String move){
-    	JsonArray array;
-    	ArrayList<Location> locs = new ArrayList<Location>();
-    	try{ array = JsonParser.array().from(move); }
-    	catch(JsonParserException e){
-    		return null;
-    	}
+        JsonArray array;
+        ArrayList<Location> locs = new ArrayList<Location>();
+        try{ array = JsonParser.array().from(move); }
+        catch(JsonParserException e){
+            return null;
+        }
         int x;
-    	ArrayList<Integer> coordList = new ArrayList<Integer>();
+        ArrayList<Integer> coordList = new ArrayList<Integer>();
         for(int k = 0; k < array.size(); k++)
                 coordList.add( array.getInt(k)  );
         Iterator<Integer> itr = coordList.iterator();
         if( !itr.hasNext() )
-        	return locs;
+            return locs;
         x = itr.next();
         locs.add( new Location(itr.next(), x) );
         itr.next(); //skip damage
         while(itr.hasNext()){
-                x = itr.next();
-                locs.add( new Location(itr.next(), x) );
+            x = itr.next();
+            locs.add( new Location(itr.next(), x) );
         }
         return locs;
     }
-    
+
     private static String formatMove(String move){
-    	JsonArray array;
-    	try{ 
-    		array = JsonParser.array().from(move); 
-    	}
-    	catch(JsonParserException e){
-    		return move;
-    	}
+        JsonArray array;
+        try{
+            array = JsonParser.array().from(move);
+        }
+        catch(JsonParserException e){
+            return move;
+        }
         int x;
-    	ArrayList<Integer> coordList = new ArrayList<Integer>();
+        ArrayList<Integer> coordList = new ArrayList<Integer>();
         for(int k = 0; k < array.size(); k++)
-                coordList.add( array.getInt(k)  );
+            coordList.add( array.getInt(k)  );
         Iterator<Integer> itr = coordList.iterator();
         ArrayList<Location> locs = new ArrayList<Location>();
-        
+
         x = itr.next();
         locs.add( new Location(itr.next(), x) );
         itr.next(); //skip damage
         while(itr.hasNext()){
-                x = itr.next();
-                locs.add( new Location(itr.next(), x) );
+            x = itr.next();
+            locs.add( new Location(itr.next(), x) );
         }
         return locs.toString();
     }
-    
+
     public static Piece createDamagedPiece(int damage, Color color){
-    	Piece [] damageCounts ={
-    		new One(),
-    		new Two(),
-    		new Three(),
-    		new Four(),
-    		new Five()	
-    	};
-    	if(damage < 5)
-    		damageCounts[ damage - 1 ].setColor(color);
-    	return damageCounts[ damage - 1 ];
+        Piece [] damageCounts ={
+            new One(),
+            new Two(),
+            new Three(),
+            new Four(),
+            new Five()
+        };
+        if(damage < 5)
+            damageCounts[ damage - 1 ].setColor(color);
+        return damageCounts[ damage - 1 ];
     }
-    
+
     /*
      * clears board, highlights destinations, declares move/winner
      */
     protected void drawBoard(String inData){
-    	String onMessageField, p1Move, p2Move, pieceStr;
-    	int winner;
-    	ArrayList<Piece> pieces;
-    	String [] data = inData.split( SPLIT_PHRASE );
-    	pieceStr = data[0];
+        String onMessageField, p1Move, p2Move, pieceStr;
+        int winner;
+        ArrayList<Piece> pieces;
+        String [] data = inData.split( SPLIT_PHRASE );
+        pieceStr = data[0];
         boolean isValid = (pieceStr.charAt(0) == 'a');
         char invalidPlayer = pieceStr.charAt(0);
         pieceStr = pieceStr.substring(1);
-    	p1Move = data[1];
-    	p2Move = data[2];
-        
-    	onMessageField = TIMER + upTimer() + "\n" + mTeamA + ": " 
-    		+ formatMove(p1Move) + "\n" + mTeamB + ": " + formatMove(p2Move);
-        
+        p1Move = data[1];
+        p2Move = data[2];
+
+        onMessageField = TIMER + upTimer() + "\n" + mTeamA + ": "
+            + formatMove(p1Move) + "\n" + mTeamB + ": " + formatMove(p2Move);
+
         if (isValid){
             //add player 1 move track
             pieces = toPieceList( p1Move, true ) ;
@@ -454,10 +454,10 @@ class GameBoard extends OfficialObserver{
                     mWorld.add(p.getXYLocation(), p);
             }//end for loop
         }
-        
+
         clearBoard( mWorld );
         highlightDestinations( mWorld );
-        
+
         //add all the pieces
         pieces = toPieceList( pieceStr, false ) ;
         print( pieces.toString() );
@@ -468,27 +468,27 @@ class GameBoard extends OfficialObserver{
                 p.setColor( TEAM_B_COLOR );
 
             if(p.damage > 0)
-    		mWorld.add(p.getXYLocation(), this.createDamagedPiece( p.damage, p.getColor() ));
+            mWorld.add(p.getXYLocation(), this.createDamagedPiece( p.damage, p.getColor() ));
             else
                 mWorld.add(p.getXYLocation(), p);
         }//end for loop
-        
-        if (isValid) 
-        	addToPieces(p1Move, p2Move, mWorld);
+
+        if (isValid)
+            addToPieces(p1Move, p2Move, mWorld);
         else{
             if (invalidPlayer == '0' || invalidPlayer == '2') onMessageField = "Invalid Move by " + mTeamA + " | " + onMessageField;
             if (invalidPlayer == '1' || invalidPlayer == '2') onMessageField = "Invalid Move by " + mTeamB + " | " + onMessageField;
         }
-        
+
         //check for victory
         winner = getWinner( mWorld, new Glitter() );
-    	if( winner == 1)
-    		onMessageField = HALMATE + TEAM_A_WINS.replace( TEAM_A_REPLACE , mTeamA);
+        if( winner == 1)
+            onMessageField = HALMATE + TEAM_A_WINS.replace( TEAM_A_REPLACE , mTeamA);
         else if( winner == 2 )
-    		onMessageField = HALMATE + TEAM_B_WINS.replace( TEAM_B_REPLACE , mTeamB);
+            onMessageField = HALMATE + TEAM_B_WINS.replace( TEAM_B_REPLACE , mTeamB);
         else if( winner == 3 ) //tie
-    		onMessageField = HALMATE + "It's a tie!";
-        
+            onMessageField = HALMATE + "It's a tie!";
+
         mWorld.setMessage( onMessageField );
     }
 

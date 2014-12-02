@@ -30,7 +30,7 @@ public class Piece extends Rock{
     }
     
     public String setColor(Color c, boolean local){
-    	super.setColor(c);
+        super.setColor(c);
         return c.toString();
     }
     public String setColor(String inColor){
@@ -54,7 +54,7 @@ public class Piece extends Rock{
     }
     
     public Location getXYLocation(){
-    	return new Location(y, x);
+        return new Location(y, x);
     }
     
     @Override
