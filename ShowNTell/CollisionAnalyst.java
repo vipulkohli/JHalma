@@ -106,16 +106,16 @@ public class CollisionAnalyst extends OfficialObserver{
             	xyd.setD( DAMAGE_LITE );
         }
         
-		//of superclass
+        //of superclass
         VICTORY = checkVictory(nextBoard);
 
         return "a"+nextBoard.toString().replace(" ", "");
     }
 
-	private static boolean isInBlackHole( int x, int y ){
-		return BOARD_SIZE > 2 && x >= BOARD_SIZE / 2 - 2 && x <= BOARD_SIZE / 2
-			&& y >= BOARD_SIZE / 2 - 2 && y <= BOARD_SIZE / 2;
-	}
+    private static boolean isInBlackHole( int x, int y ){
+        return BOARD_SIZE > 2 && x >= BOARD_SIZE / 2 - 2 && x <= BOARD_SIZE / 2
+                && y >= BOARD_SIZE / 2 - 2 && y <= BOARD_SIZE / 2;
+    }
 	
     private static boolean checkVictory(ArrayList<XYDLocation> nextBoard){
         boolean isAtFinish;
@@ -292,17 +292,22 @@ public class CollisionAnalyst extends OfficialObserver{
     private static boolean isValidMoveRequest(int damage, Location src, ArrayList<Location> moveArr, ArrayList<XYDLocation> gPieces) {
         if(moveArr.isEmpty())
             return false;
+        
+        //check if the AI tries to move outside the board
         Location finalMove = moveArr.get(moveArr.size()-1);
         if (finalMove.getCol() >= BOARD_SIZE || finalMove.getCol() < 0 ||
                 finalMove.getRow() >= BOARD_SIZE || finalMove.getRow() < 0)
             return false;
+        
+        //check that a single move is valid
         if(moveArr.size() == 1) {
             Location dest = moveArr.get(0);  // only one
             return (isLegalOneSquareMove(src, dest, gPieces)  ||
                 isLegalTwoSquareJump(damage, src, dest, gPieces)  ||
                 isPieceHoldingPosition(src,dest) );
         }
-        // we have a multi jump request
+        
+        //check that a jump-chain is valid
         return isArrayOfValidJumps(damage, src, moveArr, gPieces);
     }
 

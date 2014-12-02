@@ -459,14 +459,14 @@ class GameBoard extends OfficialObserver{
             for (Piece p : pieces){
                 p.setColor( TEAM_A_COLOR );
                 mWorld.add(p.getXYLocation(), p);
-            }//end for loop
+            }
 
             //add player 2 move track
             pieces = toPieceList( p2Move, true ) ;
             for (Piece p : pieces){
                 p.setColor( TEAM_B_COLOR );
                 mWorld.add(p.getXYLocation(), p);
-            }//end for loop
+            }
         }
 
         clearBoard( mWorld );

@@ -29,9 +29,8 @@ public abstract class OfficialObserver implements Observer{
 
     private void processOfficialUpdate( Official o, String arg ){
         String[] parts = arg.split(SPLIT_PHRASE);
-        if(parts.length != 2)
-        	return;
-    	m_official = (Official) o;
+        if(parts.length != 2) return;
+        m_official = (Official) o;
         m_recipient = parts[0];
         m_message = parts[1];
         handleUpdate();

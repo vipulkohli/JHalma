@@ -14,7 +14,7 @@ public class Official extends Observable{
     private boolean VICTORY;
     private static final double
         DELAY_DEFAULT = 0,
-        RUN_COUNT = 250; //maximum moves before aborting game
+        RUN_COUNT = 200; //maximum moves before aborting game
 
     public static final int
         BOARD_SIZE = 18;
