@@ -35,6 +35,7 @@ public class Program{
         String player1 = homeDemoURL;
         String player2Name = enemyDemoName;
         String player2 = enemyDemoURL;
+        
         //text fields
         JTextField pfield1 = new JTextField(35);
         JTextField pfield2 = new JTextField(35);
@@ -317,6 +318,8 @@ class GameBoard extends OfficialObserver{
     		}
     	}
         
+        if(reds == 0 && blues == 0)
+                return 3;
     	if(reds == 0)
     		return 1;
     	if(blues == 0)
@@ -483,6 +486,9 @@ class GameBoard extends OfficialObserver{
     		onMessageField = HALMATE + TEAM_A_WINS.replace( TEAM_A_REPLACE , mTeamA);
         else if( winner == 2 )
     		onMessageField = HALMATE + TEAM_B_WINS.replace( TEAM_B_REPLACE , mTeamB);
+        else if( winner == 3 ) //tie
+    		onMessageField = HALMATE + "It's a tie!";
+        
         mWorld.setMessage( onMessageField );
     }
 

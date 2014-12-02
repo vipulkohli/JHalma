@@ -27,13 +27,12 @@ public abstract class OfficialObserver implements Observer{
     }
     
     private void processOfficialUpdate( Official o, String arg ){
-    	String string = arg.toString();
-        String[] parts = string.split(SPLIT_PHRASE);
+        String[] parts = arg.split(SPLIT_PHRASE);
         if(parts.length != 2)
         	return;
     	m_official = (Official) o;
-        m_recipient = parts[0]; // 004
-        m_message = parts[1]; // 034556
+        m_recipient = parts[0];
+        m_message = parts[1];
         handleUpdate();
         o.setVictory(VICTORY);
     }
