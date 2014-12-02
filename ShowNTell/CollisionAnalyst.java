@@ -9,6 +9,7 @@ import java.util.*;
 
 public class CollisionAnalyst extends OfficialObserver{
 
+
     @Override
     //called whenever an update is received from the observable
     protected void handleUpdate(){
@@ -101,13 +102,21 @@ public class CollisionAnalyst extends OfficialObserver{
                 else if( xyd.equals( fromLoc1, 1 ) )
                     xyd.setXYD( toLoc1, DAMAGE_START );
             }
+            if( xyd.getD() == 0 && isInBlackHole( xyd.getX(), xyd.getY() ) )
+            	xyd.setD( DAMAGE_LITE );
         }
-
+        
+		//of superclass
         VICTORY = checkVictory(nextBoard);
 
         return "a"+nextBoard.toString().replace(" ", "");
     }
 
+	private static boolean isInBlackHole( int x, int y ){
+		return BOARD_SIZE > 2 && x >= BOARD_SIZE / 2 - 2 && x <= BOARD_SIZE / 2
+			&& y >= BOARD_SIZE / 2 - 2 && y <= BOARD_SIZE / 2;
+	}
+	
     private static boolean checkVictory(ArrayList<XYDLocation> nextBoard){
         boolean isAtFinish;
         boolean redVict = true, blueVict = true;

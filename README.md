@@ -10,18 +10,24 @@ Java GridWorld Halma that connects with 2 Web AI Players
 	
 	Win = 9-square destination area filled
 	
-	Tie = Both teams area filled on same move
+	Tie = Both teams' destination area filled on same move
 
 Collision Penalties:
-
--Intentional collisions onto already occupied squares will result in:
-	
-	Enemy Damage = 5
-	
-	Home  Damage = 0 --> Naturally sets Home off course
 
 -Accidental head-on collisions when both teams move to the same square on the same time:
 	
 	Enemy Damage = 5
 	
 	Home Damage = 5
+
+-Intentional collisions onto already occupied squares will result in:
+	
+	Enemy Damage = 5
+
+	Home Damage unchanged
+
+-Danger Zone:
+	
+	Home  Damage = 5 if full health
+
+	Enemy Damage unchanged unless collision

@@ -77,9 +77,9 @@ public class Program{
 
         //start the games
         HalmaGame [] tournament = {
-            new HalmaGame( player1, player2, player1Name, player2Name ),
             new HalmaGame( tieURL, tieURL, tieName, tieName ),
-            new HalmaGame( homeSmartURL, enemySmartURL, homeSmartName, enemySmartName )
+            new HalmaGame( homeSmartURL, enemySmartURL, homeSmartName, enemySmartName ),
+            new HalmaGame( player1, player2, player1Name, player2Name )
         };
     }
 
@@ -280,6 +280,20 @@ class GameBoard extends OfficialObserver{
                 Glitter g = new Glitter();
                 g.setColor( TEAM_A_COLOR );
                 world.add(new Location( row , col ), g);
+            }
+        }
+        for(int x = 0; x < 3; x++){
+            for(int y = 0; y < 3; y++){
+                Glitter g = new Glitter();
+                g.setColor( TEAM_B_COLOR );
+                world.add(new Location( x, y ), g);
+            }
+        }
+        for(int x = 7; x < 10; x++){
+            for(int y = 7; y < 10; y++){
+                Actor g = new Actor();
+                g.setColor( Color.black );
+                world.add(new Location( x, y ), g);
             }
         }
     }
