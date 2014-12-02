@@ -26,7 +26,7 @@ public class Program{
         homeSmartURL = "http://lyle.smu.edu/~tbgeorge/cse4345/a1/getMove.php";
         enemySmartURL = "http://lyle.smu.edu/~sochaa/4345/FinalHalma/finalHalmaWithDamage.php";
      	homeDemoURL = "http://lyle.smu.edu/~aaloqla/halmagame/WebService.php";
-     	enemyDemoURL = "http://lyle.smu.edu/~jkayse/4345/Homework9/getMoveJSON.php";
+     	enemyDemoURL = "http://lyle.smu.edu/~sochaa/4345/FinalHalma/finalHalmaWithDamage.php";
         homeDemoName = "Jets";
         enemyDemoName = "Bozos";
         homeSmartName = "Tyler";
