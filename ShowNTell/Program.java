@@ -18,14 +18,23 @@ import javax.swing.*;
 public class Program{
     
     public static void main(String[] args){
+    	String homeDemoURL, homeDemoName,
+    		   enemyDemoURL, enemyDemoName;
+    	String homeSmartURL, homeSmartName,
+    		   enemySmartURL, enemySmartName;
         //default players
-        String player1 = "http://lyle.smu.edu/~tbgeorge/cse4345/a1/getMove.php";
-        String player2 = "http://lyle.smu.edu/~sochaa/4345/FinalHalma/finalHalmaWithDamage.php";
-     	//String player1 = "http://lyle.smu.edu/~aaloqla/halmagame/WebService.php";
-     	//String player2 = "http://lyle.smu.edu/~jkayse/4345/Homework9/getMoveJSON.php";
-        String player1Name = "Tyler";
-        String player2Name = "Andrew";
-        
+        homeSmartURL = "http://lyle.smu.edu/~tbgeorge/cse4345/a1/getMove.php";
+        enemySmartURL = "http://lyle.smu.edu/~sochaa/4345/FinalHalma/finalHalmaWithDamage.php";
+     	homeDemoURL = "http://lyle.smu.edu/~aaloqla/halmagame/WebService.php";
+     	enemyDemoURL = "http://lyle.smu.edu/~jkayse/4345/Homework9/getMoveJSON.php";
+        homeDemoName = "Jets";
+        enemyDemoName = "Bozos";
+        homeSmartName = "Tyler";
+        enemySmartName = "Andrew";
+        String player1Name = homeDemoName;
+        String player1 = homeDemoURL;
+        String player2Name = enemyDemoName;
+        String player2 = enemyDemoURL;
         //text fields
         JTextField pfield1 = new JTextField(35);
         JTextField pfield2 = new JTextField(35);
@@ -63,7 +72,7 @@ public class Program{
         //start the games
      	HalmaGame [] tournament = {
      		new HalmaGame( player1, player2, player1Name, player2Name ),
-     		new HalmaGame( player1, player1, player1Name, player1Name )
+     		new HalmaGame( homeSmartURL, enemySmartURL, homeSmartName, enemySmartName )
      	};
     }
     
@@ -462,10 +471,11 @@ class GameBoard extends OfficialObserver{
                 mWorld.add(p.getXYLocation(), p);
         }//end for loop
         
-        if (isValid) addToPieces(p1Move, p2Move, mWorld);
+        if (isValid) 
+        	addToPieces(p1Move, p2Move, mWorld);
         else{
-            if (invalidPlayer == '0' || invalidPlayer == '2') onMessageField += "\nInvalid Move Submitted by " + mTeamA;
-            if (invalidPlayer == '1' || invalidPlayer == '2') onMessageField += "\nInvalid Move Submitted by " + mTeamB;
+            if (invalidPlayer == '0' || invalidPlayer == '2') onMessageField = "Invalid Move by " + mTeamA + " | " + onMessageField;
+            if (invalidPlayer == '1' || invalidPlayer == '2') onMessageField = "Invalid Move by " + mTeamB + " | " + onMessageField;
         }
         
         //check for victory

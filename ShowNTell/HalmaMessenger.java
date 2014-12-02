@@ -53,7 +53,12 @@ public class HalmaMessenger extends OfficialObserver{
     private String respondWithAIMoves(String message){
         ArrayList<String> moves = getRemoteAIMoves(message);
         Iterator<String> jsons = moves.iterator();
-        return concat(toSequence(jsons.next()), toSequence(jsons.next()) );
+        try{
+        	return concat(toSequence(jsons.next()), toSequence(jsons.next()) );
+        }
+        catch( NullPointerException n){
+        	return n.toString();
+        }
     }
     
     public ArrayList<String> getRemoteAIMoves(String message){
