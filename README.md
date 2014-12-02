@@ -6,6 +6,12 @@ Vipul Kohli and Andrew Socha CSE 4345 Fall 2014 Team Project
 
 Java GridWorld Halma that connects with 2 Web AI Players
 
+-Victory conditions:
+	
+	Win = 9-square destination area filled
+	
+	Tie = Both teams area filled on same move
+
 Collision Penalties:
 
 -Intentional collisions onto already occupied squares will result in:

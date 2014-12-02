@@ -24,9 +24,12 @@ public class Program{
                enemyDemoURL, enemyDemoName;
         String homeSmartURL, homeSmartName,
                enemySmartURL, enemySmartName;
+        String tieURL, tieName;
         //default players
+        tieURL = "http://lyle.smu.edu/~jyeh/4345/api/index.php/getMultiplayerMove";
+        tieName = "Ty";
         homeSmartURL = "http://lyle.smu.edu/~tbgeorge/cse4345/a1/getMove.php";
-        enemySmartURL = "http://lyle.smu.edu/~sochaa/4345/FinalHalma/finalHalmaWithDamage.php";
+		enemySmartURL = "http://lyle.smu.edu/~sochaa/4345/FinalHalma/finalHalmaWithDamage.php";
         homeDemoURL = "http://lyle.smu.edu/~aaloqla/halmagame/WebService.php";
         enemyDemoURL = "http://lyle.smu.edu/~sochaa/4345/FinalHalma/finalHalmaWithDamage.php";
         homeDemoName = "Jets";
@@ -75,6 +78,7 @@ public class Program{
         //start the games
         HalmaGame [] tournament = {
             new HalmaGame( player1, player2, player1Name, player2Name ),
+            new HalmaGame( tieURL, tieURL, tieName, tieName ),
             new HalmaGame( homeSmartURL, enemySmartURL, homeSmartName, enemySmartName )
         };
     }
@@ -99,7 +103,8 @@ class GameBoard extends OfficialObserver{
         TEXT_SELECTION_COLOR = Color.red;
 
     private static final int
-        BOARD_FRAME_WIDTH = (int) Toolkit.getDefaultToolkit().getScreenSize().getWidth() / 2,
+    	NUM_SPLITS = 2,
+        BOARD_FRAME_WIDTH = (int) Toolkit.getDefaultToolkit().getScreenSize().getWidth() / NUM_SPLITS,
         BOARD_FRAME_HEIGHT = (int) (Toolkit.getDefaultToolkit().getScreenSize().getHeight() * 0.98),
         CELL_SIZE = BOARD_FRAME_WIDTH / 25,
         TIMER_START = 0;
@@ -189,7 +194,7 @@ class GameBoard extends OfficialObserver{
     }
 
     private static void centerWorldOnScreen(HalmaWorld inWorld, int numInstances){
-        inWorld.getFrame().setLocation( BOARD_FRAME_WIDTH * (numInstances % 2), 0 );
+        inWorld.getFrame().setLocation( BOARD_FRAME_WIDTH * (numInstances % NUM_SPLITS ), 0 );
     }
 
 
