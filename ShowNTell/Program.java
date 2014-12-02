@@ -25,11 +25,12 @@ public class Program{
         String homeSmartURL, homeSmartName,
                enemySmartURL, enemySmartName;
         String tieURL, tieName;
+        
         //default players
         tieURL = "http://lyle.smu.edu/~jyeh/4345/api/index.php/getMultiplayerMove";
         tieName = "Ty";
         homeSmartURL = "http://lyle.smu.edu/~tbgeorge/cse4345/a1/getMove.php";
-		enemySmartURL = "http://lyle.smu.edu/~sochaa/4345/FinalHalma/finalHalmaWithDamage.php";
+	enemySmartURL = "http://lyle.smu.edu/~sochaa/4345/FinalHalma/finalHalmaWithDamage.php";
         homeDemoURL = "http://lyle.smu.edu/~aaloqla/halmagame/WebService.php";
         enemyDemoURL = "http://lyle.smu.edu/~sochaa/4345/FinalHalma/finalHalmaWithDamage.php";
         homeDemoName = "Jets";
@@ -457,22 +458,14 @@ class GameBoard extends OfficialObserver{
             pieces = toPieceList( p1Move, true ) ;
             for (Piece p : pieces){
                 p.setColor( TEAM_A_COLOR );
-
-                if(p.damage > 0)
-                    mWorld.add(p.getXYLocation(), this.createDamagedPiece( p.damage, p.getColor() ));
-                else
-                    mWorld.add(p.getXYLocation(), p);
+                mWorld.add(p.getXYLocation(), p);
             }//end for loop
 
             //add player 2 move track
             pieces = toPieceList( p2Move, true ) ;
             for (Piece p : pieces){
                 p.setColor( TEAM_B_COLOR );
-
-                if(p.damage > 0)
-                    mWorld.add(p.getXYLocation(), this.createDamagedPiece( p.damage, p.getColor() ));
-                else
-                    mWorld.add(p.getXYLocation(), p);
+                mWorld.add(p.getXYLocation(), p);
             }//end for loop
         }
 
@@ -487,9 +480,13 @@ class GameBoard extends OfficialObserver{
                 p.setColor( TEAM_A_COLOR );
             else
                 p.setColor( TEAM_B_COLOR );
+            
+            //color overlapping pieces black
+            if (mWorld.getGrid().get(p.getXYLocation()) instanceof Piece)
+                p.setColor("black");
 
             if(p.damage > 0)
-            mWorld.add(p.getXYLocation(), this.createDamagedPiece( p.damage, p.getColor() ));
+                mWorld.add(p.getXYLocation(), this.createDamagedPiece( p.damage, p.getColor() ));
             else
                 mWorld.add(p.getXYLocation(), p);
         }//end for loop
