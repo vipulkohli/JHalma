@@ -1,9 +1,10 @@
+package ShowNTell;
+
 /**
  * CollisionAnalyst
  * Enforces collisions between pieces. Also validates that moves follow the rules.
  */
 
-package ShowNTell;
 import java.util.*;
 
 public class CollisionAnalyst extends OfficialObserver{

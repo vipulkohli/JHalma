@@ -1,13 +1,10 @@
+package ShowNTell;
+
 /**
- * Piece.java
+ * Piece
  * Contains the data to draw a halma piece.
  * This file includes damage count pieces and XPiece.
- *
- * @author Vipul Kohli
- * @author Andrew Socha
- * @version 11-27-2014
  */
-package ShowNTell;
 
 import java.util.*;
 import java.awt.Color;

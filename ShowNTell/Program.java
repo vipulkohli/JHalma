@@ -1,3 +1,5 @@
+package ShowNTell;
+
 /**
  * @(#)Program.java
  * Creates one or more Halma games.
@@ -7,9 +9,9 @@
  *
  * @author Vipul Kohli
  * @author Andrew Socha
- * @version 11-27-2014
+ * @version 12-1-2014
  */
-package ShowNTell;
+
 import com.grack.nanojson.*;
 import java.awt.*;
 import java.util.*;
