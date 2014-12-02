@@ -10,7 +10,7 @@ Java GridWorld Halma that connects with 2 Web AI Players
 	
 	Win = 9-square destination area filled
 	
-	Tie = Both teams' destination area filled on same move
+	Tie = Both teams' destination areas filled on same move
 
 Collision Penalties:
 
