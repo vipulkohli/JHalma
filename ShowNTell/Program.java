@@ -299,11 +299,9 @@ class GameBoard extends OfficialObserver{
     			}
     		}
     	}
-    }
+    }    
     
-    
-    
-    //need to correct for winner situation
+    //Determine the winner by counting the number of remaining highlighted victory locations
     public static int getWinner( HalmaWorld world, Object marker ){
     	Grid grid = world.getGrid();
     	int blues = 0, reds = 0;
@@ -313,11 +311,12 @@ class GameBoard extends OfficialObserver{
     			if( o != null && marker.getClass().equals( o.getClass() ) 
     				&& x < 3)
     				blues++;
-    			if( o != null && marker.getClass().equals( o.getClass() )  
+                        else if( o != null && marker.getClass().equals( o.getClass() )  
     				&& x > 3)
     				reds++;
     		}
     	}
+        
     	if(reds == 0)
     		return 1;
     	if(blues == 0)

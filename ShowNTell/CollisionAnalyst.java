@@ -19,7 +19,6 @@ public class CollisionAnalyst extends OfficialObserver{
     //||||||||||||||MEMBER DATA|||||||||||||
     private static final String 
         SPLIT_PHRASE = "SPLITSPLIT",
-        INVALID_MOVE = "INVALID MOVE!",
         MY_EMAIL = "c";
     private static final int 
         DAMAGE_START = 5,
@@ -102,7 +101,58 @@ public class CollisionAnalyst extends OfficialObserver{
                     xyd.setXYD( toLoc1, DAMAGE_START );
             }
     	}
+        
+        VICTORY = checkVictory(nextBoard);
+        
         return "a"+nextBoard.toString().replace(" ", "");
+    }
+    
+    private static boolean checkVictory(ArrayList<XYDLocation> nextBoard){
+        boolean isAtFinish;
+        boolean redVict = true, blueVict = true;
+        
+        //create lists of where pieces will be if someone has won
+        ArrayList<XYDLocation> redVictory = new ArrayList<>();
+        for (int x = BOARD_SIZE-3; x < BOARD_SIZE; x++){
+            for (int y = 0; y < 3; y++){
+                redVictory.add(new XYDLocation(x, y, 0, 0));
+            }
+        }
+        ArrayList<XYDLocation> blueVictory = new ArrayList<>();
+        for (int x = 0; x < 3; x++){
+            for (int y = 0; y < 3; y++){
+                blueVictory.add(new XYDLocation(x, y, 0, 0));
+            }
+        }
+        
+        //compare those lists to the current board
+        for ( XYDLocation victory : redVictory ){
+            isAtFinish = false;
+            for ( XYDLocation xyd : nextBoard ){
+                if (xyd.getX() == victory.getX() && xyd.getY() == victory.getY()){
+                    isAtFinish = true;
+                    break;
+                }
+            }
+            if (isAtFinish == false){
+                redVict = false;
+                break;
+            }
+        }
+        for ( XYDLocation victory : blueVictory ){
+            isAtFinish = false;
+            for ( XYDLocation xyd : nextBoard ){
+                if (xyd.getX() == victory.getX() && xyd.getY() == victory.getY()){
+                    isAtFinish = true;
+                    break;
+                }
+            }
+            if (isAtFinish == false){
+                blueVict = false;
+                break;
+            }
+        }
+        return (redVict || blueVict);
     }
     
     private static ArrayList<Integer> toIntList(int [] coords){

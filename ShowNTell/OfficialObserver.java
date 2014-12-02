@@ -12,6 +12,8 @@ public abstract class OfficialObserver implements Observer{
     protected abstract void handleUpdate();
     
     protected static final int BOARD_SIZE = Official.BOARD_SIZE;
+    
+    protected static boolean VICTORY = false;
    
     private static final String
     	SPLIT_PHRASE = "SPLITSPLITSPLIT";
@@ -33,6 +35,7 @@ public abstract class OfficialObserver implements Observer{
         m_recipient = parts[0]; // 004
         m_message = parts[1]; // 034556
         handleUpdate();
+        o.setVictory(VICTORY);
     }
     
     public static void print(String message){

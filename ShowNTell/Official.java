@@ -11,9 +11,10 @@ public class Official extends Observable{
     
     private String mBoard, mMove;
     private int mCount;
+    private boolean VICTORY;
     private static final double
     	DELAY_DEFAULT = 0,
-    	RUN_COUNT = 1000; //maximum moves before aborting game
+    	RUN_COUNT = 250; //maximum moves before aborting game
     
     public static final int
     	BOARD_SIZE = 18;
@@ -28,6 +29,11 @@ public class Official extends Observable{
     public Official(){
         mBoard = getDefaultStartBoard();
         mCount = 0;
+        VICTORY = false;
+    }
+    
+    public void setVictory(boolean vict){
+        VICTORY = vict;
     }
     
     public String getDefaultStartBoard(){
@@ -89,12 +95,13 @@ public class Official extends Observable{
             output("From M: " + message)
             .setMove(message)
             .send( COLLISIONS , composeForCollisions(message) );
-        else if ( COLLISIONS.equals(sender) && mCount < RUN_COUNT)
+        else if ( COLLISIONS.equals(sender) && mCount < RUN_COUNT){
             output("From C: " + message)
             .setBoard(message.substring(1))
             .send( GRID, composeForGameBoard(message, mMove))
-            .delay(DELAY_DEFAULT)
-            .getRemoteAIMoves( message.substring(1) );
+            .delay(DELAY_DEFAULT);
+            if (!VICTORY) this.getRemoteAIMoves( message.substring(1) );
+        }
     }
     
     private static String concat(String inFront, String inTail){
