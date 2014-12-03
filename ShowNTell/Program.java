@@ -351,6 +351,8 @@ class GameBoard extends OfficialObserver{
             bluePiece = new XPiece();
         redPiece.setColor( TEAM_A_COLOR );
         bluePiece.setColor( TEAM_B_COLOR );
+        
+        //don't draw the pieces if there was a collision, so the damaged piece is drawn instead
         if (collision0 == false) world.add(redLoc, redPiece);
         if (collision1 == false) world.add(blueLoc, bluePiece);
     }
@@ -465,6 +467,7 @@ class GameBoard extends OfficialObserver{
         boolean collision0 = false, collision1 = false;
         boolean skipPiece; //because we already displayed a piece there with higher damage
         for (Piece p : pieces){
+            //make sure the pieces are the correct team color
             skipPiece = false;
             if(p.getTeam() == 0){
                 p.setColor( TEAM_A_COLOR );
@@ -494,6 +497,7 @@ class GameBoard extends OfficialObserver{
                 }
             }
 
+            //draw the pieces
             if (!skipPiece){
                 if(p.getDamage() > 0)
                     mWorld.add(p.getXYLocation(), this.createDamagedPiece( p.getDamage(), p.getColor() ));
@@ -502,6 +506,7 @@ class GameBoard extends OfficialObserver{
             }
         }//end for loop
 
+        //check if the moves were valid, and display the moved pieces if so
         if (isValid)
             addToPieces(p1Move, p2Move, mWorld, collision0, collision1);
         else{
