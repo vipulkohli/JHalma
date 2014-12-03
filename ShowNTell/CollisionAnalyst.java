@@ -11,11 +11,6 @@ public class CollisionAnalyst extends OfficialObserver{
 	
 	private final Object VALIDATOR;
 	
-	public CollisionAnalyst(){
-		super();
-		VALIDATOR = new MoveValidator();
-	}
-	
 	public CollisionAnalyst( Object inValidator ){
 		super();
 		if(inValidator == null)

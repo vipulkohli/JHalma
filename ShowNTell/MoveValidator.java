@@ -8,6 +8,44 @@ import java.util.*;
 
 public class MoveValidator{
     
+    private static final int IN_COUNT = 5;
+    
+    /* entry point for move validator */
+    @Override
+	public boolean equals( Object o ){
+		if( isValidInput( o ) )
+			return processInput( o );
+		return super.equals(o);
+	}
+    
+    private boolean processInput( Object o ){
+    	ArrayList<Object> list = ( ArrayList<Object> ) o;
+		Iterator<Object>itr = list.iterator();
+		return !isValidMoveRequest((int) itr.next(), (Location) itr.next(), (ArrayList<Location>) itr.next(), (ArrayList<XYDLocation>) itr.next(), (int) itr.next() );
+	}
+    
+    public boolean isValidInput( Object o ){
+    	if(o instanceof ArrayList == false)
+    		return false;
+    	ArrayList list = ( ArrayList ) o;
+    	if( list.size() != IN_COUNT )
+    		return false;
+  		Iterator itr = list.iterator();
+  		Object [] checkTypes = {
+  			new Integer(5), 
+  			new Location(0,0),
+  			new ArrayList(),
+  			new ArrayList(),
+  			new Integer(5)
+  		};
+  		for( Object obj : checkTypes ){
+  			if( !itr.next().getClass().isAssignableFrom( obj.getClass() ) )
+    			return false;
+  		}
+		return true;
+    }
+    
+    
     public static boolean isThereAPieceBetween(Location cell1, Location cell2, ArrayList<XYDLocation> gPieces) {
         /* note: assumes cell1 and cell2 are 2 squares away
          either vertically, horizontally, or diagonally */
@@ -78,17 +116,7 @@ public class MoveValidator{
     public static boolean isPieceHoldingPosition(Location src, Location dest) {
         return (src.getCol() == dest.getCol() && src.getRow() == dest.getRow());
     }
-	@Override
-	public boolean equals(Object o){
-		if(o instanceof List){
-			ArrayList<Object> list = (ArrayList<Object>) o;
-			if(list.size() != 5)
-				return super.equals(o);
-			Iterator<Object>itr = list.iterator();
-			return !isValidMoveRequest((int) itr.next(), (Location) itr.next(), (ArrayList<Location>) itr.next(), (ArrayList<XYDLocation>) itr.next(), (int) itr.next() );
-		}
-		return super.equals(o);
-	}
+	
 	
     // checks that array of requested moves is valid.
     // if only one move in array, check either non-jump or one jump
