@@ -84,37 +84,39 @@ public class CollisionAnalyst extends OfficialObserver{
 
         //Check if there was a collision and update the board
         boolean isHeadOnCollision = toLoc0.equals(toLoc1);
+        boolean movedPiece = false;
         for( XYDLocation xyd : nextBoard ){
             xyd.heal(); //heals all pieces
             if(!isHeadOnCollision){
-                if( xyd.equals( fromLoc0, 0) )
+                if( !movedPiece && xyd.equals( fromLoc0, 0) ){
                     xyd.setXY( toLoc0 );
-                else if( xyd.equals( fromLoc1, 1 ) )
+                    movedPiece = true;
+                }
+                else if( !movedPiece && xyd.equals( fromLoc1, 1 ) ){
                     xyd.setXY( toLoc1 );
+                    movedPiece = true;
+                }
                 else if( isOwnCollision( toLoc0, toLoc1, xyd ) )
                     xyd.setD( DAMAGE_START );
                 else if( isEnemyCollision( toLoc0, toLoc1, xyd ) )
                     xyd.setD( DAMAGE_LITE );
             }
             else{
-                if( xyd.equals( fromLoc0, 0 ) )
+                if( !movedPiece && xyd.equals( fromLoc0, 0 ) ){
                     xyd.setXYD( toLoc0, DAMAGE_START );
-                else if( xyd.equals( fromLoc1, 1 ) )
+                    movedPiece = true;
+                }
+                else if( !movedPiece && xyd.equals( fromLoc1, 1 ) ){
                     xyd.setXYD( toLoc1, DAMAGE_START );
+                    movedPiece = true;
+                }
             }
-            if( xyd.getD() == 0 && isInBlackHole( xyd.getX(), xyd.getY() ) )
-            	xyd.setD( DAMAGE_LITE );
         }
         
         //of superclass
         VICTORY = checkVictory(nextBoard);
 
         return "a"+nextBoard.toString().replace(" ", "");
-    }
-
-    private static boolean isInBlackHole( int x, int y ){
-        return BOARD_SIZE > 2 && x >= BOARD_SIZE / 2 - 2 && x <= BOARD_SIZE / 2
-                && y >= BOARD_SIZE / 2 - 2 && y <= BOARD_SIZE / 2;
     }
 	
     private static boolean checkVictory(ArrayList<XYDLocation> nextBoard){

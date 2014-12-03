@@ -20,27 +20,23 @@ import javax.swing.*;
 public class Program{
 
     public static void main(String[] args){
-        String homeDemoURL, homeDemoName,
-               enemyDemoURL, enemyDemoName;
-        String homeSmartURL, homeSmartName,
-               enemySmartURL, enemySmartName;
-        String tieURL, tieName;
+        String player1, player2,
+               collisionPlayer1, collisionPlayer2,
+               collision1Name, collision2Name,
+               player1Name, player2Name,
+               tieURL, tieName;
         
         //default players
         tieURL = "http://lyle.smu.edu/~jyeh/4345/api/index.php/getMultiplayerMove";
         tieName = "Ty";
-        homeSmartURL = "http://lyle.smu.edu/~tbgeorge/cse4345/a1/getMove.php";
-	enemySmartURL = "http://lyle.smu.edu/~sochaa/4345/FinalHalma/finalHalmaWithDamage.php";
-        homeDemoURL = "http://lyle.smu.edu/~aaloqla/halmagame/WebService.php";
-        enemyDemoURL = "http://lyle.smu.edu/~sochaa/4345/FinalHalma/finalHalmaWithDamage.php";
-        homeDemoName = "Jets";
-        enemyDemoName = "Bozos";
-        homeSmartName = "Tyler";
-        enemySmartName = "Andrew";
-        String player1Name = homeDemoName;
-        String player1 = homeDemoURL;
-        String player2Name = enemyDemoName;
-        String player2 = enemyDemoURL;
+        player1 = "http://lyle.smu.edu/~tbgeorge/cse4345/a1/getMove.php";
+	player2 = "http://lyle.smu.edu/~sochaa/4345/FinalHalma/finalHalmaWithDamage.php";
+        collisionPlayer1 = "http://lyle.smu.edu/~aaloqla/halmagame/WebService.php";
+        collisionPlayer2 = "http://lyle.smu.edu/~sochaa/4345/FinalHalma/finalHalmaWithDamage.php";
+        collision1Name = "Jets";
+        collision2Name = "Bozos";
+        player1Name = "Tyler";
+        player2Name = "Andrew";
 
         //text fields
         JTextField pfield1 = new JTextField(35);
@@ -78,9 +74,9 @@ public class Program{
 
         //start the games
         HalmaGame [] tournament = {
-            new HalmaGame( tieURL, tieURL, tieName, tieName ),
-            new HalmaGame( homeSmartURL, enemySmartURL, homeSmartName, enemySmartName ),
-            new HalmaGame( player1, player2, player1Name, player2Name )
+            //new HalmaGame( tieURL, tieURL, tieName, tieName ),
+            new HalmaGame( player1, player2, player1Name, player2Name ),
+            new HalmaGame( collisionPlayer1, collisionPlayer2, collision1Name, collision2Name )
         };
     }
 
@@ -273,7 +269,7 @@ class GameBoard extends OfficialObserver{
             for(int y = 0; y < 3; y++){
                 Glitter g = new Glitter();
                 g.setColor( TEAM_B_COLOR );
-                world.add(new Location( x, y ), g);
+                world.add(new Location( y, x ), g);
             }
         }
         for(int row = 0; row < 3; row++){
@@ -281,20 +277,6 @@ class GameBoard extends OfficialObserver{
                 Glitter g = new Glitter();
                 g.setColor( TEAM_A_COLOR );
                 world.add(new Location( row , col ), g);
-            }
-        }
-        for(int x = 0; x < 3; x++){
-            for(int y = 0; y < 3; y++){
-                Glitter g = new Glitter();
-                g.setColor( TEAM_B_COLOR );
-                world.add(new Location( x, y ), g);
-            }
-        }
-        for(int x = 7; x < 10; x++){
-            for(int y = 7; y < 10; y++){
-                Actor g = new Actor();
-                g.setColor( Color.black );
-                world.add(new Location( x, y ), g);
             }
         }
     }
