@@ -342,7 +342,7 @@ class GameBoard extends OfficialObserver{
         return new Location(target.getRow(), target.getCol());
     }
 
-    private static void addToPieces(String team1Move, String team2Move, HalmaWorld world){
+    private static void addToPieces(String team1Move, String team2Move, HalmaWorld world, boolean collision0, boolean collision1){
         Location
             redLoc = getToLocation( team1Move ),
             blueLoc = getToLocation( team2Move );
@@ -351,8 +351,8 @@ class GameBoard extends OfficialObserver{
             bluePiece = new XPiece();
         redPiece.setColor( TEAM_A_COLOR );
         bluePiece.setColor( TEAM_B_COLOR );
-        world.add(redLoc, redPiece);
-        world.add(blueLoc, bluePiece);
+        if (collision0 == false) world.add(redLoc, redPiece);
+        if (collision1 == false) world.add(blueLoc, bluePiece);
     }
 
     private static ArrayList<Location> toLocationList(String move){
@@ -435,12 +435,16 @@ class GameBoard extends OfficialObserver{
         onMessageField = TIMER + upTimer() + "\n" + mTeamA + ": "
             + formatMove(p1Move) + "\n" + mTeamB + ": " + formatMove(p2Move);
 
+        Location
+                final0 = new Location(-1, -1),
+                final1 = new Location(-1, -1);
         if (isValid){
             //add player 1 move track
             pieces = toPieceList( p1Move, true ) ;
             for (Piece p : pieces){
                 p.setColor( TEAM_A_COLOR );
                 mWorld.add(p.getXYLocation(), p);
+                final0 = p.getXYLocation();
             }
 
             //add player 2 move track
@@ -448,6 +452,7 @@ class GameBoard extends OfficialObserver{
             for (Piece p : pieces){
                 p.setColor( TEAM_B_COLOR );
                 mWorld.add(p.getXYLocation(), p);
+                final1 = p.getXYLocation();
             }
         }
 
@@ -457,24 +462,48 @@ class GameBoard extends OfficialObserver{
         //add all the pieces
         pieces = toPieceList( pieceStr, false ) ;
         print( pieces.toString() );
+        boolean collision0 = false, collision1 = false;
+        boolean skipPiece; //because we already displayed a piece there with higher damage
         for (Piece p : pieces){
-            if(p.team == 0)
+            skipPiece = false;
+            if(p.getTeam() == 0){
                 p.setColor( TEAM_A_COLOR );
-            else
+                if(p.getDamage() == 5){
+                    if (final0.equals(p.getXYLocation()))
+                        collision0 = true;
+                    else
+                        collision1 = true;
+                }
+            }
+            else{
                 p.setColor( TEAM_B_COLOR );
+                if(p.getDamage() == 5){
+                    if (final1.equals(p.getXYLocation()))
+                        collision1 = true;
+                    else
+                        collision0 = true;
+                }
+            }
             
             //color overlapping pieces black
-            if (mWorld.getGrid().get(p.getXYLocation()) instanceof Piece)
+            if (mWorld.getGrid().get(p.getXYLocation()) instanceof Piece){
                 p.setColor("black");
+                if (p.getDamage() == 0){
+                    skipPiece = true;
+                    mWorld.getGrid().get(p.getXYLocation()).setColor(Color.BLACK);
+                }
+            }
 
-            if(p.damage > 0)
-                mWorld.add(p.getXYLocation(), this.createDamagedPiece( p.damage, p.getColor() ));
-            else
-                mWorld.add(p.getXYLocation(), p);
+            if (!skipPiece){
+                if(p.getDamage() > 0)
+                    mWorld.add(p.getXYLocation(), this.createDamagedPiece( p.getDamage(), p.getColor() ));
+                else
+                    mWorld.add(p.getXYLocation(), p);
+            }
         }//end for loop
 
         if (isValid)
-            addToPieces(p1Move, p2Move, mWorld);
+            addToPieces(p1Move, p2Move, mWorld, collision0, collision1);
         else{
             if (invalidPlayer == '0' || invalidPlayer == '2') onMessageField = "Invalid Move by " + mTeamA + " | " + onMessageField;
             if (invalidPlayer == '1' || invalidPlayer == '2') onMessageField = "Invalid Move by " + mTeamB + " | " + onMessageField;

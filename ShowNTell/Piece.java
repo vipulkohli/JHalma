@@ -11,7 +11,7 @@ import java.awt.Color;
 
 public class Piece extends Rock{
     
-    public int x, y, damage, team;
+    private int x, y, damage, team;
     private String mColor;    
     private static final String DEFAULT_COLOR_STRING = "default";
     
@@ -54,6 +54,14 @@ public class Piece extends Rock{
     
     public Location getXYLocation(){
         return new Location(y, x);
+    }
+    
+    public int getDamage(){
+        return damage;
+    }
+    
+    public int getTeam(){
+        return team;
     }
     
     @Override

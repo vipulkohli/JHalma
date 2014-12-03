@@ -68,17 +68,9 @@ public class CollisionAnalyst extends OfficialObserver{
             toLocArray1 = getToLocationArray( movesList.get(1) );
 
         //Verify move is valid
-        int damage0 = 5, damage1 = 5;
-        for( XYDLocation xyd : nextBoard ){
-            if( xyd.equals( fromLoc0, 0) && damage0 > xyd.getD() ){
-                damage0 = xyd.getD();
-            }
-            if( xyd.equals( fromLoc1, 1) && damage1 > xyd.getD() ){
-                damage1 = xyd.getD();
-            }
-        }
-        //int damage0 = toIntArray(movesList.get(0))[2];
-        //int damage1 = toIntArray(movesList.get(1))[2];
+        int damage0 = toIntArray(movesList.get(0))[2];
+        int damage1 = toIntArray(movesList.get(1))[2];
+        
         boolean isValid0 = isValidMoveRequest(damage0, fromLoc0, toLocArray0, nextBoard);
         boolean isValid1 = isValidMoveRequest(damage1, fromLoc1, toLocArray1, nextBoard);
         if (!isValid0 && !isValid1){
