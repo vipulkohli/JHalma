@@ -86,6 +86,10 @@ public class XYDLocation{
         return mLoc.equals(other) && otherTeam == mTeam;
     }
     
+    public boolean equals(Location other, int otherTeam, int damage){
+        return mLoc.equals(other) && otherTeam == mTeam && mDamage == damage;
+    }
+    
     @Override
     public String toString(){
         return getX() + "," + getY() + "," + getD() + "," + getTeam();

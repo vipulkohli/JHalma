@@ -68,8 +68,17 @@ public class CollisionAnalyst extends OfficialObserver{
             toLocArray1 = getToLocationArray( movesList.get(1) );
 
         //Verify move is valid
-        int damage0 = toIntArray(movesList.get(0))[2];
-        int damage1 = toIntArray(movesList.get(1))[2];
+        int damage0 = 5, damage1 = 5;
+        for( XYDLocation xyd : nextBoard ){
+            if( xyd.equals( fromLoc0, 0) && damage0 > xyd.getD() ){
+                damage0 = xyd.getD();
+            }
+            if( xyd.equals( fromLoc1, 1) && damage1 > xyd.getD() ){
+                damage1 = xyd.getD();
+            }
+        }
+        //int damage0 = toIntArray(movesList.get(0))[2];
+        //int damage1 = toIntArray(movesList.get(1))[2];
         boolean isValid0 = isValidMoveRequest(damage0, fromLoc0, toLocArray0, nextBoard);
         boolean isValid1 = isValidMoveRequest(damage1, fromLoc1, toLocArray1, nextBoard);
         if (!isValid0 && !isValid1){
@@ -84,33 +93,33 @@ public class CollisionAnalyst extends OfficialObserver{
 
         //Check if there was a collision and update the board
         boolean isHeadOnCollision = toLoc0.equals(toLoc1);
-        boolean movedPiece = false;
+        boolean movedPiece0 = false, movedPiece1 = false;
         for( XYDLocation xyd : nextBoard ){
-            xyd.heal(); //heals all pieces
             if(!isHeadOnCollision){
-                if( !movedPiece && xyd.equals( fromLoc0, 0) ){
+                if( !movedPiece0 && xyd.equals( fromLoc0, 0, damage0) ){
                     xyd.setXY( toLoc0 );
-                    movedPiece = true;
+                    movedPiece0 = true;
                 }
-                else if( !movedPiece && xyd.equals( fromLoc1, 1 ) ){
+                else if( !movedPiece1 && xyd.equals( fromLoc1, 1, damage1 ) ){
                     xyd.setXY( toLoc1 );
-                    movedPiece = true;
+                    movedPiece1 = true;
                 }
                 else if( isOwnCollision( toLoc0, toLoc1, xyd ) )
-                    xyd.setD( DAMAGE_START );
+                    xyd.setD( DAMAGE_START + 1);
                 else if( isEnemyCollision( toLoc0, toLoc1, xyd ) )
-                    xyd.setD( DAMAGE_LITE );
+                    xyd.setD( DAMAGE_LITE + 1);
             }
             else{
-                if( !movedPiece && xyd.equals( fromLoc0, 0 ) ){
-                    xyd.setXYD( toLoc0, DAMAGE_START );
-                    movedPiece = true;
+                if( !movedPiece0 && xyd.equals( fromLoc0, 0, damage0 ) ){
+                    xyd.setXYD( toLoc0, DAMAGE_START + 1);
+                    movedPiece0 = true;
                 }
-                else if( !movedPiece && xyd.equals( fromLoc1, 1 ) ){
-                    xyd.setXYD( toLoc1, DAMAGE_START );
-                    movedPiece = true;
+                else if( !movedPiece1 && xyd.equals( fromLoc1, 1, damage1 ) ){
+                    xyd.setXYD( toLoc1, DAMAGE_START + 1);
+                    movedPiece1 = true;
                 }
             }
+            xyd.heal(); //heals all pieces
         }
         
         //of superclass
