@@ -78,7 +78,18 @@ public class MoveValidator{
     public static boolean isPieceHoldingPosition(Location src, Location dest) {
         return (src.getCol() == dest.getCol() && src.getRow() == dest.getRow());
     }
-
+	@Override
+	public boolean equals(Object o){
+		if(o instanceof List){
+			ArrayList<Object> list = (ArrayList<Object>) o;
+			if(list.size() != 5)
+				return super.equals(o);
+			Iterator<Object>itr = list.iterator();
+			return !isValidMoveRequest((int) itr.next(), (Location) itr.next(), (ArrayList<Location>) itr.next(), (ArrayList<XYDLocation>) itr.next(), (int) itr.next() );
+		}
+		return super.equals(o);
+	}
+	
     // checks that array of requested moves is valid.
     // if only one move in array, check either non-jump or one jump
     // else check if all move pairs are jumping over some piece

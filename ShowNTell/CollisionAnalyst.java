@@ -9,16 +9,19 @@ import java.util.*;
 
 public class CollisionAnalyst extends OfficialObserver{
 	
-	private final MoveValidator VALIDATOR;
+	private final Object VALIDATOR;
 	
 	public CollisionAnalyst(){
 		super();
 		VALIDATOR = new MoveValidator();
 	}
 	
-	public CollisionAnalyst( MoveValidator inValidator ){
+	public CollisionAnalyst( Object inValidator ){
 		super();
-		VALIDATOR = inValidator;
+		if(inValidator == null)
+			VALIDATOR = false;
+		else	
+			VALIDATOR = inValidator;
 	}
 	
     @Override
@@ -79,11 +82,18 @@ public class CollisionAnalyst extends OfficialObserver{
             toLocArray1 = getToLocationArray( movesList.get(1) );
 
         //Verify move is valid
-        int damage0 = toIntArray(movesList.get(0))[2];
-        int damage1 = toIntArray(movesList.get(1))[2];
-        
-        boolean isValid0 = VALIDATOR.isValidMoveRequest(damage0, fromLoc0, toLocArray0, nextBoard, BOARD_SIZE);
-        boolean isValid1 = VALIDATOR.isValidMoveRequest(damage1, fromLoc1, toLocArray1, nextBoard, BOARD_SIZE);
+        Integer damage0 = toIntArray(movesList.get(0))[2];
+        Integer damage1 = toIntArray(movesList.get(1))[2];
+        ArrayList<Object> params = new ArrayList<Object> ();
+        Object [] test = {	damage0, fromLoc0, toLocArray0, nextBoard, BOARD_SIZE        };
+		for(Object param : test)
+			params.add(param);
+		ArrayList<Object> params2 = new ArrayList<Object> ();
+        Object [] test2 = {	damage1, fromLoc1, toLocArray1, nextBoard, BOARD_SIZE };
+		for(Object param : test2)
+			params2.add(param);
+        boolean isValid0 = !VALIDATOR.equals( params );
+        boolean isValid1 = !VALIDATOR.equals( params2 );
         if (!isValid0 && !isValid1){
             return "2"+nextBoard.toString().replace(" ", "");
         }

@@ -32,7 +32,7 @@ public class Program{
         player1 = "http://lyle.smu.edu/~tbgeorge/cse4345/a1/getMove.php";
 	player2 = "http://lyle.smu.edu/~sochaa/4345/FinalHalma/finalHalmaWithDamage.php";
         collisionPlayer1 = "http://lyle.smu.edu/~aaloqla/halmagame/WebService.php";
-        collisionPlayer2 = "http://lyle.smu.edu/~sochaa/4345/FinalHalma/invalid.php"; //not completed
+        collisionPlayer2 = "http://lyle.smu.edu/~tbgeorge/cse4345/a1/getMove.php"; //not completed
         collision1Name = "Collider";
         collision2Name = "Invalidity";
         player1Name = "Tyler";
