@@ -16,7 +16,7 @@ public class HalmaGame extends Thread{
         OfficialObserver [] array =
         {
             new HalmaMessenger( url1, url2 ),
-            new CollisionAnalyst(),
+            new CollisionAnalyst( new MoveValidator() ),
             new GameBoard( name1, name2 )
         };
         for( Observer keeper : array )
