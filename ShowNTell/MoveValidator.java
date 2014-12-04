@@ -125,10 +125,10 @@ public class MoveValidator{
     }
     
     //checks if a piece is at a location
-    private static boolean isPieceAt(Location src, int team, ArrayList<XYDLocation> gPieces){
+    private static boolean isPieceAt(Location src, int team, int damage, ArrayList<XYDLocation> gPieces){
         for (XYDLocation piece : gPieces){
             if (piece.getX() == src.getCol() && piece.getY() == src.getRow() &&
-                    team == piece.getTeam())
+                    team == piece.getTeam() && damage == piece.getD())
                 return true;
         }
         return false;
@@ -142,7 +142,7 @@ public class MoveValidator{
             return false;
         
         //ensure there is a piece at the location we are trying to move
-        if(!isPieceAt(src, team, gPieces))
+        if(!isPieceAt(src, team, damage, gPieces))
             return false;
         
         //check if the AI tries to move outside the board
