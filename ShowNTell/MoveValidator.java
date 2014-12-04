@@ -4,24 +4,30 @@ package ShowNTell;
  * Enforces halma game rules
  * Based on the JavaScript version by Dr. Coyle
  */
+
 import java.util.*;
 
 public class MoveValidator{
     
-    private static final int IN_COUNT = 5;
+    private static final int IN_COUNT = 6;
     
     /* entry point for move validator */
     @Override
 	public boolean equals( Object o ){
 		if( isValidInput( o ) )
 			return processInput( o );
+                else{
+                    System.out.println("Validator Bug!");
+                }
 		return super.equals(o);
 	}
     
     private boolean processInput( Object o ){
     	ArrayList<Object> list = ( ArrayList<Object> ) o;
 		Iterator<Object>itr = list.iterator();
-		return !isValidMoveRequest((int) itr.next(), (Location) itr.next(), (ArrayList<Location>) itr.next(), (ArrayList<XYDLocation>) itr.next(), (int) itr.next() );
+		return !isValidMoveRequest((int) itr.next(), (Location) itr.next(),
+                        (int) itr.next(), (ArrayList<Location>) itr.next(),
+                        (ArrayList<XYDLocation>) itr.next(), (int) itr.next() );
 	}
     
     public boolean isValidInput( Object o ){
@@ -34,6 +40,7 @@ public class MoveValidator{
   		Object [] checkTypes = {
   			new Integer(5), 
   			new Location(0,0),
+                        new Integer(5),
   			new ArrayList(),
   			new ArrayList(),
   			new Integer(5)
@@ -46,7 +53,7 @@ public class MoveValidator{
     }
     
     
-    public static boolean isThereAPieceBetween(Location cell1, Location cell2, ArrayList<XYDLocation> gPieces) {
+    private static boolean isThereAPieceBetween(Location cell1, Location cell2, ArrayList<XYDLocation> gPieces) {
         /* note: assumes cell1 and cell2 are 2 squares away
          either vertically, horizontally, or diagonally */
         int rowBetween = (cell1.getRow() + cell2.getRow()) / 2;
@@ -60,7 +67,7 @@ public class MoveValidator{
         return false;
     }
 
-    public static boolean isOneSpaceAway(Location c1, Location c2) {
+    private static boolean isOneSpaceAway(Location c1, Location c2) {
         int diffx = Math.abs(c1.getCol() - c2.getCol());
         int diffy = Math.abs(c1.getRow() - c2.getRow());
         int diffxy = diffx + diffy;
@@ -69,7 +76,7 @@ public class MoveValidator{
         return false;  // not linear or diagonal
     }
 
-    public static boolean isTwoSpacesAway(Location c1, Location c2) {
+    private static boolean isTwoSpacesAway(Location c1, Location c2) {
         int diffx = Math.abs(c1.getCol() - c2.getCol());
         int diffy = Math.abs(c1.getRow() - c2.getRow());
         // check x and y
@@ -82,20 +89,20 @@ public class MoveValidator{
     }
 
     // checks that src & dest are one cell apart and dest is free
-    public static boolean isLegalOneSquareMove(Location src, Location dest, ArrayList<XYDLocation> gPiecesArr) {
+    private static boolean isLegalOneSquareMove(Location src, Location dest, ArrayList<XYDLocation> gPiecesArr) {
         return isOneSpaceAway(src,dest);
     }
 
     // checks that 1) src & dest are two cells apart 2) dest is free
     //             3) there exists a piece between src and dest
-    public static boolean isLegalTwoSquareJump(int damage, Location src, Location dest, ArrayList<XYDLocation> gPiecesArr) {
+    private static boolean isLegalTwoSquareJump(int damage, Location src, Location dest, ArrayList<XYDLocation> gPiecesArr) {
         return (isTwoSpacesAway(src,dest) &&
                 isThereAPieceBetween(src, dest, gPiecesArr) &&
                 damage == 0);
     }
 
     // jumpArr will have original source piece followed by jump locations
-    public static boolean isArrayOfValidJumps(int damage, Location src, ArrayList<Location> jumpArr, ArrayList<XYDLocation> gPiecesArr) {
+    private static boolean isArrayOfValidJumps(int damage, Location src, ArrayList<Location> jumpArr, ArrayList<XYDLocation> gPiecesArr) {
         // add src cell to array
         jumpArr.add(0, src);
         while (jumpArr.size() > 1) {
@@ -113,16 +120,29 @@ public class MoveValidator{
     }
 
     // checks if piece is holding its position
-    public static boolean isPieceHoldingPosition(Location src, Location dest) {
+    private static boolean isPieceHoldingPosition(Location src, Location dest) {
         return (src.getCol() == dest.getCol() && src.getRow() == dest.getRow());
     }
-	
+    
+    //checks if a piece is at a location
+    private static boolean isPieceAt(Location src, int team, ArrayList<XYDLocation> gPieces){
+        for (XYDLocation piece : gPieces){
+            if (piece.getX() == src.getCol() && piece.getY() == src.getRow() &&
+                    team == piece.getTeam())
+                return true;
+        }
+        return false;
+    }
 	
     // checks that array of requested moves is valid.
     // if only one move in array, check either non-jump or one jump
     // else check if all move pairs are jumping over some piece
-    public static boolean isValidMoveRequest(int damage, Location src, ArrayList<Location> moveArr, ArrayList<XYDLocation> gPieces, int BOARD_SIZE) {
+    private static boolean isValidMoveRequest(int damage, Location src, int team, ArrayList<Location> moveArr, ArrayList<XYDLocation> gPieces, int BOARD_SIZE) {
         if(moveArr.isEmpty())
+            return false;
+        
+        //ensure there is a piece at the location we are trying to move
+        if(!isPieceAt(src, team, gPieces))
             return false;
         
         //check if the AI tries to move outside the board
