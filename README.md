@@ -33,6 +33,7 @@ Collision Penalties:
 	Enemy Damage unchanged unless collision
 <img src="https://raw.githubusercontent.com/vipulkohli/JHalma/master/slides/p1.png"/>
 <img src="https://raw.githubusercontent.com/vipulkohli/JHalma/master/slides/p2.png"/>
-<img src="https://raw.githubusercontent.com/vipulkohli/JHalma/master/slides/p3.png"/>
+<img src="https://raw.githubusercontent.com/vipulkohli/JHalma/ed37062edf5754a7fd2ade85af7a001cfb613806/slides/p3.png"/>
 <img src="https://raw.githubusercontent.com/vipulkohli/JHalma/master/slides/p4.png"/>
 <img src="https://raw.githubusercontent.com/vipulkohli/JHalma/master/slides/p5.png"/>
+<img src="https://raw.githubusercontent.com/vipulkohli/JHalma/master/slides/p6.png"/>
