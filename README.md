@@ -31,3 +31,8 @@ Collision Penalties:
 	Home  Damage = 5 if full health
 
 	Enemy Damage unchanged unless collision
+<img src="https://raw.githubusercontent.com/vipulkohli/JHalma/master/slides/p1.png"/>
+<img src="https://raw.githubusercontent.com/vipulkohli/JHalma/master/slides/p2.png"/>
+<img src="https://raw.githubusercontent.com/vipulkohli/JHalma/master/slides/p3.png"/>
+<img src="https://raw.githubusercontent.com/vipulkohli/JHalma/master/slides/p4.png"/>
+<img src="https://raw.githubusercontent.com/vipulkohli/JHalma/master/slides/p5.png"/>
