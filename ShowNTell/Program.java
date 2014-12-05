@@ -9,7 +9,7 @@ package ShowNTell;
  *
  * @author Vipul Kohli
  * @author Andrew Socha
- * @version 12-1-2014
+ * @version 12-4-2014
  */
 
 import com.grack.nanojson.*;
@@ -203,10 +203,10 @@ class GameBoard extends OfficialObserver{
     protected void rewindMove(){
         if( mTimer < TIMER_START + 2)
             return;
-    mTimer-=2;
+        mTimer-=2;
         clearBoard( mWorld );
         clearFlowers( mWorld );
-    drawBoard( ALL_MOVES.get( mTimer ) );
+        drawBoard( ALL_MOVES.get( mTimer ) );
     }
 
     protected void restartGame(){
@@ -367,7 +367,7 @@ class GameBoard extends OfficialObserver{
         int x;
         ArrayList<Integer> coordList = new ArrayList<Integer>();
         for(int k = 0; k < array.size(); k++)
-                coordList.add( array.getInt(k)  );
+            coordList.add( array.getInt(k)  );
         Iterator<Integer> itr = coordList.iterator();
         if( !itr.hasNext() )
             return locs;
@@ -438,8 +438,8 @@ class GameBoard extends OfficialObserver{
             + formatMove(p1Move) + "\n" + mTeamB + ": " + formatMove(p2Move);
 
         Location
-                final0 = new Location(-1, -1),
-                final1 = new Location(-1, -1);
+            final0 = new Location(-1, -1),
+            final1 = new Location(-1, -1);
         if (isValid){
             //add player 1 move track
             pieces = toPieceList( p1Move, true ) ;

@@ -2,7 +2,8 @@ package ShowNTell;
 
 /**
  * CollisionAnalyst
- * Enforces collisions between pieces. Also validates that moves follow the rules.
+ * Enforces collisions between pieces. Also validates that moves follow the
+ * rules.
  */
 
 import java.util.*;
@@ -80,7 +81,7 @@ public class CollisionAnalyst extends OfficialObserver{
         Integer damage0 = toIntArray(movesList.get(0))[2];
         Integer damage1 = toIntArray(movesList.get(1))[2];
         ArrayList<Object> params = new ArrayList<Object> ();
-        Object [] test = {  damage0, fromLoc0, 0, toLocArray0, nextBoard, BOARD_SIZE        };
+        Object [] test = {  damage0, fromLoc0, 0, toLocArray0, nextBoard, BOARD_SIZE };
         for(Object param : test)
             params.add(param);
         ArrayList<Object> params2 = new ArrayList<Object> ();
@@ -233,4 +234,3 @@ public class CollisionAnalyst extends OfficialObserver{
         return moveArrayList;
     }
 }
-
