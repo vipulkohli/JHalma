@@ -17,14 +17,14 @@ public abstract class OfficialObserver implements Observer{
     protected static boolean VICTORY = false;
 
     private static final String
-    	SPLIT_PHRASE = "SPLITSPLITSPLIT";
+        SPLIT_PHRASE = "SPLITSPLITSPLIT";
     private Official m_official;
     private String m_message, m_recipient;
 
     @Override
     public void update(Observable o, Object arg){
         if(arg instanceof String && o instanceof Official)
-        	processOfficialUpdate( (Official) o, arg.toString() );
+            processOfficialUpdate( (Official) o, arg.toString() );
     }
 
     private void processOfficialUpdate( Official o, String arg ){
@@ -38,7 +38,7 @@ public abstract class OfficialObserver implements Observer{
     }
 
     public static void print(String message){
-    	System.out.println(message);
+        System.out.println(message);
     }
 
     protected void replyToOfficial(String sender, String message){

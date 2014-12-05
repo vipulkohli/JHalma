@@ -8,17 +8,17 @@ package ShowNTell;
 import java.util.*;
 
 public class CollisionAnalyst extends OfficialObserver{
-	
-	private final Object VALIDATOR;
-	
-	public CollisionAnalyst( Object inValidator ){
-		super();
-		if(inValidator == null)
-			VALIDATOR = false;
-		else	
-			VALIDATOR = inValidator;
-	}
-	
+    
+    private final Object VALIDATOR;
+    
+    public CollisionAnalyst( Object inValidator ){
+        super();
+        if(inValidator == null)
+            VALIDATOR = false;
+        else    
+            VALIDATOR = inValidator;
+    }
+    
     @Override
     //called whenever an update is received from the observable
     protected void handleUpdate(){
@@ -80,13 +80,13 @@ public class CollisionAnalyst extends OfficialObserver{
         Integer damage0 = toIntArray(movesList.get(0))[2];
         Integer damage1 = toIntArray(movesList.get(1))[2];
         ArrayList<Object> params = new ArrayList<Object> ();
-        Object [] test = {	damage0, fromLoc0, 0, toLocArray0, nextBoard, BOARD_SIZE        };
-		for(Object param : test)
-			params.add(param);
-		ArrayList<Object> params2 = new ArrayList<Object> ();
-        Object [] test2 = {	damage1, fromLoc1, 1, toLocArray1, nextBoard, BOARD_SIZE };
-		for(Object param : test2)
-			params2.add(param);
+        Object [] test = {  damage0, fromLoc0, 0, toLocArray0, nextBoard, BOARD_SIZE        };
+        for(Object param : test)
+            params.add(param);
+        ArrayList<Object> params2 = new ArrayList<Object> ();
+        Object [] test2 = { damage1, fromLoc1, 1, toLocArray1, nextBoard, BOARD_SIZE };
+        for(Object param : test2)
+            params2.add(param);
         boolean isValid0 = !VALIDATOR.equals( params );
         boolean isValid1 = !VALIDATOR.equals( params2 );
         if (!isValid0 && !isValid1){
@@ -135,7 +135,7 @@ public class CollisionAnalyst extends OfficialObserver{
 
         return "a"+nextBoard.toString().replace(" ", "");
     }
-	
+    
     private static boolean checkVictory(ArrayList<XYDLocation> nextBoard){
         boolean isAtFinish;
         boolean redVict = true, blueVict = true;

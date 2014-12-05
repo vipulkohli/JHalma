@@ -13,43 +13,43 @@ public class MoveValidator{
     
     /* entry point for move validator */
     @Override
-	public boolean equals( Object o ){
-		if( isValidInput( o ) )
-			return processInput( o );
-                else{
-                    System.out.println("Validator Bug!");
-                }
-		return super.equals(o);
-	}
+    public boolean equals( Object o ){
+        if( isValidInput( o ) )
+            return processInput( o );
+        else{
+            System.out.println("Validator Bug!");
+        }
+        return super.equals(o);
+    }
     
     private boolean processInput( Object o ){
-    	ArrayList<Object> list = ( ArrayList<Object> ) o;
-		Iterator<Object>itr = list.iterator();
-		return !isValidMoveRequest((int) itr.next(), (Location) itr.next(),
-                        (int) itr.next(), (ArrayList<Location>) itr.next(),
-                        (ArrayList<XYDLocation>) itr.next(), (int) itr.next() );
-	}
+        ArrayList<Object> list = ( ArrayList<Object> ) o;
+        Iterator<Object>itr = list.iterator();
+        return !isValidMoveRequest((int) itr.next(), (Location) itr.next(),
+                (int) itr.next(), (ArrayList<Location>) itr.next(),
+                (ArrayList<XYDLocation>) itr.next(), (int) itr.next() );
+    }
     
     public boolean isValidInput( Object o ){
-    	if(o instanceof ArrayList == false)
-    		return false;
-    	ArrayList list = ( ArrayList ) o;
-    	if( list.size() != IN_COUNT )
-    		return false;
-  		Iterator itr = list.iterator();
-  		Object [] checkTypes = {
-  			new Integer(5), 
-  			new Location(0,0),
-                        new Integer(5),
-  			new ArrayList(),
-  			new ArrayList(),
-  			new Integer(5)
-  		};
-  		for( Object obj : checkTypes ){
-  			if( !itr.next().getClass().isAssignableFrom( obj.getClass() ) )
-    			return false;
-  		}
-		return true;
+        if(o instanceof ArrayList == false)
+            return false;
+        ArrayList list = ( ArrayList ) o;
+        if( list.size() != IN_COUNT )
+            return false;
+        Iterator itr = list.iterator();
+        Object [] checkTypes = {
+            new Integer(5), 
+            new Location(0,0),
+            new Integer(5),
+            new ArrayList(),
+            new ArrayList(),
+            new Integer(5)
+        };
+        for( Object obj : checkTypes ){
+            if( !itr.next().getClass().isAssignableFrom( obj.getClass() ) )
+                return false;
+        }
+        return true;
     }
     
     
@@ -81,10 +81,10 @@ public class MoveValidator{
         int diffy = Math.abs(c1.getRow() - c2.getRow());
         // check x and y
         if  ((diffx == 2 && diffy == 0) || (diffx == 0 && diffy == 2)  ) 
-             	return true;  // x y axis
+            return true;  // x y axis
         // check diagonal
         if (diffx==2 && diffy==2) 
-        	return true;
+            return true;
         return false;  // not linear or diagonal
     }
 
@@ -133,7 +133,7 @@ public class MoveValidator{
         }
         return false;
     }
-	
+    
     // checks that array of requested moves is valid.
     // if only one move in array, check either non-jump or one jump
     // else check if all move pairs are jumping over some piece

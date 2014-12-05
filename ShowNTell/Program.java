@@ -30,7 +30,7 @@ public class Program{
         tieURL = "http://lyle.smu.edu/~jyeh/4345/api/index.php/getMultiplayerMove";
         tieName = "Ty";
         player1 = "http://lyle.smu.edu/~tbgeorge/cse4345/a1/getMove.php";
-	player2 = "http://lyle.smu.edu/~sochaa/4345/FinalHalma/finalHalmaWithDamage.php";
+        player2 = "http://lyle.smu.edu/~sochaa/4345/FinalHalma/finalHalmaWithDamage.php";
         collisionPlayer1 = "http://lyle.smu.edu/~aaloqla/halmagame/WebService.php";
         collisionPlayer2 = "http://lyle.smu.edu/~tbgeorge/cse4345/a1/getMove.php";
         collision1Name = "Invalidity";
@@ -100,7 +100,7 @@ class GameBoard extends OfficialObserver{
         TEXT_SELECTION_COLOR = Color.red;
 
     private static final int
-    	NUM_SPLITS = 2,
+        NUM_SPLITS = 2,
         BOARD_FRAME_WIDTH = (int) Toolkit.getDefaultToolkit().getScreenSize().getWidth() / NUM_SPLITS,
         BOARD_FRAME_HEIGHT = (int) (Toolkit.getDefaultToolkit().getScreenSize().getHeight() * 0.98),
         CELL_SIZE = BOARD_FRAME_WIDTH / 25,
